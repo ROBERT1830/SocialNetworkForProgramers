@@ -89,11 +89,7 @@ class StandardTextFieldTest{
                     },
                     keyBoardType = KeyboardType.Password,
                     //set it to 5 for testing. Not need to be the same as the original text field
-                    maxLength = 5,
-                    modifier = Modifier.semantics {
-                        testTag = STANDARD_TEXT_FIELD
-                    }
-
+                    maxLength = 5
                 )
             }
         }
