@@ -16,6 +16,7 @@ import io.mockk.impl.annotations.RelaxedMockK
 import io.mockk.verify
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.test.TestCoroutineDispatcher
 import kotlinx.coroutines.test.advanceTimeBy
 import kotlinx.coroutines.test.runBlockingTest
 import okhttp3.internal.assertThreadDoesntHoldLock
@@ -44,6 +45,8 @@ class SplashScreenTest {
     @RelaxedMockK
     lateinit var navController: NavController
 
+    private val testDispatcher =  TestCoroutineDispatcher()
+
     /*This function is called by JUNIT before every single test case. Is used
     * to initialize objects or mocks. */
     @Before
@@ -55,10 +58,10 @@ class SplashScreenTest {
     //use runBlocking because we are testing a coroutine.
     @OptIn(ExperimentalCoroutinesApi::class)
     @Test
-    fun splashScreen_displaysAndDisappears() = runBlockingTest{
+    fun splashScreen_displaysAndDisappears() = testDispatcher.runBlockingTest{
         composeTestRule.setContent {
             My_social_networkTheme {
-                SplashScreen(navController = navController)
+                SplashScreen(navController = navController, dispatcher = testDispatcher)
             }
         }
         //node is a ui element in the screen and now we have to find the image
@@ -66,14 +69,17 @@ class SplashScreenTest {
         composeTestRule
             .onNodeWithContentDescription("Logo")
             .assertExists()
-        //verify that the popBackStack and navigation functions are called
 
+        advanceTimeBy(ConstVal.SPLASH_SCREEN_DURATION)
+
+        //verify that the popBackStack and navigation functions are called
         /**
          * The test failed because the LaunchedEffect block launches a different coroutine
          * in a different scope and it doesn't use the scope ot he testCoroutineScope. And
          * the scope that LaunchedEffect uses might not cancel the delay by the runBlockingTest
          *
          * Sum up: this coroutine block do not skip the delay.
+         * test if both functions are called.
          */
         //advanceTimeBy(ConstVal.SPLASH_SCREEN_DURATION)
         verify {

@@ -8,6 +8,7 @@ import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.testTag
@@ -23,7 +24,10 @@ fun StandardTextField(
     maxLength: Int = 40,
     isError: Boolean = false,
     keyBoardType: KeyboardType = KeyboardType.Text,
-    onValueChange: (String) -> Unit
+    onValueChange: (String) -> Unit,
+    modifier: Modifier = Modifier.semantics {
+        testTag = "standard_text_field"
+    }
 ) {
 
     val isPasswordToggleDisplayed by remember {
@@ -37,10 +41,7 @@ fun StandardTextField(
     //semantics : to find latter on testing.
     TextField(
         modifier = Modifier
-            .fillMaxWidth()
-            .semantics {
-                testTag = "standard_text_field"
-            },
+            .fillMaxWidth(),
         value = text,
         onValueChange = {
             if (it.length <= maxLength) {
@@ -68,7 +69,10 @@ fun StandardTextField(
             if (isPasswordToggleDisplayed) {
                 IconButton(onClick = {
                     isPasswordVisible = !isPasswordVisible
-                }) {
+                },
+                    modifier = Modifier
+                        .semantics { testTag = "password_toggle" }
+                ) {
                     Icon(
                         imageVector = if (isPasswordVisible) {
                             Icons.Filled.VisibilityOff
@@ -79,7 +83,8 @@ fun StandardTextField(
                             stringResource(R.string.password_visible_content_description)
                         } else {
                             stringResource(R.string.password_hidden_content_description)
-                        }
+                        },
+                        tint = Color.White
                     )
                 }
             }
