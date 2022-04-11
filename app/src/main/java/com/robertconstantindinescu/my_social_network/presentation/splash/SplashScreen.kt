@@ -16,7 +16,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.navigation.NavController
 import com.robertconstantindinescu.my_social_network.R
 import com.robertconstantindinescu.my_social_network.presentation.util.Screen
-import com.robertconstantindinescu.my_social_network.util.ConstVal.SPLASH_SCREEN_DURATION
+import com.robertconstantindinescu.my_social_network.util.Constants.SPLASH_SCREEN_DURATION
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay

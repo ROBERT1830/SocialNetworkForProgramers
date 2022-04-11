@@ -1,5 +1,6 @@
 package com.robertconstantindinescu.my_social_network.presentation.login
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonColors
@@ -20,6 +21,7 @@ import com.robertconstantindinescu.my_social_network.R
 import com.robertconstantindinescu.my_social_network.presentation.components.StandardTextField
 import com.robertconstantindinescu.my_social_network.presentation.ui.theme.SpaceLarge
 import com.robertconstantindinescu.my_social_network.presentation.ui.theme.SpaceMedium
+import com.robertconstantindinescu.my_social_network.presentation.util.Screen
 
 
 @Composable
@@ -76,6 +78,7 @@ fun LoginScreen(
 
             Button(
                 onClick = {
+                    navController.navigate(Screen.MainFeedScreen.route)
                 },
                 modifier = Modifier.align(Alignment.End)
             ) {
@@ -88,7 +91,13 @@ fun LoginScreen(
 
         }
         Text(
-            modifier = Modifier.align(Alignment.BottomCenter),
+            modifier = Modifier
+                .align(Alignment.BottomCenter)
+                .clickable {
+                    navController.navigate(
+                        Screen.RegisterScreen.route
+                    )
+                },
             text = buildAnnotatedString {
                 append(stringResource(id = R.string.dont_have_an_account_yet))
                 append(" ")
@@ -101,9 +110,9 @@ fun LoginScreen(
                     append(signUpText)
                 }
             },
-            style = MaterialTheme.typography.body1
+            style = MaterialTheme.typography.body1,
 
-        )
+            )
     }
 
 

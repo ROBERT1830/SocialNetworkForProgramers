@@ -1,26 +1,20 @@
 package com.robertconstantindinescu.my_social_network.presentation.splash
 
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
-import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.navigation.NavController
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import androidx.test.internal.runner.junit4.AndroidJUnit4ClassRunner
-import androidx.test.runner.AndroidJUnitRunner
 import com.robertconstantindinescu.my_social_network.presentation.MainActivity
 import com.robertconstantindinescu.my_social_network.presentation.ui.theme.My_social_networkTheme
 import com.robertconstantindinescu.my_social_network.presentation.util.Screen
-import com.robertconstantindinescu.my_social_network.util.ConstVal
+import com.robertconstantindinescu.my_social_network.util.Constants
 import io.mockk.MockKAnnotations
 import io.mockk.impl.annotations.RelaxedMockK
 import io.mockk.verify
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.TestCoroutineDispatcher
 import kotlinx.coroutines.test.advanceTimeBy
 import kotlinx.coroutines.test.runBlockingTest
-import okhttp3.internal.assertThreadDoesntHoldLock
-import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -70,7 +64,7 @@ class SplashScreenTest {
             .onNodeWithContentDescription("Logo")
             .assertExists()
 
-        advanceTimeBy(ConstVal.SPLASH_SCREEN_DURATION)
+        advanceTimeBy(Constants.SPLASH_SCREEN_DURATION)
 
         //verify that the popBackStack and navigation functions are called
         /**

@@ -18,7 +18,7 @@ class LoginViewModel @Inject constructor(): ViewModel() {
     private val _showPassword = mutableStateOf(false)
     val showPassword: State<Boolean> = _showPassword
 
-    private val _userNameError = mutableStateOf("Username to short")
+    private val _userNameError = mutableStateOf("")
     val userNameError: State<String> = _userNameError
 
     private val _passwordError = mutableStateOf("")

@@ -70,7 +70,7 @@ fun StandardTextField(
             } else {
                 VisualTransformation.None
             },
-            singleLine = true,
+            singleLine = error != "",
             trailingIcon = {
                 if (isPasswordToggleDisplayed) {
                     IconButton(onClick = {
