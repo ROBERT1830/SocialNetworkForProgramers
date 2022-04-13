@@ -1,5 +1,7 @@
 package com.robertconstantindinescu.my_social_network.presentation.components
 
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
@@ -29,7 +31,7 @@ import kotlin.jvm.Throws
 @Composable
 @Throws(IllegalArgumentException::class)
 fun RowScope.StandardBottomNavItem(
-    icon: ImageVector,
+    icon: ImageVector? = null,
     contentDescription: String? = null,
     modifier: Modifier = Modifier,
     selected: Boolean = false,
@@ -44,6 +46,17 @@ fun RowScope.StandardBottomNavItem(
 //    alertCount?.let {
 //        require(alertCount >= 0)
 //    }
+
+    //Animation for bottom line selection
+    val lineLength = animateFloatAsState(
+        //is selected changes to true we animate from 0 towards 1
+        //previous selection, the target value is 0. When select is 1 so animate toward that value.
+        targetValue = if (selected) 1f else 0f,
+        animationSpec = tween(
+            durationMillis = 300
+        )
+    )
+
 
     if (alertCount != null && alertCount<0){
         throw IllegalArgumentException("Alert count not grater thatn 0")
@@ -61,13 +74,14 @@ fun RowScope.StandardBottomNavItem(
                 .fillMaxSize()
                 .padding(SpaceMedium)
                 .drawBehind {
-                    if (selected){
+                    if (selected) {
                         drawLine(
                             color = if (selected) selectedColor
                             else unselectedColor,
                             //offset line draw at x0 and and height (starts by top left in coordinate system)
-                            start = Offset(size.width/2f - 15.dp.toPx(), size.height),
-                            end = Offset(size.width/2f + 15.dp.toPx(), size.height),
+                            start = Offset(size.width / 2f -  lineLength.value * 15.dp.toPx(), size.height),
+                            //animate from middle + animated value * 15 (0,1 *15, 0,2 * 15...till 1*15 when ends)
+                            end = Offset(size.width / 2f + lineLength.value * 15.dp.toPx(), size.height),
                             strokeWidth = 2.dp.toPx(),
                             cap = StrokeCap.Round
                         )
@@ -76,11 +90,13 @@ fun RowScope.StandardBottomNavItem(
 
                 }
             ) {
-                Icon(
-                    imageVector = icon,
-                    contentDescription = contentDescription,
-                    modifier = Modifier.align(Alignment.Center)
-                )
+                if (icon != null){
+                    Icon(
+                        imageVector = icon,
+                        contentDescription = contentDescription,
+                        modifier = Modifier.align(Alignment.Center)
+                    )
+                }
                 if (alertCount != null){
                     //if alert is more then 100 display 99+
                     val alertText = if (alertCount > 99){

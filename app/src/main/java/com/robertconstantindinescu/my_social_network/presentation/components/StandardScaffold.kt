@@ -4,14 +4,17 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Message
+import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.outlined.Doorbell
 import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.Message
 import androidx.compose.material.icons.outlined.Person
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -46,7 +49,6 @@ import com.robertconstantindinescu.my_social_network.presentation.util.Screen
 
 @Composable
 fun StandardScaffold(
-
     navController: NavController,
     modifier: Modifier = Modifier,
     showBottomBar: Boolean = true,
@@ -62,8 +64,11 @@ fun StandardScaffold(
             contentDescription = "Message"
         ),
         BottomNavItem(
+            route = ""
+        ),
+        BottomNavItem(
             route = Screen.ActivityScreen.route,
-            icon = Icons.Outlined.Doorbell,
+            icon = Icons.Default.Notifications,
             contentDescription = "Activity"
         ),
         BottomNavItem(
@@ -72,14 +77,15 @@ fun StandardScaffold(
             contentDescription = "Profile"
         )
     ),
+    onFabClick: () -> Unit = {},
     content: @Composable () -> Unit
 
-)  {
+) {
 
     Scaffold(
         modifier = modifier,
         bottomBar = {
-            if(showBottomBar){
+            if (showBottomBar) {
                 BottomAppBar(
                     modifier = Modifier.fillMaxWidth(),
                     backgroundColor = MaterialTheme.colors.surface,
@@ -88,15 +94,22 @@ fun StandardScaffold(
                 ) {
                     BottomNavigation(modifier = Modifier.fillMaxWidth()) {
                         bottomNavItems.forEachIndexed { index, bottomNavItem ->
-
                             StandardBottomNavItem(
                                 icon = bottomNavItem.icon,
                                 contentDescription = bottomNavItem.contentDescription,
                                 selected = bottomNavItem.route == navController.currentDestination?.route,
                                 alertCount = bottomNavItem.alertCount,
+                                //if we have an icon enable te icon else not. And that will be used
+                                //to create an other item just to separate the middle ones from the fab
+                                enabled = bottomNavItem.icon != null
                             ) {
-                                //viewModel.setSelectedBottomNavItem(index)
-                                navController.navigate(bottomNavItem.route)
+                                //only navigate if the selected icon is not home.
+                                //we don't want to navigate to home if we pres home. or navigate to the
+                                //same screen over and over again
+                                if (navController.currentDestination?.route != bottomNavItem.route){
+                                    navController.navigate(bottomNavItem.route)
+                                }
+
                             }
                         }
 
@@ -107,7 +120,21 @@ fun StandardScaffold(
             }
 
 
-        }
+        },
+        floatingActionButton = {
+            if (showBottomBar){
+                FloatingActionButton(
+                    backgroundColor = MaterialTheme.colors.primary,
+                    onClick = onFabClick
+                ) {
+                    Icon(imageVector = Icons.Default.Add, contentDescription = stringResource(id = R.string.make_post))
+
+                }
+            }
+
+        },
+        isFloatingActionButtonDocked = true,
+        floatingActionButtonPosition = FabPosition.Center
     ) {
 
         content()

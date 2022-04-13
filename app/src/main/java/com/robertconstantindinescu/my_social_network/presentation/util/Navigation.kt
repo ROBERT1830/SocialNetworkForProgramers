@@ -10,6 +10,7 @@ import androidx.navigation.compose.rememberNavController
 import com.robertconstantindinescu.my_social_network.presentation.MainFeedScreen
 import com.robertconstantindinescu.my_social_network.presentation.activity.ActivityScreen
 import com.robertconstantindinescu.my_social_network.presentation.chat.ChatScreen
+import com.robertconstantindinescu.my_social_network.presentation.create_post.CreatePostScreen
 import com.robertconstantindinescu.my_social_network.presentation.splash.SplashScreen
 import com.robertconstantindinescu.my_social_network.presentation.login.LoginScreen
 import com.robertconstantindinescu.my_social_network.presentation.profile.ProfileScreen
@@ -48,6 +49,10 @@ fun Navigation(
         }
         composable(route = Screen.ProfileScreen.route){
             ProfileScreen(navController = navController)
+        }
+
+        composable(route = Screen.CreatePostScreen.route){
+            CreatePostScreen(navController = navController)
         }
 
     }
