@@ -1,4 +1,4 @@
-package com.robertconstantindinescu.my_social_network.domain
+package com.robertconstantindinescu.my_social_network.domain.models
 
 data class Post(
     val username: String,

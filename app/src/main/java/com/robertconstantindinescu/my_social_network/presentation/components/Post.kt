@@ -32,7 +32,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.robertconstantindinescu.my_social_network.R
-import com.robertconstantindinescu.my_social_network.domain.Post
+import com.robertconstantindinescu.my_social_network.domain.models.Post
 import com.robertconstantindinescu.my_social_network.presentation.ui.theme.HintGray
 import com.robertconstantindinescu.my_social_network.presentation.ui.theme.MediumGray
 import com.robertconstantindinescu.my_social_network.presentation.ui.theme.SpaceMedium
