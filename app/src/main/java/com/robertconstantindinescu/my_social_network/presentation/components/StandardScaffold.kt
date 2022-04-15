@@ -1,13 +1,12 @@
 package com.robertconstantindinescu.my_social_network.presentation.components
 
+import android.widget.Toolbar
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Message
-import androidx.compose.material.icons.filled.Notifications
+import androidx.compose.material.icons.filled.*
 import androidx.compose.material.icons.outlined.Doorbell
 import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.Message
@@ -16,6 +15,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
@@ -24,34 +24,16 @@ import com.robertconstantindinescu.my_social_network.domain.models.BottomNavItem
 import com.robertconstantindinescu.my_social_network.presentation.ui.theme.HintGray
 import com.robertconstantindinescu.my_social_network.presentation.util.Screen
 
-//private val bottomNavItems = listOf(
-//    BottomNavItem(
-//        route = Screen.MainFeedScreen.route,
-//        icon = Icons.Outlined.Home,
-//        contentDescription = "Home"
-//    ),
-//    BottomNavItem(
-//        route = Screen.ChatScreen.route,
-//        icon = Icons.Outlined.Message,
-//        contentDescription = "Message"
-//    ),
-//    BottomNavItem(
-//        route = Screen.ActivityScreen.route,
-//        icon = Icons.Outlined.Doorbell,
-//        contentDescription = "Activity"
-//    ),
-//    BottomNavItem(
-//        route = Screen.ProfileScreen.route,
-//        icon = Icons.Outlined.Person,
-//        contentDescription = "Profile"
-//    )
-//)
-
 @Composable
 fun StandardScaffold(
     navController: NavController,
     modifier: Modifier = Modifier,
     showBottomBar: Boolean = true,
+    showToolbar: Boolean = false,
+    showBackArrow: Boolean = true,
+    //Lambda that represents a composable. Need to have access to RowScope.
+    navActions: @Composable RowScope.() -> Unit = {},
+    toolBarTitle: String? = null, //some screens don't have title
     bottomNavItems: List<BottomNavItem> = listOf(
         BottomNavItem(
             route = Screen.MainFeedScreen.route,
@@ -82,6 +64,8 @@ fun StandardScaffold(
 
 ) {
 
+    val scaffoldState = rememberScaffoldState()
+
     Scaffold(
         modifier = modifier,
         bottomBar = {
@@ -106,7 +90,7 @@ fun StandardScaffold(
                                 //only navigate if the selected icon is not home.
                                 //we don't want to navigate to home if we pres home. or navigate to the
                                 //same screen over and over again
-                                if (navController.currentDestination?.route != bottomNavItem.route){
+                                if (navController.currentDestination?.route != bottomNavItem.route) {
                                     navController.navigate(bottomNavItem.route)
                                 }
 
@@ -122,12 +106,15 @@ fun StandardScaffold(
 
         },
         floatingActionButton = {
-            if (showBottomBar){
+            if (showBottomBar) {
                 FloatingActionButton(
                     backgroundColor = MaterialTheme.colors.primary,
                     onClick = onFabClick
                 ) {
-                    Icon(imageVector = Icons.Default.Add, contentDescription = stringResource(id = R.string.make_post))
+                    Icon(
+                        imageVector = Icons.Default.Add,
+                        contentDescription = stringResource(id = R.string.make_post)
+                    )
 
                 }
             }

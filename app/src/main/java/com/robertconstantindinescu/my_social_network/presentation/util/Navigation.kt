@@ -10,9 +10,11 @@ import androidx.navigation.compose.rememberNavController
 import com.robertconstantindinescu.my_social_network.presentation.MainFeedScreen
 import com.robertconstantindinescu.my_social_network.presentation.activity.ActivityScreen
 import com.robertconstantindinescu.my_social_network.presentation.chat.ChatScreen
+import com.robertconstantindinescu.my_social_network.domain.models.Post
 import com.robertconstantindinescu.my_social_network.presentation.create_post.CreatePostScreen
 import com.robertconstantindinescu.my_social_network.presentation.splash.SplashScreen
 import com.robertconstantindinescu.my_social_network.presentation.login.LoginScreen
+import com.robertconstantindinescu.my_social_network.presentation.post_detail.PostDetailScreen
 import com.robertconstantindinescu.my_social_network.presentation.profile.ProfileScreen
 import com.robertconstantindinescu.my_social_network.presentation.register.RegisterScreen
 
@@ -24,35 +26,50 @@ fun Navigation(
     NavHost(
         navController = navController,
         startDestination = Screen.SplashScreen.route
-    ){
-        composable(route= Screen.SplashScreen.route){
+    ) {
+        composable(route = Screen.SplashScreen.route) {
             //here goes the composable that comes up when visit the route
             SplashScreen(navController = navController)
 
         }
-        composable(route = Screen.LoginScreen.route){
+        composable(route = Screen.LoginScreen.route) {
             LoginScreen(navController = navController)
         }
-        composable(Screen.RegisterScreen.route){
+        composable(Screen.RegisterScreen.route) {
             RegisterScreen(navController = navController)
         }
         //Bottom
-        composable(Screen.MainFeedScreen.route){
+        composable(Screen.MainFeedScreen.route) {
             MainFeedScreen(navController = navController)
         }
 
-        composable(route = Screen.ChatScreen.route){
+        composable(route = Screen.ChatScreen.route) {
             ChatScreen(navController = navController)
         }
-        composable(route = Screen.ActivityScreen.route){
+        composable(route = Screen.ActivityScreen.route) {
             ActivityScreen(navController = navController)
         }
-        composable(route = Screen.ProfileScreen.route){
+        composable(route = Screen.ProfileScreen.route) {
             ProfileScreen(navController = navController)
         }
 
-        composable(route = Screen.CreatePostScreen.route){
+        composable(route = Screen.CreatePostScreen.route) {
             CreatePostScreen(navController = navController)
+        }
+
+        composable(route = Screen.PostDetailScreen.route) {
+            PostDetailScreen(
+                navController = navController,
+                post = Post(
+                    username = "Robert Constantin",
+                    imageUrl = "",
+                    profilePicture = "",
+                    description = "sadasd asdasd asfsd fsd g sdg sd g sf gfs g df gdf g dsf gs dfg " +
+                            "sdfgsdfgsdfgsdfg sdfg sdfg aerhwet hd b",
+                    likeCount = 17,
+                    commentCount = 7
+                )
+            )
         }
 
     }

@@ -2,7 +2,7 @@
 <resources>
 
     <style name="Theme.My_social_network" parent="android:Theme.Material.Light.NoActionBar">
-        <item name="android:statusBarColor">@color/dark_gray </item>
+        <item name="android:statusBarColor">@color/medium_gray </item>
     </style>
 
 </resources>

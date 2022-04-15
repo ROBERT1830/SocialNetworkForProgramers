@@ -26,4 +26,6 @@
     <string name="notification">Notification</string>
     <string name="profile">Profile</string>
     <string name="make_post">Make Post</string>
+    <string name="navigate_back">Navigate Back</string>
+    <string name="your_feed">Your Feed</string>
 </resources>

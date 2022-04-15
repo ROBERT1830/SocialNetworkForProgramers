@@ -74,7 +74,7 @@ fun RowScope.StandardBottomNavItem(
                 .fillMaxSize()
                 .padding(SpaceMedium)
                 .drawBehind {
-                    if (selected) {
+                    if (lineLength.value > 0f) {
                         drawLine(
                             color = if (selected) selectedColor
                             else unselectedColor,
@@ -108,6 +108,7 @@ fun RowScope.StandardBottomNavItem(
                     Text(
                         text = alertText,
                         color = MaterialTheme.colors.onPrimary,
+                        //center with the icon
                         textAlign = TextAlign.Center,
                         fontSize = 10.sp,
                         fontWeight = FontWeight.Bold,

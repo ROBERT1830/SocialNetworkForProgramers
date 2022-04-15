@@ -33,17 +33,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.robertconstantindinescu.my_social_network.R
 import com.robertconstantindinescu.my_social_network.domain.models.Post
-import com.robertconstantindinescu.my_social_network.presentation.ui.theme.HintGray
-import com.robertconstantindinescu.my_social_network.presentation.ui.theme.MediumGray
-import com.robertconstantindinescu.my_social_network.presentation.ui.theme.SpaceMedium
-import com.robertconstantindinescu.my_social_network.presentation.ui.theme.TextWhite
+import com.robertconstantindinescu.my_social_network.presentation.ui.theme.*
 import com.robertconstantindinescu.my_social_network.util.Constants.MAX_POST_DESCRIPTION_LINES
 
 @Composable
 fun Post(
     post: Post,
-    profilePictureSize: Dp = 75.dp
-
+    onPostClick: () -> Unit = {}
 ) {
 
     Box(
@@ -56,10 +52,13 @@ fun Post(
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .offset(y = profilePictureSize / 2f)
+                .offset(y = ProfilePictureSize / 2f)
                 .shadow(5.dp)
                 .clip(MaterialTheme.shapes.medium)
                 .background(MediumGray)
+                .clickable {
+                    onPostClick()
+                }
         ) {
             Image(
                 painter = painterResource(id = R.drawable.kermit),
@@ -130,7 +129,7 @@ fun Post(
             painter = painterResource(id = R.drawable.robert),
             contentDescription = "Profile picture",
             modifier = Modifier
-                .size(profilePictureSize)
+                .size(ProfilePictureSize)
                 .clip(CircleShape)
                 .align(Alignment.TopCenter)
 

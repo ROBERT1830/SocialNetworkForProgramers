@@ -27,6 +27,7 @@ fun StandardTextField(
     maxLength: Int = 40,
     error: String = "",
     keyBoardType: KeyboardType = KeyboardType.Text,
+    isPasswordToggleDisplayed: Boolean = keyBoardType == KeyboardType.Password,
     onValueChange: (String) -> Unit,
     showPasswordToggle: Boolean = false,
     onPasswordToggleClick: (Boolean) -> Unit = {},
@@ -34,9 +35,10 @@ fun StandardTextField(
 
     ) {
 
-    val isPasswordToggleDisplayed by remember {
-        mutableStateOf(keyBoardType == KeyboardType.Password)
-    }
+    //PASS IT THORUGH PARAMETERS BECAUSE WE DONT HAVE CONTROL FROM OUTISE
+//    val isPasswordToggleDisplayed by remember {
+//        mutableStateOf(keyBoardType == KeyboardType.Password)
+//    }
 
     Column(
         modifier = modifier.fillMaxWidth()
