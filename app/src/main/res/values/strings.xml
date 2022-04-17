@@ -28,4 +28,17 @@
     <string name="make_post">Make Post</string>
     <string name="navigate_back">Navigate Back</string>
     <string name="your_feed">Your Feed</string>
+    <string name="liked">Liked</string>
+    <string name="commented_on">Commented on</string>
+    <string name="your_post">your post</string>
+    <string name="your_activity">Your Activity</string>
+    <string name="your_profile">Your Profile</string>
+    <string name="banner_image">Banner Image</string>
+    <string name="profile_image">Profile Image</string>
+    <string name="edit">Edit</string>
+    <string name="followers">Followers</string>
+    <string name="following">Fllowing</string>
+    <string name="post_count">Post Count</string>
+    <string name="unfollow">Unfollow</string>
+    <string name="follow">Follow</string>
 </resources>

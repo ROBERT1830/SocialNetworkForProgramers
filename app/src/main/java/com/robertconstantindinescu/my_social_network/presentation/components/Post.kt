@@ -38,21 +38,22 @@ import com.robertconstantindinescu.my_social_network.util.Constants.MAX_POST_DES
 
 @Composable
 fun Post(
+    modifier: Modifier = Modifier,
     post: Post,
+    showProfileImage: Boolean = true,
     onPostClick: () -> Unit = {}
 ) {
 
     Box(
         modifier = Modifier
             .fillMaxWidth()
-
             .padding(SpaceMedium)
     ) {
 
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .offset(y = ProfilePictureSize / 2f)
+                .offset(y = if(showProfileImage) ProfilePictureSizeMedium / 2f else 0.dp)
                 .shadow(5.dp)
                 .clip(MaterialTheme.shapes.medium)
                 .background(MediumGray)
@@ -124,17 +125,19 @@ fun Post(
         }
 
 
+        if (showProfileImage){
+            Image(
+                painter = painterResource(id = R.drawable.robert),
+                contentDescription = "Profile picture",
+                modifier = Modifier
+                    .size(ProfilePictureSizeMedium)
+                    .clip(CircleShape)
+                    .align(Alignment.TopCenter)
 
-        Image(
-            painter = painterResource(id = R.drawable.robert),
-            contentDescription = "Profile picture",
-            modifier = Modifier
-                .size(ProfilePictureSize)
-                .clip(CircleShape)
-                .align(Alignment.TopCenter)
 
+            )
+        }
 
-        )
 
     }
 
