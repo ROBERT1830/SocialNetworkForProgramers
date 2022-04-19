@@ -11,12 +11,15 @@ import com.robertconstantindinescu.my_social_network.presentation.MainFeedScreen
 import com.robertconstantindinescu.my_social_network.presentation.activity.ActivityScreen
 import com.robertconstantindinescu.my_social_network.presentation.chat.ChatScreen
 import com.robertconstantindinescu.my_social_network.domain.models.Post
+import com.robertconstantindinescu.my_social_network.presentation.PersonListScreen
 import com.robertconstantindinescu.my_social_network.presentation.create_post.CreatePostScreen
+import com.robertconstantindinescu.my_social_network.presentation.edit_profile.EditProfileScreen
 import com.robertconstantindinescu.my_social_network.presentation.splash.SplashScreen
 import com.robertconstantindinescu.my_social_network.presentation.login.LoginScreen
 import com.robertconstantindinescu.my_social_network.presentation.post_detail.PostDetailScreen
 import com.robertconstantindinescu.my_social_network.presentation.profile.ProfileScreen
 import com.robertconstantindinescu.my_social_network.presentation.register.RegisterScreen
+import com.robertconstantindinescu.my_social_network.presentation.search.SearchScreen
 
 @Composable
 fun Navigation(
@@ -25,7 +28,7 @@ fun Navigation(
     //val navController = rememberNavController()
     NavHost(
         navController = navController,
-        startDestination = Screen.SplashScreen.route
+        startDestination = Screen.EditProfileScreen.route
     ) {
         composable(route = Screen.SplashScreen.route) {
             //here goes the composable that comes up when visit the route
@@ -52,9 +55,19 @@ fun Navigation(
         composable(route = Screen.ProfileScreen.route) {
             ProfileScreen(navController = navController)
         }
+        composable(route = Screen.EditProfileScreen.route) {
+            EditProfileScreen(navController = navController)
+        }
 
         composable(route = Screen.CreatePostScreen.route) {
             CreatePostScreen(navController = navController)
+        }
+        composable(route = Screen.SearchScreen.route) {
+            SearchScreen(navController = navController)
+        }
+        
+        composable(route = Screen.PersonalListScreen.route){
+            PersonListScreen(navController = navController)
         }
 
         composable(route = Screen.PostDetailScreen.route) {

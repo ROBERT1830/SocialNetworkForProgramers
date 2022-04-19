@@ -6,37 +6,25 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Favorite
-import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.SpanStyle
-import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.robertconstantindinescu.my_social_network.R
 import com.robertconstantindinescu.my_social_network.domain.models.Post
 import com.robertconstantindinescu.my_social_network.presentation.components.ActionRow
-import com.robertconstantindinescu.my_social_network.presentation.components.Post
 import com.robertconstantindinescu.my_social_network.presentation.components.StandardToolBar
 import com.robertconstantindinescu.my_social_network.presentation.ui.theme.*
-import com.robertconstantindinescu.my_social_network.presentation.util.Screen
-import com.robertconstantindinescu.my_social_network.util.Constants.MAX_POST_DESCRIPTION_LINES
 
 import com.robertconstantindinescu.my_social_network.domain.models.Comment
 
@@ -92,7 +80,7 @@ fun PostDetailScreen(
                         Column(
                             modifier = Modifier
                                 .fillMaxSize()
-                                .offset(y = ProfilePictureSizeSmall / 2f)
+                                .offset(y = ProfilePictureSizeExtraSmall / 2f)
                                 .clip(MaterialTheme.shapes.medium)
                                 .shadow(5.dp)
                                 .background(MediumGray)
@@ -173,7 +161,7 @@ fun PostDetailScreen(
                             painter = painterResource(id = R.drawable.robert),
                             contentDescription = "Profile picture",
                             modifier = Modifier
-                                .size(ProfilePictureSizeSmall)
+                                .size(ProfilePictureSizeExtraSmall)
                                 .clip(CircleShape)
                                 .align(Alignment.TopCenter)
 
@@ -235,7 +223,7 @@ fun Comment(
                         contentDescription = "",
                         modifier = Modifier
                             .clip(CircleShape)
-                            .size(ProfilePictureSizeSmall)
+                            .size(ProfilePictureSizeExtraSmall)
                     )
                     Spacer(modifier = Modifier.width(SpaceSmall))
                     Text(

@@ -22,7 +22,9 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.robertconstantindinescu.my_social_network.R
 import com.robertconstantindinescu.my_social_network.domain.models.Post
@@ -59,21 +61,23 @@ import com.robertconstantindinescu.my_social_network.presentation.util.toPx
 
 
 @Composable
-fun ProfileScreen(navController: NavController) {
-
-
+fun ProfileScreen(
+    navController: NavController,
+    profilePicturesSize: Dp = ProfilePictureSizeLage,
+    viewModel: ProfileViewModel = hiltViewModel()
+) {
 
     val lazyListState = rememberLazyListState()
 
     //how much the toolbar is offset
-    var toolbarOffsetY by remember {
-        mutableStateOf(0f)
-    }
+    var toolbarOffsetY = viewModel.toolbarOffsetY.value
+    //ratio to multiply the banner height. will be changed so because of that we use by.
+    var expandedRatio = viewModel.expandedRatio.value
+
+
     val iconHorizontalCentralLength =
         (LocalConfiguration.current.screenWidthDp.dp.toPx()/4f -
-            (ProfilePictureSizeLage / 4f).toPx() + SpaceSmall.toPx())/ 2f
-
-
+            (profilePicturesSize / 4f).toPx() + SpaceSmall.toPx())/ 2f
     //check for the firt item in the list. We only want to scroll down the banner section when the first
     //item from the list is visible so that not appears when user performs large scroll
     val isFirstItemVisible = lazyListState.firstVisibleItemIndex == 0
@@ -84,7 +88,7 @@ fun ProfileScreen(navController: NavController) {
     val toolbarHeightCollapsed = 75.dp
 
     val imageCollapsedOffsetY = remember {
-        (toolbarHeightCollapsed - ProfilePictureSizeLage / 2f) / 2f
+        (toolbarHeightCollapsed - profilePicturesSize / 2f) / 2f
     }
     //maximum offset to center image
     val iconCollapsedOffsetY = remember{
@@ -97,7 +101,7 @@ fun ProfileScreen(navController: NavController) {
     //by using "=" remember the value is saved and does not calculate again when recomposition take place
     //used to perform some space between banner and info above.
     val toolbarHeightExpanded = remember {
-        bannerHeight + ProfilePictureSizeLage
+        bannerHeight + profilePicturesSize
     }
     Log.d("toolbarHeightExpanded", toolbarHeightExpanded.toString())
     //the maximum amount of pixels that the banner will go outside the upper screen
@@ -105,10 +109,7 @@ fun ProfileScreen(navController: NavController) {
         toolbarHeightExpanded - toolbarHeightCollapsed
     }
     Log.d("maxOffset", maxOffset.toString())
-    //ratio to multiply the banner height. will be changed so because of that we use by.
-    var expandedRatio by remember {
-        mutableStateOf(1f)
-    }
+
 
     /**
      * The NestedScrollConnection listen scroll events in children. So we attach the nestedScrollConnection
@@ -200,7 +201,7 @@ fun ProfileScreen(navController: NavController) {
 //
 //            }
             item {
-                Spacer(modifier = Modifier.height(toolbarHeightExpanded - ProfilePictureSizeLage / 2f))
+                Spacer(modifier = Modifier.height(toolbarHeightExpanded - profilePicturesSize / 2f))
             }
             item {
                 ProfileHeaderSection(
@@ -224,7 +225,7 @@ fun ProfileScreen(navController: NavController) {
                 Spacer(
                     modifier = Modifier
                         .height(SpaceMedium)
-                    //.offset(y = -ProfilePictureSizeLage / 2f)
+                    //.offset(y = -profilePicturesSize / 2f)
                 )
                 Post(
                     post = Post(
@@ -276,21 +277,21 @@ fun ProfileScreen(navController: NavController) {
                 modifier = Modifier
                     .align(CenterHorizontally)
                     .graphicsLayer {
-                        translationY = -ProfilePictureSizeLage.toPx() / 2f -
+                        translationY = -profilePicturesSize.toPx() / 2f -
                                 (1f - expandedRatio) * imageCollapsedOffsetY.toPx()
                         transformOrigin = TransformOrigin(
                             pivotFractionX = 0.5f,
                             pivotFractionY = 0f
                         )
                         //the size we always want. SO if we are at the very top
-                        //we wanto to add 0 on top of that then we stay at the
+                        //we want to add 0 on top of that then we stay at the
                         //(ProfilePictureSizeLage.toPx() / 2f) size, i men, half of the initial
                         //size.
                         val scale = 0.5f + (expandedRatio * 0.5f)
                         scaleX = scale
                         scaleY = scale
                     }
-                    .size(ProfilePictureSizeLage)
+                    .size(profilePicturesSize)
                     .clip(CircleShape)
                     .border(
                         width = 1.dp,

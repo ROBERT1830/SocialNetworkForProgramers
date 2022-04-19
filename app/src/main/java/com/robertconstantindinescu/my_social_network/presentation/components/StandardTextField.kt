@@ -2,6 +2,7 @@ package com.robertconstantindinescu.my_social_network.presentation.components
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -10,15 +11,20 @@ import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.testTag
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
 import com.robertconstantindinescu.my_social_network.R
 import com.robertconstantindinescu.my_social_network.presentation.util.TestTags
+import androidx.compose.ui.text.TextStyle
+import com.robertconstantindinescu.my_social_network.presentation.ui.theme.IconSizeMedium
 
 @Composable
 fun StandardTextField(
@@ -26,6 +32,12 @@ fun StandardTextField(
     hint: String = "",
     maxLength: Int = 40,
     error: String = "",
+    style: TextStyle = TextStyle(
+        color = MaterialTheme.colors.onBackground
+    ),
+    singleLine: Boolean = true,
+    maxLines: Int = 1,
+    leadingIcon: ImageVector? = null,
     keyBoardType: KeyboardType = KeyboardType.Text,
     isPasswordToggleDisplayed: Boolean = keyBoardType == KeyboardType.Password,
     onValueChange: (String) -> Unit,
@@ -33,13 +45,12 @@ fun StandardTextField(
     onPasswordToggleClick: (Boolean) -> Unit = {},
     modifier: Modifier = Modifier
 
-    ) {
+) {
 
     //PASS IT THORUGH PARAMETERS BECAUSE WE DONT HAVE CONTROL FROM OUTISE
 //    val isPasswordToggleDisplayed by remember {
 //        mutableStateOf(keyBoardType == KeyboardType.Password)
 //    }
-
     Column(
         modifier = modifier.fillMaxWidth()
     ) {
@@ -57,6 +68,8 @@ fun StandardTextField(
                 }
 
             },
+            maxLines = maxLines,
+            textStyle = style,
             placeholder = {
                 Text(
                     text = hint,
@@ -72,9 +85,18 @@ fun StandardTextField(
             } else {
                 VisualTransformation.None
             },
-            singleLine = error != "",
-            trailingIcon = {
-                if (isPasswordToggleDisplayed) {
+            singleLine = singleLine,
+            leadingIcon = if (leadingIcon != null) {
+                {
+                    Icon(
+                        imageVector = leadingIcon, contentDescription = null,
+                        tint = MaterialTheme.colors.onBackground,
+                        modifier = Modifier.size(IconSizeMedium)
+                    )
+                }
+            } else null,
+            trailingIcon = if (isPasswordToggleDisplayed) {
+                {
                     IconButton(onClick = {
                         onPasswordToggleClick(!showPasswordToggle)
                     },
@@ -95,12 +117,14 @@ fun StandardTextField(
                             tint = Color.White
                         )
                     }
+
                 }
 
-            }
+
+            }else null
 
         )
-        if (error.isNotEmpty()){
+        if (error.isNotEmpty()) {
             Text(
                 text = error,
                 style = MaterialTheme.typography.body2,
