@@ -1,28 +1,22 @@
 package com.robertconstantindinescu.my_social_network.presentation.components
 
-import android.widget.Toolbar
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
-import androidx.compose.material.icons.outlined.Doorbell
 import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.Message
 import androidx.compose.material.icons.outlined.Person
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.robertconstantindinescu.my_social_network.R
-import com.robertconstantindinescu.my_social_network.domain.models.BottomNavItem
-import com.robertconstantindinescu.my_social_network.presentation.ui.theme.HintGray
-import com.robertconstantindinescu.my_social_network.presentation.util.Screen
+import com.robertconstantindinescu.my_social_network.core.domain.models.BottomNavItem
+import com.robertconstantindinescu.my_social_network.core.util.Screen
 
 @Composable
 fun StandardScaffold(

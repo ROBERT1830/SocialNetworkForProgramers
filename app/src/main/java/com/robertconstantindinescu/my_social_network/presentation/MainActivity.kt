@@ -8,14 +8,12 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.robertconstantindinescu.my_social_network.R
 import com.robertconstantindinescu.my_social_network.presentation.components.StandardScaffold
 import com.robertconstantindinescu.my_social_network.presentation.ui.theme.My_social_networkTheme
 import com.robertconstantindinescu.my_social_network.presentation.util.Navigation
-import com.robertconstantindinescu.my_social_network.presentation.util.Screen
+import com.robertconstantindinescu.my_social_network.core.util.Screen
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint

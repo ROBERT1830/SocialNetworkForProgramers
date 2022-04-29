@@ -16,14 +16,11 @@ import androidx.compose.ui.test.performTextInput
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.robertconstantindinescu.my_social_network.presentation.MainActivity
-import com.robertconstantindinescu.my_social_network.presentation.login.LoginScreen
-import com.robertconstantindinescu.my_social_network.presentation.util.TestTags.STANDARD_TEXT_FIELD
+import com.robertconstantindinescu.my_social_network.core.util.TestTags.STANDARD_TEXT_FIELD
 import org.junit.Assert.*
-import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
-import kotlin.math.exp
 
 @RunWith(AndroidJUnit4::class)
 class StandardTextFieldTest{
