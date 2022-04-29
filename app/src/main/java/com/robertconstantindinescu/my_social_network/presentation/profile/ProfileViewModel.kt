@@ -8,18 +8,17 @@ import javax.inject.Inject
 @HiltViewModel
 class ProfileViewModel @Inject constructor(): ViewModel(){
 
-    private val _toolbarOffsetY = mutableStateOf<Float>(0f)
-    val toolbarOffsetY: State<Float> = _toolbarOffsetY
+    private val _toolbarState = mutableStateOf<ProfileToolbarState>(ProfileToolbarState())
+    val toolbarState: State<ProfileToolbarState> = _toolbarState
 
-    private val _expandedRatio = mutableStateOf(1f)
-    val expandedRatio: State<Float> = _expandedRatio
-
-    fun setToolbarOffsetY(value: Float){
-        _toolbarOffsetY.value = value
+    fun setExpandedRatio(ratio: Float){
+        _toolbarState.value = _toolbarState.value.copy(expandedRatio = ratio)
+        println("UPDATING TOOLBAR STATE TO $toolbarState")
     }
 
-    fun setToolbarOffset(value: Float){
-        _expandedRatio.value = value
+    fun setToolbarOffsetY(value: Float){
+        _toolbarState.value = _toolbarState.value.copy(toolbarOffsetY = value)
+        println("UPDATING TOOLBAR STATE TO $toolbarState")
     }
 
 

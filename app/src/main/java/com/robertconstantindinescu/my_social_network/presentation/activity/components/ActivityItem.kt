@@ -47,6 +47,9 @@ fun ActivityItem(
                 is ActivityAction.CommentedOnPost -> {
                     stringResource(id = R.string.commented_on)
                 }
+                is ActivityAction.FollowedYou -> {
+                    stringResource(id = R.string.followed_you)
+                }
             }
             val actionText = when(activity.actionType){
                 is ActivityAction.LikedPost ->{
@@ -55,6 +58,7 @@ fun ActivityItem(
                 is ActivityAction.CommentedOnPost -> {
                     stringResource(id = R.string.your_post)
                 }
+                is ActivityAction.FollowedYou -> ""
             }
 
             Text(

@@ -28,7 +28,7 @@ fun Navigation(
     //val navController = rememberNavController()
     NavHost(
         navController = navController,
-        startDestination = Screen.EditProfileScreen.route
+        startDestination = Screen.SplashScreen.route
     ) {
         composable(route = Screen.SplashScreen.route) {
             //here goes the composable that comes up when visit the route
