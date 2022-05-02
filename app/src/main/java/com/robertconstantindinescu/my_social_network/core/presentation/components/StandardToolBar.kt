@@ -1,4 +1,4 @@
-package com.robertconstantindinescu.my_social_network.presentation.components
+package com.robertconstantindinescu.my_social_network.core.presentation.components
 
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.material.Icon
@@ -11,7 +11,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavAction
 import androidx.navigation.NavController
 import com.robertconstantindinescu.my_social_network.R
 

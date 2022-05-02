@@ -34,12 +34,12 @@ import androidx.navigation.NavController
 import com.google.accompanist.flowlayout.FlowRow
 import com.google.accompanist.flowlayout.MainAxisAlignment
 import com.robertconstantindinescu.my_social_network.R
-import com.robertconstantindinescu.my_social_network.presentation.components.StandardTextField
-import com.robertconstantindinescu.my_social_network.presentation.components.StandardToolBar
+import com.robertconstantindinescu.my_social_network.core.presentation.components.StandardTextField
+import com.robertconstantindinescu.my_social_network.core.presentation.components.StandardToolBar
 import com.robertconstantindinescu.my_social_network.feature_profile.presentation.edit_profile.components.Chip
-import com.robertconstantindinescu.my_social_network.presentation.ui.theme.ProfilePictureSizeLage
-import com.robertconstantindinescu.my_social_network.presentation.ui.theme.SpaceLarge
-import com.robertconstantindinescu.my_social_network.presentation.ui.theme.SpaceMedium
+import com.robertconstantindinescu.my_social_network.core.presentation.ui.theme.ProfilePictureSizeLage
+import com.robertconstantindinescu.my_social_network.core.presentation.ui.theme.SpaceLarge
+import com.robertconstantindinescu.my_social_network.core.presentation.ui.theme.SpaceMedium
 import com.robertconstantindinescu.my_social_network.core.domain.states.StandardTextFieldState
 import com.robertconstantindinescu.my_social_network.feature_profile.presentation.util.EditProfileError
 import kotlin.random.Random

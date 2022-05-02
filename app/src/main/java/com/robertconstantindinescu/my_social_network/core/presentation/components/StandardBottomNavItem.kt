@@ -1,4 +1,4 @@
-package com.robertconstantindinescu.my_social_network.presentation.components
+package com.robertconstantindinescu.my_social_network.core.presentation.components
 
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
@@ -22,8 +22,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.robertconstantindinescu.my_social_network.presentation.ui.theme.HintGray
-import com.robertconstantindinescu.my_social_network.presentation.ui.theme.SpaceMedium
+import com.robertconstantindinescu.my_social_network.core.presentation.ui.theme.HintGray
+import com.robertconstantindinescu.my_social_network.core.presentation.ui.theme.SpaceMedium
 import kotlin.jvm.Throws
 
 //RowScope here because we only have access to BottomNavigationItem in the RowScope that gives us

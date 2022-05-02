@@ -21,7 +21,7 @@ import androidx.compose.ui.unit.sp
 import com.robertconstantindinescu.my_social_network.R
 import com.robertconstantindinescu.my_social_network.core.domain.models.Activity
 import com.robertconstantindinescu.my_social_network.domain.util.ActivityAction
-import com.robertconstantindinescu.my_social_network.presentation.ui.theme.SpaceSmall
+import com.robertconstantindinescu.my_social_network.core.presentation.ui.theme.SpaceSmall
 
 //all that stuff will be saved in backend
 @Composable

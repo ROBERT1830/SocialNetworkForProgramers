@@ -2,12 +2,12 @@ package com.robertconstantindinescu.my_social_network.feature_auth.presentation.
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.Button
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -17,16 +17,19 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.robertconstantindinescu.my_social_network.R
-import com.robertconstantindinescu.my_social_network.presentation.components.StandardTextField
-import com.robertconstantindinescu.my_social_network.presentation.ui.theme.SpaceLarge
-import com.robertconstantindinescu.my_social_network.presentation.ui.theme.SpaceMedium
+import com.robertconstantindinescu.my_social_network.core.presentation.components.StandardTextField
+import com.robertconstantindinescu.my_social_network.core.presentation.ui.theme.SpaceLarge
+import com.robertconstantindinescu.my_social_network.core.presentation.ui.theme.SpaceMedium
+import com.robertconstantindinescu.my_social_network.core.presentation.util.asString
 import com.robertconstantindinescu.my_social_network.core.util.Constants
 import com.robertconstantindinescu.my_social_network.feature_auth.domain.models.AuthError
+import kotlinx.coroutines.flow.collectLatest
 
 
 @Composable
 fun RegisterScreen(
     navController: NavController,
+    scaffoldState: ScaffoldState,
     viewModel: RegisterViewModel = hiltViewModel()
 ) {
 
@@ -34,6 +37,22 @@ fun RegisterScreen(
     val usernameState = viewModel.usernameState.value
     val emailState = viewModel.emailState.value
     val passwordState = viewModel.passwordState.value
+    val registerState = viewModel.registerState.value
+
+    val context = LocalContext.current
+
+    LaunchedEffect(key1 = true){
+        viewModel.eventFlow.collectLatest { event ->
+            when(event){
+                is RegisterViewModel.UiEvent.SnackBarEvent -> {
+                    scaffoldState.snackbarHostState.showSnackbar(
+                        message = event.uiText.asString(context),
+                        duration = SnackbarDuration.Long
+                    )
+                }
+            }
+        }
+    }
 
     Box(
         modifier = Modifier
@@ -126,12 +145,17 @@ fun RegisterScreen(
                 onClick = {
                           viewModel.onEvent(RegisterEvent.Register)
                 },
+                //if we are not loading is enabled. If we are loading is disabled.
+                enabled = !registerState.isLoading,
                 modifier = Modifier.align(Alignment.End)
             ) {
                 Text(
                     text = stringResource(id = R.string.register),
                     color = MaterialTheme.colors.onPrimary
                 )
+            }
+            if (registerState.isLoading){
+                CircularProgressIndicator()
             }
 
 

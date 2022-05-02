@@ -14,14 +14,13 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.robertconstantindinescu.my_social_network.R
 import com.robertconstantindinescu.my_social_network.core.domain.models.User
-import com.robertconstantindinescu.my_social_network.presentation.components.StandardTextField
-import com.robertconstantindinescu.my_social_network.presentation.components.StandardToolBar
-import com.robertconstantindinescu.my_social_network.presentation.components.UserProfileItem
-import com.robertconstantindinescu.my_social_network.presentation.ui.theme.IconSizeMedium
-import com.robertconstantindinescu.my_social_network.presentation.ui.theme.SpaceLarge
-import com.robertconstantindinescu.my_social_network.presentation.ui.theme.SpaceMedium
+import com.robertconstantindinescu.my_social_network.core.presentation.components.StandardTextField
+import com.robertconstantindinescu.my_social_network.core.presentation.components.StandardToolBar
+import com.robertconstantindinescu.my_social_network.core.presentation.components.UserProfileItem
+import com.robertconstantindinescu.my_social_network.core.presentation.ui.theme.IconSizeMedium
+import com.robertconstantindinescu.my_social_network.core.presentation.ui.theme.SpaceLarge
+import com.robertconstantindinescu.my_social_network.core.presentation.ui.theme.SpaceMedium
 import com.robertconstantindinescu.my_social_network.core.domain.states.StandardTextFieldState
-import com.robertconstantindinescu.my_social_network.feature_profile.presentation.util.EditProfileError
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable

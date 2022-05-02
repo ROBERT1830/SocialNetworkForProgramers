@@ -4,8 +4,8 @@ import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.navigation.NavController
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.robertconstantindinescu.my_social_network.presentation.MainActivity
-import com.robertconstantindinescu.my_social_network.presentation.ui.theme.My_social_networkTheme
+import com.robertconstantindinescu.my_social_network.core.presentation.MainActivity
+import com.robertconstantindinescu.my_social_network.core.presentation.ui.theme.My_social_networkTheme
 import com.robertconstantindinescu.my_social_network.core.util.Screen
 import com.robertconstantindinescu.my_social_network.core.util.Constants
 import io.mockk.MockKAnnotations

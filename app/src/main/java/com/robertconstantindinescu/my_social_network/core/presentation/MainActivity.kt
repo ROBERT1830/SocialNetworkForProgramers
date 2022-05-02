@@ -1,4 +1,4 @@
-package com.robertconstantindinescu.my_social_network.presentation
+package com.robertconstantindinescu.my_social_network.core.presentation
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -6,12 +6,13 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
+import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.robertconstantindinescu.my_social_network.presentation.components.StandardScaffold
-import com.robertconstantindinescu.my_social_network.presentation.ui.theme.My_social_networkTheme
+import com.robertconstantindinescu.my_social_network.core.presentation.components.StandardScaffold
+import com.robertconstantindinescu.my_social_network.core.presentation.ui.theme.My_social_networkTheme
 import com.robertconstantindinescu.my_social_network.presentation.util.Navigation
 import com.robertconstantindinescu.my_social_network.core.util.Screen
 import dagger.hilt.android.AndroidEntryPoint
@@ -32,6 +33,7 @@ class MainActivity : ComponentActivity() {
                 ) {
                     val navController = rememberNavController()
                     val navBackStackEntry by navController.currentBackStackEntryAsState()
+                    val scaffoldState = rememberScaffoldState()
                     StandardScaffold(
                         modifier = Modifier.fillMaxSize(),
                         navController = navController,
@@ -42,6 +44,7 @@ class MainActivity : ComponentActivity() {
                             Screen.ActivityScreen.route,
                             Screen.ProfileScreen.route,
                         ),
+                        state = scaffoldState,
 //                        showBackArrow = navBackStackEntry?.destination?.route in listOf(
 //                            Screen.PostDetailScreen.route,
 //                            Screen.MessagesScreen.route,
@@ -59,7 +62,7 @@ class MainActivity : ComponentActivity() {
                             navController.navigate(Screen.CreatePostScreen.route)
                         }
                     ) {
-                        Navigation(navController = navController)
+                        Navigation(navController = navController, scaffoldState = scaffoldState)
                     }
 
 

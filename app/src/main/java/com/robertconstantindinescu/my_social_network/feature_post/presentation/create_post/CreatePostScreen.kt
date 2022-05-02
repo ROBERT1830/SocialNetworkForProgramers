@@ -16,11 +16,11 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.robertconstantindinescu.my_social_network.R
-import com.robertconstantindinescu.my_social_network.presentation.components.StandardTextField
-import com.robertconstantindinescu.my_social_network.presentation.components.StandardToolBar
-import com.robertconstantindinescu.my_social_network.presentation.ui.theme.SpaceLarge
-import com.robertconstantindinescu.my_social_network.presentation.ui.theme.SpaceMedium
-import com.robertconstantindinescu.my_social_network.presentation.ui.theme.SpaceSmall
+import com.robertconstantindinescu.my_social_network.core.presentation.components.StandardTextField
+import com.robertconstantindinescu.my_social_network.core.presentation.components.StandardToolBar
+import com.robertconstantindinescu.my_social_network.core.presentation.ui.theme.SpaceLarge
+import com.robertconstantindinescu.my_social_network.core.presentation.ui.theme.SpaceMedium
+import com.robertconstantindinescu.my_social_network.core.presentation.ui.theme.SpaceSmall
 import com.robertconstantindinescu.my_social_network.core.domain.states.StandardTextFieldState
 import com.robertconstantindinescu.my_social_network.feature_post.presentation.util.PostDescriptionError
 

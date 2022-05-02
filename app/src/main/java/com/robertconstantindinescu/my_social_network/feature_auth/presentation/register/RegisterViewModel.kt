@@ -4,16 +4,27 @@ import android.util.Patterns
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.robertconstantindinescu.my_social_network.R
 import com.robertconstantindinescu.my_social_network.core.domain.states.PasswordTextFieldState
 import com.robertconstantindinescu.my_social_network.core.domain.states.StandardTextFieldState
 import com.robertconstantindinescu.my_social_network.core.util.Constants.MIN_PASSWORD_LENGTH
 import com.robertconstantindinescu.my_social_network.core.util.Constants.MIN_USERNAME_LENGTH
+import com.robertconstantindinescu.my_social_network.core.util.Resource
+import com.robertconstantindinescu.my_social_network.core.util.UiText
 import com.robertconstantindinescu.my_social_network.feature_auth.domain.models.AuthError
+import com.robertconstantindinescu.my_social_network.feature_auth.domain.use_case.RegisterUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+//gets data from use cases and maps it to state useful for ui.
 @HiltViewModel
-class RegisterViewModel @Inject constructor(): ViewModel() {
+class RegisterViewModel @Inject constructor(
+    private val registerUseCase: RegisterUseCase
+): ViewModel() {
 
     /**
      * We decided to do a state for each and every field because when you change a
@@ -33,7 +44,13 @@ class RegisterViewModel @Inject constructor(): ViewModel() {
     private val _passwordState = mutableStateOf(PasswordTextFieldState())
     val passwordState: State<PasswordTextFieldState> = _passwordState
 
+    //state that disables the button when currently registring
 
+    private val _registerState = mutableStateOf<RegisterState>(RegisterState())
+    val registerState: State<RegisterState> = _registerState
+
+    private val _eventFlow = MutableSharedFlow<UiEvent>()
+    val eventFlow = _eventFlow.asSharedFlow()
 
     fun onEvent(event: RegisterEvent){
         when(event){
@@ -58,11 +75,53 @@ class RegisterViewModel @Inject constructor(): ViewModel() {
                 )
                 validateEmail(emailState.value.text)
                 validatePassword(passwordState.value.text)
+                registerIfNoErrors()
             }
             is RegisterEvent.TogglePasswordVisibility -> {
                 _passwordState.value = _passwordState.value.copy(
                     isPasswordVisible = !passwordState.value.isPasswordVisible
                 )
+            }
+        }
+    }
+
+    private fun registerIfNoErrors(){
+        if (this.emailState.value.error != null
+            && usernameState.value.error != null
+            && passwordState.value.error != null){
+            return
+        }
+        viewModelScope.launch {
+            _registerState.value = RegisterState(
+                isLoading = true
+            )
+            val result = registerUseCase(
+                email = emailState.value.text,
+                username = usernameState.value.text,
+                password = passwordState.value.text
+            )
+            when(result){
+                is Resource.Success -> {
+                    //create another register state
+                    _registerState.value = RegisterState(
+                        successful = true,
+                        message = null,
+                        isLoading = false
+                    )
+                    _eventFlow.emit(
+                        UiEvent.SnackBarEvent(UiText.StringResource( R.string.success_registration))
+                    )
+                }
+                is Resource.Error -> {
+                    _registerState.value = RegisterState(
+                        successful = false,
+                        message = result.uiText,
+                        isLoading = false
+                    )
+                    _eventFlow.emit(
+                        UiEvent.SnackBarEvent(result.uiText ?: UiText.unknownError())
+                    )
+                }
             }
         }
     }
@@ -136,6 +195,11 @@ class RegisterViewModel @Inject constructor(): ViewModel() {
         _passwordState.value = _passwordState.value.copy(
             error = null
         )
+    }
+
+
+    sealed class UiEvent {
+        data class SnackBarEvent(val uiText: UiText):UiEvent()
     }
 }
 

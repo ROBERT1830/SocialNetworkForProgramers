@@ -15,8 +15,8 @@ import com.robertconstantindinescu.my_social_network.R
 import com.robertconstantindinescu.my_social_network.core.domain.models.Activity
 import com.robertconstantindinescu.my_social_network.domain.util.ActivityAction
 import com.robertconstantindinescu.my_social_network.core.util.DateFormatUtil
-import com.robertconstantindinescu.my_social_network.presentation.components.StandardToolBar
-import com.robertconstantindinescu.my_social_network.presentation.ui.theme.*
+import com.robertconstantindinescu.my_social_network.core.presentation.components.StandardToolBar
+import com.robertconstantindinescu.my_social_network.core.presentation.ui.theme.*
 import kotlin.random.Random
 
 @Composable

@@ -22,9 +22,9 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.robertconstantindinescu.my_social_network.R
 import com.robertconstantindinescu.my_social_network.core.domain.models.Post
-import com.robertconstantindinescu.my_social_network.presentation.components.ActionRow
-import com.robertconstantindinescu.my_social_network.presentation.components.StandardToolBar
-import com.robertconstantindinescu.my_social_network.presentation.ui.theme.*
+import com.robertconstantindinescu.my_social_network.core.presentation.components.ActionRow
+import com.robertconstantindinescu.my_social_network.core.presentation.components.StandardToolBar
+import com.robertconstantindinescu.my_social_network.core.presentation.ui.theme.*
 
 import com.robertconstantindinescu.my_social_network.core.domain.models.Comment
 

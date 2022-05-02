@@ -16,8 +16,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.robertconstantindinescu.my_social_network.R
 import com.robertconstantindinescu.my_social_network.core.domain.models.User
-import com.robertconstantindinescu.my_social_network.presentation.ui.theme.SpaceMedium
-import com.robertconstantindinescu.my_social_network.presentation.ui.theme.SpaceSmall
+import com.robertconstantindinescu.my_social_network.core.presentation.ui.theme.SpaceMedium
+import com.robertconstantindinescu.my_social_network.core.presentation.ui.theme.SpaceSmall
 
 @Composable
 fun ProfileHeaderSection(

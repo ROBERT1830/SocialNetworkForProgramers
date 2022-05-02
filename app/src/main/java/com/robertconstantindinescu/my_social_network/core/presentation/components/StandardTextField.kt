@@ -1,4 +1,4 @@
-package com.robertconstantindinescu.my_social_network.presentation.components
+package com.robertconstantindinescu.my_social_network.core.presentation.components
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -22,7 +22,7 @@ import androidx.compose.ui.text.style.TextAlign
 import com.robertconstantindinescu.my_social_network.R
 import com.robertconstantindinescu.my_social_network.core.util.TestTags
 import androidx.compose.ui.text.TextStyle
-import com.robertconstantindinescu.my_social_network.presentation.ui.theme.IconSizeMedium
+import com.robertconstantindinescu.my_social_network.core.presentation.ui.theme.IconSizeMedium
 
 @Composable
 fun StandardTextField(

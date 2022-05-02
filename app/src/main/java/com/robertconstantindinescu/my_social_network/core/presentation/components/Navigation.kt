@@ -1,5 +1,6 @@
 package com.robertconstantindinescu.my_social_network.presentation.util
 
+import androidx.compose.material.ScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -21,7 +22,8 @@ import com.robertconstantindinescu.my_social_network.feature_profile.presentatio
 
 @Composable
 fun Navigation(
-    navController: NavHostController
+    navController: NavHostController,
+    scaffoldState: ScaffoldState
 ) {
     //val navController = rememberNavController()
     NavHost(
@@ -37,7 +39,7 @@ fun Navigation(
             LoginScreen(navController = navController)
         }
         composable(Screen.RegisterScreen.route) {
-            RegisterScreen(navController = navController)
+            RegisterScreen(navController = navController, scaffoldState = scaffoldState)
         }
         //Bottom
         composable(Screen.MainFeedScreen.route) {

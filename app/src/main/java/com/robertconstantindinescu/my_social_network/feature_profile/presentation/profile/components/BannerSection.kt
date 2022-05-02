@@ -16,8 +16,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.robertconstantindinescu.my_social_network.R
-import com.robertconstantindinescu.my_social_network.presentation.ui.theme.SpaceMedium
-import com.robertconstantindinescu.my_social_network.presentation.ui.theme.SpaceSmall
+import com.robertconstantindinescu.my_social_network.core.presentation.ui.theme.SpaceMedium
+import com.robertconstantindinescu.my_social_network.core.presentation.ui.theme.SpaceSmall
 import com.robertconstantindinescu.my_social_network.presentation.util.toPx
 
 @Composable

@@ -1,4 +1,4 @@
-package com.robertconstantindinescu.my_social_network.presentation.components
+package com.robertconstantindinescu.my_social_network.core.presentation.components
 
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.getValue
@@ -15,7 +15,7 @@ import androidx.compose.ui.test.performTextClearance
 import androidx.compose.ui.test.performTextInput
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.robertconstantindinescu.my_social_network.presentation.MainActivity
+import com.robertconstantindinescu.my_social_network.core.presentation.MainActivity
 import com.robertconstantindinescu.my_social_network.core.util.TestTags.STANDARD_TEXT_FIELD
 import org.junit.Assert.*
 import org.junit.Rule

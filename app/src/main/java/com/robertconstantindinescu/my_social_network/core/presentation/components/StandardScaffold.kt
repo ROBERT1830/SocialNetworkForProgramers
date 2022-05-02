@@ -1,4 +1,4 @@
-package com.robertconstantindinescu.my_social_network.presentation.components
+package com.robertconstantindinescu.my_social_network.core.presentation.components
 
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -23,6 +23,7 @@ fun StandardScaffold(
     navController: NavController,
     modifier: Modifier = Modifier,
     showBottomBar: Boolean = true,
+    state: ScaffoldState,
     showToolbar: Boolean = false,
     showBackArrow: Boolean = true,
     //Lambda that represents a composable. Need to have access to RowScope.
@@ -99,6 +100,7 @@ fun StandardScaffold(
 
 
         },
+        scaffoldState = state,
         floatingActionButton = {
             if (showBottomBar) {
                 FloatingActionButton(

@@ -1,4 +1,4 @@
-package com.robertconstantindinescu.my_social_network.presentation.ui.theme
+package com.robertconstantindinescu.my_social_network.core.presentation.ui.theme
 
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.darkColors

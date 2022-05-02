@@ -1,4 +1,4 @@
-package com.robertconstantindinescu.my_social_network.presentation.components
+package com.robertconstantindinescu.my_social_network.core.presentation.components
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
@@ -14,7 +14,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.robertconstantindinescu.my_social_network.R
 import com.robertconstantindinescu.my_social_network.core.domain.models.User
-import com.robertconstantindinescu.my_social_network.presentation.ui.theme.*
+import com.robertconstantindinescu.my_social_network.core.presentation.ui.theme.*
 
 @ExperimentalMaterialApi
 @Composable

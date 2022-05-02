@@ -11,8 +11,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.navigation.NavController
 import com.robertconstantindinescu.my_social_network.R
-import com.robertconstantindinescu.my_social_network.presentation.components.Post
-import com.robertconstantindinescu.my_social_network.presentation.components.StandardToolBar
+import com.robertconstantindinescu.my_social_network.core.presentation.components.Post
+import com.robertconstantindinescu.my_social_network.core.presentation.components.StandardToolBar
 import com.robertconstantindinescu.my_social_network.core.util.Screen
 
 @Composable

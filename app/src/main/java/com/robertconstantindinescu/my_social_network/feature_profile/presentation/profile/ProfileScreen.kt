@@ -29,12 +29,12 @@ import androidx.navigation.NavController
 import com.robertconstantindinescu.my_social_network.R
 import com.robertconstantindinescu.my_social_network.core.domain.models.Post
 import com.robertconstantindinescu.my_social_network.core.domain.models.User
-import com.robertconstantindinescu.my_social_network.presentation.components.Post
+import com.robertconstantindinescu.my_social_network.core.presentation.components.Post
 import com.robertconstantindinescu.my_social_network.feature_profile.presentation.profile.components.BannerSection
 import com.robertconstantindinescu.my_social_network.feature_profile.presentation.profile.components.ProfileHeaderSection
-import com.robertconstantindinescu.my_social_network.presentation.ui.theme.ProfilePictureSizeLage
-import com.robertconstantindinescu.my_social_network.presentation.ui.theme.SpaceMedium
-import com.robertconstantindinescu.my_social_network.presentation.ui.theme.SpaceSmall
+import com.robertconstantindinescu.my_social_network.core.presentation.ui.theme.ProfilePictureSizeLage
+import com.robertconstantindinescu.my_social_network.core.presentation.ui.theme.SpaceMedium
+import com.robertconstantindinescu.my_social_network.core.presentation.ui.theme.SpaceSmall
 import com.robertconstantindinescu.my_social_network.core.util.Screen
 import com.robertconstantindinescu.my_social_network.presentation.util.toPx
 

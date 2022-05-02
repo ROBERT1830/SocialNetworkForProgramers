@@ -15,8 +15,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import com.robertconstantindinescu.my_social_network.R
 import com.robertconstantindinescu.my_social_network.core.domain.models.User
-import com.robertconstantindinescu.my_social_network.presentation.ui.theme.SpaceLarge
-import com.robertconstantindinescu.my_social_network.presentation.ui.theme.SpaceMedium
+import com.robertconstantindinescu.my_social_network.core.presentation.ui.theme.SpaceLarge
+import com.robertconstantindinescu.my_social_network.core.presentation.ui.theme.SpaceMedium
 
 @Composable
 fun ProfileStats(
