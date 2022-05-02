@@ -1,6 +1,11 @@
 package com.robertconstantindinescu.my_social_network.feature_auth.domain.use_case
 
+import android.util.Patterns
+import com.robertconstantindinescu.my_social_network.core.domain.util.ValidationUtil
+import com.robertconstantindinescu.my_social_network.core.util.Constants
 import com.robertconstantindinescu.my_social_network.core.util.SimpleResource
+import com.robertconstantindinescu.my_social_network.feature_auth.domain.models.AuthError
+import com.robertconstantindinescu.my_social_network.feature_auth.domain.models.RegisterResult
 import com.robertconstantindinescu.my_social_network.feature_auth.domain.repository.AuthRepository
 
 /**
@@ -17,11 +22,30 @@ class RegisterUseCase(
 ) {
 
     suspend operator fun invoke(
-        email:String,
+        email: String,
         username: String,
-        password:String
-    ): SimpleResource {
+        password: String
+    ): RegisterResult {
 
-        return repository.register(email.trim(), username.trim(), password.trim())
+        val emailError = ValidationUtil.validateEmail(email)
+        val usernameError = ValidationUtil.validateUsername(username)
+        val passwordError = ValidationUtil.validatePassword(password)
+
+        //if we have at least 1 error
+        if (emailError != null || usernameError != null || passwordError != null){
+            //return the errors but not the result
+            return RegisterResult(
+                emailError = emailError,
+                usernameError = usernameError,
+                passwordError = passwordError,
+
+            )
+        }
+
+        val result =  repository.register(email.trim(), username.trim(), password.trim())
+        //if there is no error then return only there sult
+        return  RegisterResult(
+            result = result
+        )
     }
 }

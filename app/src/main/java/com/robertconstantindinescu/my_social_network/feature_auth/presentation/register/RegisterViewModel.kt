@@ -1,6 +1,5 @@
 package com.robertconstantindinescu.my_social_network.feature_auth.presentation.register
 
-import android.util.Patterns
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
@@ -8,11 +7,8 @@ import androidx.lifecycle.viewModelScope
 import com.robertconstantindinescu.my_social_network.R
 import com.robertconstantindinescu.my_social_network.core.domain.states.PasswordTextFieldState
 import com.robertconstantindinescu.my_social_network.core.domain.states.StandardTextFieldState
-import com.robertconstantindinescu.my_social_network.core.util.Constants.MIN_PASSWORD_LENGTH
-import com.robertconstantindinescu.my_social_network.core.util.Constants.MIN_USERNAME_LENGTH
 import com.robertconstantindinescu.my_social_network.core.util.Resource
 import com.robertconstantindinescu.my_social_network.core.util.UiText
-import com.robertconstantindinescu.my_social_network.feature_auth.domain.models.AuthError
 import com.robertconstantindinescu.my_social_network.feature_auth.domain.use_case.RegisterUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -35,6 +31,7 @@ class RegisterViewModel @Inject constructor(
      * So havin a state for each input is a better performance ui.
      */
 
+    //state is persistent , shared is not.
     private val _emailState = mutableStateOf(StandardTextFieldState())
     val emailState: State<StandardTextFieldState> = _emailState
 
@@ -49,6 +46,7 @@ class RegisterViewModel @Inject constructor(
     private val _registerState = mutableStateOf<RegisterState>(RegisterState())
     val registerState: State<RegisterState> = _registerState
 
+    //can have multiple suscribers. Channel only can have one susbscriber
     private val _eventFlow = MutableSharedFlow<UiEvent>()
     val eventFlow = _eventFlow.asSharedFlow()
 
@@ -70,12 +68,7 @@ class RegisterViewModel @Inject constructor(
                 )
             }
             is RegisterEvent.Register -> {
-                validateUsername(
-                    usernameState.value.text
-                )
-                validateEmail(emailState.value.text)
-                validatePassword(passwordState.value.text)
-                registerIfNoErrors()
+                register()
             }
             is RegisterEvent.TogglePasswordVisibility -> {
                 _passwordState.value = _passwordState.value.copy(
@@ -85,22 +78,46 @@ class RegisterViewModel @Inject constructor(
         }
     }
 
-    private fun registerIfNoErrors(){
-        if (this.emailState.value.error != null
-            && usernameState.value.error != null
-            && passwordState.value.error != null){
-            return
-        }
+    private fun register(){
+        //not needed because we check it down there
+//        if (this.emailState.value.error != null
+//            && usernameState.value.error != null
+//            && passwordState.value.error != null){
+//            return
+//        }
         viewModelScope.launch {
             _registerState.value = RegisterState(
                 isLoading = true
             )
-            val result = registerUseCase(
+
+            _usernameState.value = usernameState.value.copy(error = null)
+            _emailState.value = emailState.value.copy(error = null)
+            _passwordState.value = passwordState.value.copy(error = null)
+
+            val registerResult = registerUseCase(
                 email = emailState.value.text,
                 username = usernameState.value.text,
                 password = passwordState.value.text
             )
-            when(result){
+
+            if (registerResult.emailError != null){
+                _emailState.value = emailState.value.copy(
+                    error = registerResult.emailError
+                )
+            }
+            if (registerResult.usernameError != null){
+                _usernameState.value = usernameState.value.copy(
+                    error = registerResult.usernameError
+                )
+            }
+            if (registerResult.passwordError != null){
+                _passwordState.value = passwordState.value.copy(
+                    error = registerResult.passwordError
+                )
+            }
+
+
+            when(registerResult.result){
                 is Resource.Success -> {
                     //create another register state
                     _registerState.value = RegisterState(
@@ -111,92 +128,26 @@ class RegisterViewModel @Inject constructor(
                     _eventFlow.emit(
                         UiEvent.SnackBarEvent(UiText.StringResource( R.string.success_registration))
                     )
+                    //clear the text and erorr by using an other instance of the StandardTextFieldState
+                    _usernameState.value = StandardTextFieldState()
+                    _emailState.value = StandardTextFieldState()
+                    _passwordState.value = PasswordTextFieldState()
                 }
                 is Resource.Error -> {
                     _registerState.value = RegisterState(
                         successful = false,
-                        message = result.uiText,
+                        message = registerResult.result.uiText,
                         isLoading = false
                     )
                     _eventFlow.emit(
-                        UiEvent.SnackBarEvent(result.uiText ?: UiText.unknownError())
+                        UiEvent.SnackBarEvent(registerResult.result.uiText ?: UiText.unknownError())
                     )
                 }
+                //if happened an erro the result is null
+                null -> _registerState.value = RegisterState(isLoading = false)
             }
         }
     }
-
-    private fun validateUsername(username: String){
-        val trimmedUsername = username.trim()
-        if (trimmedUsername.isBlank()){
-            _usernameState.value = _usernameState.value.copy(
-                error = AuthError.FieldEmpty
-            )
-            return
-        }
-        if (trimmedUsername.length < MIN_USERNAME_LENGTH){
-            _usernameState.value = _usernameState.value.copy(
-                error = AuthError.InputTooShor
-            )
-            return
-        }
-        //if filter passes then reset the error to null for not showing in the ui
-        _usernameState.value = _usernameState.value.copy(
-            error = null
-        )
-    }
-    private fun validateEmail(email: String){
-        val trimmedEmail = email.trim()
-        if (trimmedEmail.isBlank()){
-            _emailState.value = _emailState.value.copy(
-                error = AuthError.FieldEmpty
-            )
-            return
-        }
-        if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()){
-            _emailState.value = _emailState.value.copy(
-                error = AuthError.InvalidEmail
-            )
-            return
-        }
-        _emailState.value = _emailState.value.copy(
-            error = null
-        )
-    }
-
-    private fun validatePassword(password: String){
-        if (password.isBlank()){
-            _passwordState.value = _passwordState.value.copy(
-                error = AuthError.FieldEmpty
-            )
-            return
-        }
-        if (password.length < MIN_PASSWORD_LENGTH){
-            _passwordState.value = _passwordState.value.copy(
-                error = AuthError.InputTooShor
-            )
-            return
-        }
-
-        //any --> returns true if a character matches the condition
-        val capitalLettersInPassword = password.any{
-             it.isUpperCase()
-        }
-        val numberInPassword = password.any{
-            it.isDigit()
-        }
-
-        if (!capitalLettersInPassword || !numberInPassword){
-            _passwordState.value = _passwordState.value.copy(
-                error = AuthError.InvalidPassword
-            )
-            return
-        }
-        _passwordState.value = _passwordState.value.copy(
-            error = null
-        )
-    }
-
 
     sealed class UiEvent {
         data class SnackBarEvent(val uiText: UiText):UiEvent()
