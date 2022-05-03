@@ -2,7 +2,11 @@ package com.robertconstantindinescu.my_social_network.feature_auth.data.remote
 
 import com.robertconstantindinescu.my_social_network.core.data.dto.response.BasicApiResponse
 import com.robertconstantindinescu.my_social_network.feature_auth.data.dto.request.CreateAccountRequest
+import com.robertconstantindinescu.my_social_network.feature_auth.data.dto.request.LoginRequest
+import com.robertconstantindinescu.my_social_network.feature_auth.data.dto.response.AuthResponse
+import retrofit2.Response
 import retrofit2.http.Body
+import retrofit2.http.GET
 import retrofit2.http.POST
 
 interface AuthApi {
@@ -12,8 +16,22 @@ interface AuthApi {
         //@Body ---> The object will be serialized using the Retrofit instance Converter and the
         // result will be set directly as the request body
         @Body request: CreateAccountRequest
-    ): BasicApiResponse
+    ): BasicApiResponse<Unit>
 
+
+    /**
+     * Here when we create the token and then we send it back from server. So the
+     * return type must be AuthResponse.
+     * But hte thing is that when the checking password failed a BasciApirESPONSE IS SEND
+     * So we need a way to parse both
+     */
+    @POST("api/user/login")
+    suspend fun login(
+        @Body request: LoginRequest
+    ): BasicApiResponse<AuthResponse>
+
+    @GET("api/user/authenticate")
+    suspend fun authenticate() //Not return anything
 
     /**
      * We put the base url here and not in a global constants file because that maybe at some

@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.robertconstantindinescu.my_social_network.R
 import com.robertconstantindinescu.my_social_network.core.domain.states.PasswordTextFieldState
 import com.robertconstantindinescu.my_social_network.core.domain.states.StandardTextFieldState
+import com.robertconstantindinescu.my_social_network.core.presentation.util.UiEvent
 import com.robertconstantindinescu.my_social_network.core.util.Resource
 import com.robertconstantindinescu.my_social_network.core.util.UiText
 import com.robertconstantindinescu.my_social_network.feature_auth.domain.use_case.RegisterUseCase
@@ -147,10 +148,6 @@ class RegisterViewModel @Inject constructor(
                 null -> _registerState.value = RegisterState(isLoading = false)
             }
         }
-    }
-
-    sealed class UiEvent {
-        data class SnackBarEvent(val uiText: UiText):UiEvent()
     }
 }
 

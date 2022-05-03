@@ -75,7 +75,7 @@ fun CreatePostScreen(
                 hint = stringResource(id = R.string.description),
                 error = when (viewModel.descriptionSate.value.error) {
                     is PostDescriptionError.FieldEmpty -> {
-                        stringResource(id = R.string.this_field_cant_be_empty)
+                        stringResource(id = R.string.error_field_empty)
                     }
                     else -> ""
                 },

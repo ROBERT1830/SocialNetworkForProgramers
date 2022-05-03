@@ -28,4 +28,15 @@ interface AuthRepository {
         username: String,
         password:String
     ): SimpleResource //is Resource<T> a seled class
+
+    suspend fun login(
+        email: String,
+        password: String
+    ): SimpleResource
+    /**
+     * The token is gona be stored in shared pref and will be attatched in each and every request
+     * So will be placed in the data layer.We have to think that if will leave the data layer or not
+     */
+
+    suspend fun authenticate(): SimpleResource
 }

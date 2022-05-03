@@ -20,6 +20,7 @@ import com.robertconstantindinescu.my_social_network.R
 import com.robertconstantindinescu.my_social_network.core.presentation.components.StandardTextField
 import com.robertconstantindinescu.my_social_network.core.presentation.ui.theme.SpaceLarge
 import com.robertconstantindinescu.my_social_network.core.presentation.ui.theme.SpaceMedium
+import com.robertconstantindinescu.my_social_network.core.presentation.util.UiEvent
 import com.robertconstantindinescu.my_social_network.core.presentation.util.asString
 import com.robertconstantindinescu.my_social_network.core.util.Constants
 import com.robertconstantindinescu.my_social_network.feature_auth.domain.models.AuthError
@@ -44,7 +45,7 @@ fun RegisterScreen(
     LaunchedEffect(key1 = true){
         viewModel.eventFlow.collectLatest { event ->
             when(event){
-                is RegisterViewModel.UiEvent.SnackBarEvent -> {
+                is UiEvent.SnackBarEvent -> {
                     scaffoldState.snackbarHostState.showSnackbar(
                         message = event.uiText.asString(context),
                         duration = SnackbarDuration.Long
@@ -85,7 +86,7 @@ fun RegisterScreen(
                 keyBoardType = KeyboardType.Email,
                 error = when (emailState.error) {
                      is AuthError.FieldEmpty -> {
-                        stringResource(id = R.string.this_field_cant_be_empty)
+                        stringResource(id = R.string.error_field_empty)
                     }
                      is AuthError.InvalidEmail -> {
                         stringResource(id = R.string.not_valid_email)
@@ -103,7 +104,7 @@ fun RegisterScreen(
                 },
                 error = when (viewModel.usernameState.value.error) {
                     is AuthError.FieldEmpty -> {
-                        stringResource(id = R.string.this_field_cant_be_empty)
+                        stringResource(id = R.string.error_field_empty)
                     }
                     is AuthError.InputTooShor -> {
                         stringResource(id = R.string.input_too_short, Constants.MIN_USERNAME_LENGTH)
@@ -123,7 +124,7 @@ fun RegisterScreen(
                 keyBoardType = KeyboardType.Password,
                 error = when (passwordState.error) {
                     is AuthError.FieldEmpty -> {
-                        stringResource(id = R.string.this_field_cant_be_empty)
+                        stringResource(id = R.string.error_field_empty)
                     }
                     is AuthError.InputTooShor -> {
                         stringResource(id = R.string.input_too_short, Constants.MIN_PASSWORD_LENGTH)

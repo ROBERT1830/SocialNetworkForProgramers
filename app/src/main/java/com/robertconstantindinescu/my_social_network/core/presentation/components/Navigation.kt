@@ -13,11 +13,11 @@ import com.robertconstantindinescu.my_social_network.core.util.Screen
 import com.robertconstantindinescu.my_social_network.presentation.PersonListScreen
 import com.robertconstantindinescu.my_social_network.feature_post.presentation.create_post.CreatePostScreen
 import com.robertconstantindinescu.my_social_network.feature_profile.presentation.edit_profile.EditProfileScreen
-import com.robertconstantindinescu.my_social_network.feature_splash.presentation.splash.SplashScreen
 import com.robertconstantindinescu.my_social_network.feature_auth.presentation.login.LoginScreen
 import com.robertconstantindinescu.my_social_network.feature_post.presentation.post_detail.PostDetailScreen
 import com.robertconstantindinescu.my_social_network.feature_profile.presentation.profile.ProfileScreen
 import com.robertconstantindinescu.my_social_network.feature_auth.presentation.register.RegisterScreen
+import com.robertconstantindinescu.my_social_network.feature_auth.presentation.splash.SplashScreen
 import com.robertconstantindinescu.my_social_network.feature_profile.presentation.search.SearchScreen
 
 @Composable
@@ -36,7 +36,7 @@ fun Navigation(
 
         }
         composable(route = Screen.LoginScreen.route) {
-            LoginScreen(navController = navController)
+            LoginScreen(navController = navController, scaffoldState = scaffoldState)
         }
         composable(Screen.RegisterScreen.route) {
             RegisterScreen(navController = navController, scaffoldState = scaffoldState)

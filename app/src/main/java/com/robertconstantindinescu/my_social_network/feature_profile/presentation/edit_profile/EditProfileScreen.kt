@@ -104,7 +104,7 @@ fun EditProfileScreen(
                     hint = stringResource(id = R.string.user_name),
                     error = when (viewModel.usernameState.value.error) {
                         is EditProfileError.FieldEmpty -> {
-                            stringResource(id = R.string.this_field_cant_be_empty)
+                            stringResource(id = R.string.error_field_empty)
                         }
                         else -> ""
 
@@ -123,7 +123,7 @@ fun EditProfileScreen(
                     hint = stringResource(id = R.string.github_profile_url),
                     error = when (viewModel.githubTextFiledState.value.error) {
                         is EditProfileError.FieldEmpty -> {
-                            stringResource(id = R.string.this_field_cant_be_empty)
+                            stringResource(id = R.string.error_field_empty)
                         }
                         else -> ""
 
@@ -142,7 +142,7 @@ fun EditProfileScreen(
                     hint = stringResource(id = R.string.instagram_profile_url),
                     error = when (viewModel.instagramTextFieldState.value.error) {
                         is EditProfileError.FieldEmpty -> {
-                            stringResource(id = R.string.this_field_cant_be_empty)
+                            stringResource(id = R.string.error_field_empty)
                         }
                         else -> ""
 
@@ -161,7 +161,7 @@ fun EditProfileScreen(
                     hint = stringResource(id = R.string.linked_in_profile),
                     error = when (viewModel.linkedInTextFieldState.value.error) {
                         is EditProfileError.FieldEmpty -> {
-                            stringResource(id = R.string.this_field_cant_be_empty)
+                            stringResource(id = R.string.error_field_empty)
                         }
                         else -> ""
 
@@ -180,7 +180,7 @@ fun EditProfileScreen(
                     hint = stringResource(id = R.string.your_bio),
                     error = when (viewModel.bioState.value.error) {
                         is EditProfileError.FieldEmpty -> {
-                            stringResource(id = R.string.this_field_cant_be_empty)
+                            stringResource(id = R.string.error_field_empty)
                         }
                         else -> ""
 
