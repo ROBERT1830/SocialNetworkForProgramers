@@ -2,14 +2,13 @@ package com.robertconstantindinescu.my_social_network.feature_auth.data.reposito
 
 import android.content.SharedPreferences
 import com.robertconstantindinescu.my_social_network.R
-import com.robertconstantindinescu.my_social_network.core.data.dto.response.BasicApiResponse
 import com.robertconstantindinescu.my_social_network.core.util.Constants.KEY_JWT_TOKEN
 import com.robertconstantindinescu.my_social_network.core.util.Resource
 import com.robertconstantindinescu.my_social_network.core.util.SimpleResource
 import com.robertconstantindinescu.my_social_network.core.util.UiText
 import com.robertconstantindinescu.my_social_network.feature_auth.data.dto.request.CreateAccountRequest
 import com.robertconstantindinescu.my_social_network.feature_auth.data.dto.request.LoginRequest
-import com.robertconstantindinescu.my_social_network.feature_auth.data.remote.AuthApi
+import com.robertconstantindinescu.my_social_network.feature_auth.data.data_source.remote.AuthApi
 import com.robertconstantindinescu.my_social_network.feature_auth.domain.repository.AuthRepository
 import retrofit2.HttpException
 import java.io.IOException

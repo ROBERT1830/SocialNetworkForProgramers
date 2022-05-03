@@ -1,8 +1,8 @@
 package com.robertconstantindinescu.my_social_network.di
 
 import android.content.SharedPreferences
-import com.robertconstantindinescu.my_social_network.feature_auth.data.remote.AuthApi
-import com.robertconstantindinescu.my_social_network.feature_auth.data.remote.AuthApi.Companion.BASE_URL
+import com.robertconstantindinescu.my_social_network.feature_auth.data.data_source.remote.AuthApi
+import com.robertconstantindinescu.my_social_network.feature_auth.data.data_source.remote.AuthApi.Companion.BASE_URL
 import com.robertconstantindinescu.my_social_network.feature_auth.data.repository.AuthRepositoryImpl
 import com.robertconstantindinescu.my_social_network.feature_auth.domain.repository.AuthRepository
 import com.robertconstantindinescu.my_social_network.feature_auth.domain.use_case.AuthenticateUseCase
@@ -12,11 +12,9 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import kotlinx.coroutines.flow.MutableSharedFlow
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import retrofit2.create
 import javax.inject.Singleton
 
 @Module

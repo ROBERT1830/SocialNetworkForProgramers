@@ -125,4 +125,7 @@ dependencies {
 
     //More Icons
     implementation "androidx.compose.material:material-icons-extended:$compose_version"
+
+    // Paging 3.0
+    implementation 'androidx.paging:paging-compose:1.0.0-alpha14'
 }
