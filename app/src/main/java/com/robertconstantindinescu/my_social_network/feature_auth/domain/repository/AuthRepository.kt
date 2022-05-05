@@ -1,8 +1,6 @@
 package com.robertconstantindinescu.my_social_network.feature_auth.domain.repository
 
-import com.robertconstantindinescu.my_social_network.core.util.Resource
 import com.robertconstantindinescu.my_social_network.core.util.SimpleResource
-import com.robertconstantindinescu.my_social_network.feature_auth.data.dto.request.CreateAccountRequest
 
 interface AuthRepository {
     /**

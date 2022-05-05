@@ -1,5 +1,7 @@
 package com.robertconstantindinescu.my_social_network.feature_post.presentation.create_post
 
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -29,6 +31,17 @@ fun CreatePostScreen(
     navController: NavHostController,
     viewModel: CreatePostViewModel = hiltViewModel()
 ) {
+    val galleryLauncher =
+        rememberLauncherForActivityResult(
+            contract = ActivityResultContracts.GetContent() //this makes the user to pick content and will receive content://+Uri for the content.
+            //then to get acces to that content uri you need to use the content resolver
+
+            //with the uri that this gives us we will get the image we want to display
+            //we need a state for that uri
+        ) {
+            viewModel.onEvent(CreatePostEvent.PickImage(it))
+
+        }
 
     Column(
         modifier = Modifier.fillMaxSize()
@@ -50,6 +63,10 @@ fun CreatePostScreen(
                 .fillMaxSize()
                 .padding(SpaceLarge)
         ) {
+            /**
+             * This is the box for the iamge. So when we click taht we wanto to open
+             * the gallery
+             */
             Box(
                 modifier = Modifier
                     .aspectRatio(16f / 9f)
@@ -59,7 +76,10 @@ fun CreatePostScreen(
                         color = MaterialTheme.colors.onBackground,
                         shape = MaterialTheme.shapes.medium
                     )
-                    .clickable {},
+                    .clickable {
+                        // /* is to get all image types
+                        galleryLauncher.launch("image/*")
+                    },
                 contentAlignment = Alignment.Center
             ) {
                 Icon(
@@ -82,14 +102,16 @@ fun CreatePostScreen(
                 singleLine = false,
                 maxLines = 5,
                 onValueChange = {
-                    viewModel.setDescriptionState(
-                        StandardTextFieldState(text = it)
+                    viewModel.onEvent(
+                        CreatePostEvent.EnterDescription(it)
                     )
                 }
             )
             Spacer(modifier = Modifier.height(SpaceLarge))
             Button(
-                onClick = { /*TODO*/ },
+                onClick = {
+                          viewModel.onEvent(CreatePostEvent.PostImage)
+                },
                 modifier = Modifier.align(Alignment.End)
 
             ) {

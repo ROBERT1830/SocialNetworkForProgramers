@@ -6,8 +6,8 @@ import com.robertconstantindinescu.my_social_network.core.util.Constants.KEY_JWT
 import com.robertconstantindinescu.my_social_network.core.util.Resource
 import com.robertconstantindinescu.my_social_network.core.util.SimpleResource
 import com.robertconstantindinescu.my_social_network.core.util.UiText
-import com.robertconstantindinescu.my_social_network.feature_auth.data.dto.request.CreateAccountRequest
-import com.robertconstantindinescu.my_social_network.feature_auth.data.dto.request.LoginRequest
+import com.robertconstantindinescu.my_social_network.feature_auth.data.data_source.remote.dto.request.CreateAccountRequest
+import com.robertconstantindinescu.my_social_network.feature_auth.data.data_source.remote.dto.request.LoginRequest
 import com.robertconstantindinescu.my_social_network.feature_auth.data.data_source.remote.AuthApi
 import com.robertconstantindinescu.my_social_network.feature_auth.domain.repository.AuthRepository
 import retrofit2.HttpException

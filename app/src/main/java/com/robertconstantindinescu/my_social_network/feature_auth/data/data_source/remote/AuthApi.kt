@@ -1,9 +1,9 @@
 package com.robertconstantindinescu.my_social_network.feature_auth.data.data_source.remote
 
 import com.robertconstantindinescu.my_social_network.core.data.dto.response.BasicApiResponse
-import com.robertconstantindinescu.my_social_network.feature_auth.data.dto.request.CreateAccountRequest
-import com.robertconstantindinescu.my_social_network.feature_auth.data.dto.request.LoginRequest
-import com.robertconstantindinescu.my_social_network.feature_auth.data.dto.response.AuthResponse
+import com.robertconstantindinescu.my_social_network.feature_auth.data.data_source.remote.dto.request.CreateAccountRequest
+import com.robertconstantindinescu.my_social_network.feature_auth.data.data_source.remote.dto.request.LoginRequest
+import com.robertconstantindinescu.my_social_network.feature_auth.data.data_source.remote.dto.response.AuthResponse
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST

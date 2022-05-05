@@ -1,13 +1,17 @@
 package com.robertconstantindinescu.my_social_network.di
 
+import android.content.Context
+import com.google.gson.Gson
 import com.robertconstantindinescu.my_social_network.feature_post.data.data_source.remote.PostApi
 import com.robertconstantindinescu.my_social_network.feature_post.data.repository.PostRepositoryImpl
 import com.robertconstantindinescu.my_social_network.feature_post.domain.repository.PostRepository
+import com.robertconstantindinescu.my_social_network.feature_post.domain.use_case.CreatePostUseCae
 import com.robertconstantindinescu.my_social_network.feature_post.domain.use_case.GetPostForFollowsUseCase
 import com.robertconstantindinescu.my_social_network.feature_post.domain.use_case.PostUseCases
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
@@ -32,15 +36,16 @@ object PostModule {
 
     @Provides
     @Singleton
-    fun providesPostRepository(api: PostApi): PostRepository{
-        return PostRepositoryImpl(api)
+    fun providesPostRepository(api: PostApi, gson: Gson, @ApplicationContext appContext: Context): PostRepository{
+        return PostRepositoryImpl(api, gson,appContext )
     }
 
     @Provides
     @Singleton
     fun providePostUseCases(repository: PostRepository): PostUseCases{
         return PostUseCases(
-            getPostForFollowsUseCase = GetPostForFollowsUseCase(repository)
+            getPostForFollowsUseCase = GetPostForFollowsUseCase(repository),
+            createPostUseCase = CreatePostUseCae(repository)
         )
     }
 }

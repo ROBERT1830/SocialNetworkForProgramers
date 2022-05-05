@@ -3,6 +3,7 @@ package com.robertconstantindinescu.my_social_network.di
 import android.app.Application
 import android.content.Context.MODE_PRIVATE
 import android.content.SharedPreferences
+import com.google.gson.Gson
 import com.robertconstantindinescu.my_social_network.core.util.Constants
 import com.robertconstantindinescu.my_social_network.core.util.Constants.SHARED_PREF_NAME
 import dagger.Module
@@ -57,6 +58,12 @@ object AppModule {
             SHARED_PREF_NAME,
             MODE_PRIVATE
         )
+    }
+
+    @Provides
+    @Singleton
+    fun provideGson(): Gson {
+        return Gson()
     }
 
     
