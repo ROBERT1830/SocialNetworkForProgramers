@@ -132,4 +132,7 @@ dependencies {
 
     // Coil
     implementation "io.coil-kt:coil-compose:2.0.0-rc03"
+
+    // uCrop
+    implementation 'com.github.yalantis:ucrop:2.2.6'
 }

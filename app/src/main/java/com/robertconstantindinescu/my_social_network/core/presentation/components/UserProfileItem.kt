@@ -60,7 +60,7 @@ fun UserProfileItem(
                 )
                 Spacer(modifier = Modifier.height(SpaceSmall))
                 Text(
-                    text = user.description,
+                    text = user.bio,
                     style = MaterialTheme.typography.body2,
                     overflow = TextOverflow.Ellipsis,
                     maxLines = 2

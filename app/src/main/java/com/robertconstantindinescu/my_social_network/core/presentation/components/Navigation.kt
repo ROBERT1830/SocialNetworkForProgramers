@@ -3,8 +3,10 @@ package com.robertconstantindinescu.my_social_network.presentation.util
 import androidx.compose.material.ScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.navArgument
 import com.robertconstantindinescu.my_social_network.presentation.MainFeedScreen
 import com.robertconstantindinescu.my_social_network.feature_activity.presentation.activity.ActivityScreen
 import com.robertconstantindinescu.my_social_network.feature_chat.presentation.chat.ChatScreen
@@ -32,47 +34,86 @@ fun Navigation(
     ) {
         composable(route = Screen.SplashScreen.route) {
             //here goes the composable that comes up when visit the route
-            SplashScreen(navController = navController)
+            SplashScreen(
+                onPopBackStack = navController::popBackStack,
+                onNavigate = navController::navigate
+            )
 
         }
         composable(route = Screen.LoginScreen.route) {
-            LoginScreen(navController = navController, scaffoldState = scaffoldState)
+            LoginScreen(
+                onNavigate = navController::navigate,
+                scaffoldState = scaffoldState
+            )
         }
         composable(Screen.RegisterScreen.route) {
             RegisterScreen(navController = navController, scaffoldState = scaffoldState)
         }
         //Bottom
         composable(Screen.MainFeedScreen.route) {
-            MainFeedScreen(navController = navController, scaffoldState = scaffoldState)
+            MainFeedScreen(
+                onNavigateUp = navController::navigateUp,
+                onNavigate = navController::navigate //directly the route are passed
+                , scaffoldState = scaffoldState)
         }
 
         composable(route = Screen.ChatScreen.route) {
-            ChatScreen(navController = navController)
+            ChatScreen( onNavigateUp = navController::navigateUp,
+                onNavigate = navController::navigate )//directly the route are passed )
         }
         composable(route = Screen.ActivityScreen.route) {
-            ActivityScreen(navController = navController)
+            ActivityScreen(onNavigateUp = navController::navigateUp,
+                onNavigate = navController::navigate)
         }
-        composable(route = Screen.ProfileScreen.route) {
-            ProfileScreen(navController = navController)
+        composable( // the "?" is because it can be null the argument
+            route = Screen.ProfileScreen.route + "?userId={userId}",
+            arguments = listOf(
+                navArgument(
+                    name = "userId"
+                ){
+                    type = NavType.StringType
+                    nullable = true //the argument could be null in case we want to access our own profile
+                    defaultValue = null
+                }
+            )
+        ) {
+            //val userId = it.arguments?.getString("userId")
+            /**
+             * The cool thing about savedStateHandle is that we just register th enavigation argument
+             * in the backStack. And we just need to pass it and automatically will be contained
+             * in the savedStateHandle.
+             * So in the viewmdeol we get the navigation argument without actually needed to pass it
+             * to the profile screen. We just get the bundle from specifc screen in the viewmodel.
+             * savedStateHandle is a tool to restore the state of the viewModel and it also contains
+             * the nav arguments.
+             */
+            ProfileScreen( onNavigateUp = navController::navigateUp,
+                onNavigate = navController::navigate,
+                scaffoldState = scaffoldState)//directly the route are passed  /*userId = userId*/, )
         }
         composable(route = Screen.EditProfileScreen.route) {
-            EditProfileScreen(navController = navController)
+            EditProfileScreen(onNavigateUp = navController::navigateUp,
+                onNavigate = navController::navigate)
         }
 
         composable(route = Screen.CreatePostScreen.route) {
-            CreatePostScreen(navController = navController)
+            CreatePostScreen(onNavigateUp = navController::navigateUp,
+                onNavigate = navController::navigate, scaffoldState = scaffoldState)
         }
         composable(route = Screen.SearchScreen.route) {
-            SearchScreen(navController = navController)
+            SearchScreen(onNavigateUp = navController::navigateUp,
+                onNavigate = navController::navigate)
         }
         
         composable(route = Screen.PersonalListScreen.route){
-            PersonListScreen(navController = navController)
+            PersonListScreen(onNavigateUp = navController::navigateUp,
+                onNavigate = navController::navigate)
         }
 
         composable(route = Screen.PostDetailScreen.route) {
             PostDetailScreen(
-                navController = navController,
+                onNavigateUp = navController::navigateUp,
+                onNavigate = navController::navigate,
                 post = Post(
                     username = "Robert Constantin",
                     imageUrl = "",

@@ -21,16 +21,18 @@ import com.robertconstantindinescu.my_social_network.core.presentation.ui.theme.
 import com.robertconstantindinescu.my_social_network.core.presentation.ui.theme.SpaceLarge
 import com.robertconstantindinescu.my_social_network.core.presentation.ui.theme.SpaceMedium
 import com.robertconstantindinescu.my_social_network.core.domain.states.StandardTextFieldState
+import com.robertconstantindinescu.my_social_network.core.util.Screen
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun SearchScreen(
-    navController: NavController,
+    onNavigate: (String) -> Unit = {},
+    onNavigateUp: () -> Unit = {},
     viewModel: SearchViewModel = hiltViewModel()
 ) {
     Column(modifier = Modifier.fillMaxSize()) {
         StandardToolBar(
-            navController = navController,
+            onNavigateUp = onNavigateUp,
             showBackArrow = true,
             title = {
                 Text(
@@ -63,9 +65,10 @@ fun SearchScreen(
                 items(10){
                     UserProfileItem(
                         user = User(
-                            profilePicture = "",
+                            userId = "626f8dc5b8d0dc0e92182b4f",
+                            profilePictureUrl = "",
                             username = "Robert Constantin",
-                            description = "Lorem ipsum es el texto que se usa habitualmente en diseño " +
+                            bio = "Lorem ipsum es el texto que se usa habitualmente en diseño " +
                                     "gráfico en demostraciones de tipografías o de borradores de diseño " +
                                     "para probar el diseño visual antes de insertar el texto final",
                             followerCount = 234,
@@ -77,6 +80,11 @@ fun SearchScreen(
                                 imageVector = Icons.Default.PersonAdd,
                                 contentDescription = null,
                                 modifier = Modifier.size(IconSizeMedium)
+                            )
+                        },
+                        onItemClick = {
+                            onNavigate(
+                                Screen.ProfileScreen.route + "?userId=626f8dc5b8d0dc0e92182b4f"
                             )
                         }
                     )

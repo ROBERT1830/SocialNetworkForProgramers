@@ -127,7 +127,7 @@ class RegisterViewModel @Inject constructor(
                         isLoading = false
                     )
                     _eventFlow.emit(
-                        UiEvent.SnackBarEvent(UiText.StringResource( R.string.success_registration))
+                        UiEvent.ShowSnackBar(UiText.StringResource( R.string.success_registration))
                     )
                     //clear the text and erorr by using an other instance of the StandardTextFieldState
                     _usernameState.value = StandardTextFieldState()
@@ -141,7 +141,7 @@ class RegisterViewModel @Inject constructor(
                         isLoading = false
                     )
                     _eventFlow.emit(
-                        UiEvent.SnackBarEvent(registerResult.result.uiText ?: UiText.unknownError())
+                        UiEvent.ShowSnackBar(registerResult.result.uiText ?: UiText.unknownError())
                     )
                 }
                 //if happened an erro the result is null

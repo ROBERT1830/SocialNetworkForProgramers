@@ -30,7 +30,8 @@ import com.robertconstantindinescu.my_social_network.core.domain.models.Comment
 
 @Composable
 fun PostDetailScreen(
-    navController: NavController,
+    onNavigate: (String) -> Unit = {},
+    onNavigateUp: () -> Unit = {},
     //here we will need to pass a post id to take the entire info from backend. 
     //but for now, just pass full object
     post: Post
@@ -40,7 +41,7 @@ fun PostDetailScreen(
 
     Column(modifier = Modifier.fillMaxSize()) {
         StandardToolBar(
-            navController = navController,
+            onNavigateUp = onNavigateUp,
             title = {
                 Text(
                     text = stringResource(id = R.string.your_feed),

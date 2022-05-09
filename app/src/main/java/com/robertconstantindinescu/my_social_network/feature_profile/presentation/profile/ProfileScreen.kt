@@ -8,6 +8,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.ScaffoldState
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
@@ -20,12 +21,15 @@ import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
 import androidx.compose.ui.input.nestedscroll.NestedScrollSource
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import coil.compose.rememberAsyncImagePainter
+import coil.compose.rememberImagePainter
 import com.robertconstantindinescu.my_social_network.R
 import com.robertconstantindinescu.my_social_network.core.domain.models.Post
 import com.robertconstantindinescu.my_social_network.core.domain.models.User
@@ -35,8 +39,11 @@ import com.robertconstantindinescu.my_social_network.feature_profile.presentatio
 import com.robertconstantindinescu.my_social_network.core.presentation.ui.theme.ProfilePictureSizeLage
 import com.robertconstantindinescu.my_social_network.core.presentation.ui.theme.SpaceMedium
 import com.robertconstantindinescu.my_social_network.core.presentation.ui.theme.SpaceSmall
+import com.robertconstantindinescu.my_social_network.core.presentation.util.UiEvent
+import com.robertconstantindinescu.my_social_network.core.presentation.util.asString
 import com.robertconstantindinescu.my_social_network.core.util.Screen
 import com.robertconstantindinescu.my_social_network.presentation.util.toPx
+import kotlinx.coroutines.flow.collectLatest
 
 /***
  *
@@ -62,13 +69,33 @@ import com.robertconstantindinescu.my_social_network.presentation.util.toPx
 
 @Composable
 fun ProfileScreen(
-    navController: NavController,
+    onNavigate: (String) -> Unit = {},
+    onNavigateUp: () -> Unit = {},
+    scaffoldState: ScaffoldState,
+    //userId: String ? = null,
     profilePicturesSize: Dp = ProfilePictureSizeLage,
     viewModel: ProfileViewModel = hiltViewModel()
 ) {
 
+
     val lazyListState = rememberLazyListState()
     val toolbarState = viewModel.toolbarState.value
+
+    val state = viewModel.state.value
+    val context = LocalContext.current
+
+    LaunchedEffect(key1 = true){
+        viewModel.eventFlow.collectLatest { event ->
+            when(event){
+                is UiEvent.ShowSnackBar -> {
+                    scaffoldState.snackbarHostState.showSnackbar(
+                        message = event.uiText.asString(context)
+                    )
+                }
+
+            }
+        }
+    }
 
     //how much the toolbar is offset
 //    var toolbarOffsetY by remember {
@@ -208,21 +235,24 @@ fun ProfileScreen(
                 Spacer(modifier = Modifier.height(toolbarHeightExpanded - profilePicturesSize / 2f))
             }
             item {
-                ProfileHeaderSection(
-                    user = User(
-                        profilePicture = "",
-                        username = "Robert Constantin",
-                        description = "Lorem ipsum es el texto que se usa habitualmente en diseño " +
-                                "gráfico en demostraciones de tipografías o de borradores de diseño " +
-                                "para probar el diseño visual antes de insertar el texto final",
-                        followerCount = 234,
-                        followingCount = 432,
-                        postCount = 23
-                    ),
-                    onAddEditClick = {
+                state.profile?.let { profile ->
+                    ProfileHeaderSection(
+                        user = User(
+                            userId = profile.userId,
+                            profilePictureUrl = profile.profilePictureUrl,
+                            username = profile.username,
+                            bio = profile.bio,
+                            followerCount = profile.followerCount,
+                            followingCount = profile.followingCount,
+                            postCount = profile.postCount
+                        ),
+                        isOwnProfile = profile.isOwnProfile,
+                        onAddEditClick = {
+                            onNavigate(Screen.EditProfileScreen.route)
+                        }
+                    )
+                }
 
-                    }
-                )
             }
 
             items(20) {
@@ -243,7 +273,7 @@ fun ProfileScreen(
                     ),
                     showProfileImage = false,
                     onPostClick = {
-                        navController.navigate(Screen.PostDetailScreen.route)
+                        onNavigate(Screen.PostDetailScreen.route)
                     }
                 )
 
@@ -252,57 +282,66 @@ fun ProfileScreen(
         //because all items are placed in a box, there are no separation between them
         //so we need to have a spacer on top of ProfileHeaderSection.
         Column(modifier = Modifier.align(Alignment.TopCenter)) {
-            BannerSection(
-                modifier = Modifier
-                    .height(
-                        (bannerHeight * toolbarState.expandedRatio).coerceIn(
-                            minimumValue = toolbarHeightCollapsed,
-                            maximumValue = bannerHeight
-                        )
+            state.profile?.let { profile ->
+                BannerSection(
+                    modifier = Modifier
+                        .height(
+                            (bannerHeight * toolbarState.expandedRatio).coerceIn(
+                                minimumValue = toolbarHeightCollapsed,
+                                maximumValue = bannerHeight
+                            )
+                        ),
+                    leftIconModifier = Modifier
+                        .graphicsLayer {
+                            translationY = (1f - toolbarState.expandedRatio) * -iconCollapsedOffsetY.toPx()
+
+
+                            translationX = (1f - toolbarState.expandedRatio) * iconHorizontalCentralLength
+                        },
+                    rightIconModifier = Modifier
+                        .graphicsLayer {
+                            translationY = (1f - toolbarState.expandedRatio) * -iconCollapsedOffsetY.toPx()
+                            translationX = (1f - toolbarState.expandedRatio) * -iconHorizontalCentralLength
+                        },
+                    topSkillUrls = profile.topSkillUrls,
+                    shouldShowGitHub = profile.gitHubUrl != null,
+                    shouldShowInstagram = profile.instagramUrl != null,
+                    shouldShowLinkedIn = profile.linkedInUrl != null,
+                    bannerUrl = profile.bannerUrl
+                )
+                Image(
+                    painter = rememberAsyncImagePainter(model = profile.profilePictureUrl),
+                    contentDescription = stringResource(
+                        id = R.string.profile_image
                     ),
-                leftIconModifier = Modifier
-                    .graphicsLayer {
-                        translationY = (1f - toolbarState.expandedRatio) * -iconCollapsedOffsetY.toPx()
-
-
-                        translationX = (1f - toolbarState.expandedRatio) * iconHorizontalCentralLength
-                    },
-                rightIconModifier = Modifier
-                    .graphicsLayer {
-                    translationY = (1f - toolbarState.expandedRatio) * -iconCollapsedOffsetY.toPx()
-                    translationX = (1f - toolbarState.expandedRatio) * -iconHorizontalCentralLength
-                }
-            )
-            Image(
-                painter = painterResource(id = R.drawable.robert),
-                contentDescription = stringResource(
-                    id = R.string.profile_image
-                ),
-                modifier = Modifier
-                    .align(CenterHorizontally)
-                    .graphicsLayer {
-                        translationY = -profilePicturesSize.toPx() / 2f -
-                                (1f - toolbarState.expandedRatio) * imageCollapsedOffsetY.toPx()
-                        transformOrigin = TransformOrigin(
-                            pivotFractionX = 0.5f,
-                            pivotFractionY = 0f
+                    modifier = Modifier
+                        .align(CenterHorizontally)
+                        .graphicsLayer {
+                            translationY = -profilePicturesSize.toPx() / 2f -
+                                    (1f - toolbarState.expandedRatio) * imageCollapsedOffsetY.toPx()
+                            transformOrigin = TransformOrigin(
+                                pivotFractionX = 0.5f,
+                                pivotFractionY = 0f
+                            )
+                            //the size we always want. SO if we are at the very top
+                            //we want to add 0 on top of that then we stay at the
+                            //(ProfilePictureSizeLage.toPx() / 2f) size, i men, half of the initial
+                            //size.
+                            val scale = 0.5f + (toolbarState.expandedRatio * 0.5f)
+                            scaleX = scale
+                            scaleY = scale
+                        }
+                        .size(profilePicturesSize)
+                        .clip(CircleShape)
+                        .border(
+                            width = 1.dp,
+                            color = MaterialTheme.colors.onSurface,
+                            shape = CircleShape
                         )
-                        //the size we always want. SO if we are at the very top
-                        //we want to add 0 on top of that then we stay at the
-                        //(ProfilePictureSizeLage.toPx() / 2f) size, i men, half of the initial
-                        //size.
-                        val scale = 0.5f + (toolbarState.expandedRatio * 0.5f)
-                        scaleX = scale
-                        scaleY = scale
-                    }
-                    .size(profilePicturesSize)
-                    .clip(CircleShape)
-                    .border(
-                        width = 1.dp,
-                        color = MaterialTheme.colors.onSurface,
-                        shape = CircleShape
-                    )
-            )
+                )
+            }
+
+
         }
     }
 

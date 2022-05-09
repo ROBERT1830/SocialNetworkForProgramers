@@ -16,8 +16,9 @@ import com.robertconstantindinescu.my_social_network.R
 
 @Composable
 fun StandardToolBar(
-    navController: NavController,
+    //navController: NavController,
     modifier: Modifier = Modifier,
+    onNavigateUp: () -> Unit = {},
     showBackArrow: Boolean = false,
     //composable for the icon
     navAction: @Composable RowScope.() -> Unit = {},
@@ -30,7 +31,7 @@ fun StandardToolBar(
         navigationIcon = {
             if (showBackArrow){
                 IconButton(onClick = {
-                    navController.navigateUp()
+                   onNavigateUp()
                 }) {
                     Icon(
                         imageVector = Icons.Default.ArrowBack,

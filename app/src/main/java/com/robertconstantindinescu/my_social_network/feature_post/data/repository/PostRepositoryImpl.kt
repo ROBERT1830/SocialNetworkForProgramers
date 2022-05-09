@@ -32,8 +32,7 @@ import java.io.IOException
 
 class PostRepositoryImpl(
     private val api: PostApi,
-    private val gson: Gson,
-    private val appContext: Context
+    private val gson: Gson
 ): PostRepository {
 
 //    override suspend fun getPostForFollows(page: Int, pageSize: Int): Resource<List<Post>> {
@@ -74,25 +73,7 @@ class PostRepositoryImpl(
         //read the file from that uri. We need to create a file from the content of the uri whoch is the image.
         //val file = imageUri.toFile() //creates a file objects taht contains the info of tahth uri
         //user --> wil close the bufferedReader automatically
-        val file = withContext(Dispatchers.IO){
-            //
-            appContext.contentResolver.openFileDescriptor(imageUri, "r")?.let { fd ->
-                val inputStream = FileInputStream(fd.fileDescriptor)
-                //that one will contain the image
-                val file = File(
-                    appContext.cacheDir,
-                    appContext.contentResolver.getFileName(imageUri)
-                )
-                val outputStream = FileOutputStream(file)
-                inputStream.copyTo(outputStream)
-                file
-            }
-        } ?: //if there are no bytes means that the file that contains the image cant be ofund
-            return Resource.Error(
-                uiText = UiText.StringResource(R.string.error_file_not_found),
-                data = null
-            )
-
+        val file = imageUri.toFile()
 
         return try {
             val response = api.createPost(
@@ -116,7 +97,6 @@ class PostRepositoryImpl(
             if (response.successful) {
                 Resource.Success(Unit) //no data
             } else {
-
                 response.message?.let { msg ->
                     Resource.Error(UiText.DynamicString(msg))
                 } ?: Resource.Error(UiText.StringResource(R.string.error_unknown))

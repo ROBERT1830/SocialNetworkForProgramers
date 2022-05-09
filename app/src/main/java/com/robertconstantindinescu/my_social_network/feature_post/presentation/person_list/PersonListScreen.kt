@@ -21,13 +21,14 @@ import com.robertconstantindinescu.my_social_network.core.presentation.ui.theme.
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun PersonListScreen(
-    navController: NavController
+    onNavigate: (String) -> Unit = {},
+    onNavigateUp: () -> Unit = {},
 ) {
     Column(
         modifier = Modifier.fillMaxSize()
     ) {
         StandardToolBar(
-            navController = navController,
+            onNavigateUp = { onNavigateUp() },
             showBackArrow = true,
             title = {
                 Text(
@@ -45,9 +46,10 @@ fun PersonListScreen(
             items(10){
                 UserProfileItem(
                     user = User(
-                        profilePicture = "",
+                        userId = "626f8dc5b8d0dc0e92182b4f",
+                        profilePictureUrl = "",
                         username = "Robert Constantin",
-                        description = "Lorem ipsum es el texto que se usa habitualmente en diseño " +
+                        bio = "Lorem ipsum es el texto que se usa habitualmente en diseño " +
                                 "gráfico en demostraciones de tipografías o de borradores de diseño " +
                                 "para probar el diseño visual antes de insertar el texto final",
                         followerCount = 234,

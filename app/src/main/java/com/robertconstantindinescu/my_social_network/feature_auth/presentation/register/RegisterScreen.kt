@@ -45,7 +45,7 @@ fun RegisterScreen(
     LaunchedEffect(key1 = true){
         viewModel.eventFlow.collectLatest { event ->
             when(event){
-                is UiEvent.SnackBarEvent -> {
+                is UiEvent.ShowSnackBar -> {
                     scaffoldState.snackbarHostState.showSnackbar(
                         message = event.uiText.asString(context),
                         duration = SnackbarDuration.Long
