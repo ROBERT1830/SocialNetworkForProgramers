@@ -8,7 +8,7 @@ import retrofit2.http.*
 import robertconstantin.example.data.requests.CreatePostRequest
 
 interface PostApi {
-    @GET("/api/post/get")
+    @GET("api/post/get")
     suspend fun getPostForFollows(
         @Query("page") page: Int,
         @Query("pageSize") pageSize: Int

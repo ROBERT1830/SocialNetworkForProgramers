@@ -15,6 +15,8 @@ import java.io.File
  * The contract get a uri and return an uri
  */
 class CropActivityResultContract(
+    private val aspectRatioX: Float,
+    private val aspectRatioY: Float
 ): ActivityResultContract<Uri, Uri?>() { //here we pass a uri when launch the contract and return a uri when the user pick an image.
  //the input comes when we launch the result launcer
     override fun createIntent(context: Context, input: Uri): Intent {
@@ -28,7 +30,7 @@ class CropActivityResultContract(
                 )
             )
         )
-            .withAspectRatio(16f, 9f)
+            .withAspectRatio(aspectRatioX, aspectRatioY)
             .getIntent(context)
     }
 

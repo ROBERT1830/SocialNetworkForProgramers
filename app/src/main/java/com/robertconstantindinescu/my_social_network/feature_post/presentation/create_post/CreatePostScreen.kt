@@ -63,7 +63,7 @@ fun CreatePostScreen(
      * We want the extension at the point we dont know the uri yet
      */
     val cropActivityLauncher = rememberLauncherForActivityResult(
-            contract = CropActivityResultContract(),
+            contract = CropActivityResultContract(16f, 9f),
 
             ) {
             //this it comes from the parseResult method from class CropActivityResultContract. You save

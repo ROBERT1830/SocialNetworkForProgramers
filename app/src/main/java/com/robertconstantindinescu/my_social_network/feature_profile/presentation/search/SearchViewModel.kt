@@ -8,7 +8,9 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
 @HiltViewModel
-class SearchViewModel @Inject constructor():ViewModel() {
+class SearchViewModel @Inject constructor(
+
+):ViewModel() {
 
     private val _searchState = mutableStateOf<StandardTextFieldState>(StandardTextFieldState())
     val searchState: State<StandardTextFieldState> = _searchState

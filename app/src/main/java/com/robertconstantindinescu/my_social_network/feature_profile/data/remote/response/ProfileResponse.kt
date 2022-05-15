@@ -18,9 +18,9 @@ data class ProfileResponse(
     val postCount: Int,
     /****/
     val profilePictureUrl: String,
-    val bannerUrl: String,
-    val topSkillUrls: List<String>,
-    val gitHubUrl:String?,
+    val bannerUrl: String?,
+    val topSkills: List<SkillDto>,
+    val gitHubUrl: String?,
     val instagramUrl: String?,
     val linkedInUrl: String?,
     //if we are following the user or not. When you se a profile you have the button there.
@@ -33,8 +33,8 @@ data class ProfileResponse(
     * hass all the info needed.
     *
     *  */
-){
-    fun toProfile():Profile{
+) {
+    fun toProfile(): Profile {
         return Profile(
             userId = userId,
             username = username,
@@ -44,7 +44,9 @@ data class ProfileResponse(
             postCount = postCount,
             profilePictureUrl = profilePictureUrl,
             bannerUrl = bannerUrl,
-            topSkillUrls = topSkillUrls,
+            topSkills = topSkills.map {
+                it.toSkill()
+            },
             gitHubUrl = gitHubUrl,
             instagramUrl = instagramUrl,
             linkedInUrl = linkedInUrl,

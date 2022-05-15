@@ -87,13 +87,27 @@ fun Navigation(
              * savedStateHandle is a tool to restore the state of the viewModel and it also contains
              * the nav arguments.
              */
-            ProfileScreen( onNavigateUp = navController::navigateUp,
+            ProfileScreen(
+                userId = it.arguments?.getString("userId") ?: "",
+                onNavigateUp = navController::navigateUp,
                 onNavigate = navController::navigate,
                 scaffoldState = scaffoldState)//directly the route are passed  /*userId = userId*/, )
         }
-        composable(route = Screen.EditProfileScreen.route) {
+        composable(
+            //here the user id is not optional. I must be passed. So do it like that.
+            route = Screen.EditProfileScreen.route + "/{userId}",
+            arguments = listOf(
+                navArgument(
+                    name = "userId"
+                ){
+                    type = NavType.StringType
+                    nullable = true //the argument could be null in case we want to access our own profile
+                    defaultValue = null
+                }
+            )
+        ) {
             EditProfileScreen(onNavigateUp = navController::navigateUp,
-                onNavigate = navController::navigate)
+                onNavigate = navController::navigate, scaffoldState = scaffoldState)
         }
 
         composable(route = Screen.CreatePostScreen.route) {

@@ -10,7 +10,7 @@ import retrofit2.http.POST
 
 interface AuthApi {
 
-    @POST("api/user/create")
+    @POST("/api/user/create")
     suspend fun register(
         //@Body ---> The object will be serialized using the Retrofit instance Converter and the
         // result will be set directly as the request body
@@ -24,12 +24,12 @@ interface AuthApi {
      * But hte thing is that when the checking password failed a BasciApirESPONSE IS SEND
      * So we need a way to parse both
      */
-    @POST("api/user/login")
+    @POST("/api/user/login")
     suspend fun login(
         @Body request: LoginRequest
     ): BasicApiResponse<AuthResponse>
 
-    @GET("api/user/authenticate")
+    @GET("/api/user/authenticate")
     suspend fun authenticate() //Not return anything
 
     /**

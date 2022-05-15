@@ -21,6 +21,8 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 object AuthModule {
 
+
+
     @Provides
     @Singleton
     fun provideAuthAoi(client: OkHttpClient): AuthApi {

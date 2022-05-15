@@ -1,28 +1,26 @@
 package com.robertconstantindinescu.my_social_network.feature_profile.presentation.edit_profile
 
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.border
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Description
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
-import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontWeight
@@ -30,7 +28,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavController
+import coil.compose.rememberAsyncImagePainter
+import coil.request.ImageRequest
 import com.google.accompanist.flowlayout.FlowRow
 import com.google.accompanist.flowlayout.MainAxisAlignment
 import com.robertconstantindinescu.my_social_network.R
@@ -40,19 +39,72 @@ import com.robertconstantindinescu.my_social_network.feature_profile.presentatio
 import com.robertconstantindinescu.my_social_network.core.presentation.ui.theme.ProfilePictureSizeLage
 import com.robertconstantindinescu.my_social_network.core.presentation.ui.theme.SpaceLarge
 import com.robertconstantindinescu.my_social_network.core.presentation.ui.theme.SpaceMedium
-import com.robertconstantindinescu.my_social_network.core.domain.states.StandardTextFieldState
+import com.robertconstantindinescu.my_social_network.core.presentation.util.CropActivityResultContract
+import com.robertconstantindinescu.my_social_network.core.presentation.util.UiEvent
+import com.robertconstantindinescu.my_social_network.core.presentation.util.asString
 import com.robertconstantindinescu.my_social_network.feature_profile.presentation.util.EditProfileError
-import kotlin.random.Random
+import kotlinx.coroutines.flow.collectLatest
 
 
 @Composable
 fun EditProfileScreen(
+    scaffoldState: ScaffoldState,
     onNavigate: (String) -> Unit = {},
     onNavigateUp: () -> Unit = {},
     viewModel: EditProfileScreenViewModel = hiltViewModel(),
     profilePictureSize: Dp = ProfilePictureSizeLage
 
 ) {
+
+    val profileState = viewModel.profileState.value
+    val context = LocalContext.current
+
+    val cropProfilePictureLauncher = rememberLauncherForActivityResult(
+        contract = CropActivityResultContract(1f, 1f),
+
+        ) {
+        viewModel.onEvent(EditProfileEvent.CropProfileImage(it))
+    }
+
+    val cropBannerImageLauncher = rememberLauncherForActivityResult(
+        contract = CropActivityResultContract(5f, 2f),
+
+        ) {
+        viewModel.onEvent(EditProfileEvent.CropBannerImage(it))
+    }
+
+    val profilePictureGalleryLauncher =
+        rememberLauncherForActivityResult(
+            contract = ActivityResultContracts.GetContent() //this makes the user to pick content and will receive content://+Uri for the content.
+        ) {
+            //launch the crop
+            cropProfilePictureLauncher.launch(it) // this it will be the input uri for the image
+
+
+        }
+
+    val bannerImageGalleryLauncher =
+        rememberLauncherForActivityResult(
+            contract = ActivityResultContracts.GetContent() //this makes the user to pick content and will receive content://+Uri for the content.
+        ) {
+            cropBannerImageLauncher.launch(it) // this it will be the input uri for the image
+
+        }
+
+    LaunchedEffect(key1 = true) {
+        viewModel.eventFlow.collectLatest {
+            when (it) {
+                is UiEvent.ShowSnackBar -> {
+                    scaffoldState.snackbarHostState.showSnackbar(
+                        message = it.uiText.asString(context)
+                    )
+                }
+                is UiEvent.NavigateUp -> {
+                    onNavigateUp()
+                }
+            }
+        }
+    }
 
 
     Column(
@@ -63,7 +115,9 @@ fun EditProfileScreen(
             onNavigateUp = { onNavigateUp() },
             showBackArrow = true,
             navAction = {
-                IconButton(onClick = { }) {
+                IconButton(onClick = {
+                    viewModel.onEvent(EditProfileEvent.UpdateProfile)
+                }) {
                     Icon(
                         imageVector = Icons.Default.Check,
                         contentDescription = stringResource(id = R.string.save_changes),
@@ -87,11 +141,30 @@ fun EditProfileScreen(
                 .verticalScroll(rememberScrollState())
         ) {
             BannerEditSection(
-                bannerImage = painterResource(id = R.drawable.channelart),
-                profileImage = painterResource(
-                    id = R.drawable.robert
+                bannerImage = rememberAsyncImagePainter(
+                    ImageRequest.Builder(LocalContext.current)
+                        //when the uri from the cropper is null, then the image to display comes from the api
+                        // That happens at the first laucnh of the screen. When select an other one, it will be displayed the
+                        // croper.
+                        .data(data = viewModel.bannerUri.value ?: profileState.profile?.bannerUrl)
+                        .apply(block = fun ImageRequest.Builder.() {
+                            crossfade(true)
+                        }).build()
                 ),
-                profilePictureSize = profilePictureSize
+                profileImage = rememberAsyncImagePainter(
+                    ImageRequest.Builder(LocalContext.current)
+                        .data(data = viewModel.profilePictureUri.value ?: profileState.profile?.profilePictureUrl)
+                        .apply(block = fun ImageRequest.Builder.() {
+                            crossfade(true)
+                        }).build()
+                ),
+                profilePictureSize = profilePictureSize,
+                onBannerClick = {
+                    bannerImageGalleryLauncher.launch("image/*")
+                },
+                onProfilePictureClick = {
+                    profilePictureGalleryLauncher.launch("image/*")
+                }
             )
             Column(
                 modifier = Modifier
@@ -112,8 +185,8 @@ fun EditProfileScreen(
                     },
                     leadingIcon = Icons.Default.Person,
                     onValueChange = {
-                        viewModel.setUsernameState(
-                            StandardTextFieldState(text = it)
+                        viewModel.onEvent(
+                            EditProfileEvent.EnteredUserName(it)
                         )
                     }
                 )
@@ -131,8 +204,8 @@ fun EditProfileScreen(
                     },
                     leadingIcon = ImageVector.vectorResource(id = R.drawable.ic_github_icon_1),
                     onValueChange = {
-                        viewModel.setGithubTextFiledState(
-                            StandardTextFieldState(text = it)
+                        viewModel.onEvent(
+                            EditProfileEvent.EnteredGitHubUrl(it)
                         )
                     }
                 )
@@ -150,8 +223,8 @@ fun EditProfileScreen(
                     },
                     leadingIcon = ImageVector.vectorResource(id = R.drawable.ic_instagram_glyph_1),
                     onValueChange = {
-                        viewModel.setInstagramTextFieldState(
-                            StandardTextFieldState(text = it)
+                        viewModel.onEvent(
+                            EditProfileEvent.EnteredInstagramUrl(it)
                         )
                     }
                 )
@@ -169,8 +242,8 @@ fun EditProfileScreen(
                     },
                     leadingIcon = ImageVector.vectorResource(id = R.drawable.ic_linkedin_icon_1),
                     onValueChange = {
-                        viewModel.setLinkedInTextFieldState(
-                            StandardTextFieldState(text = it)
+                        viewModel.onEvent(
+                            EditProfileEvent.EnteredBio(it)
                         )
                     }
                 )
@@ -190,8 +263,8 @@ fun EditProfileScreen(
                     maxLines = 3,
                     leadingIcon = Icons.Default.Description,
                     onValueChange = {
-                        viewModel.setBioState(
-                            StandardTextFieldState(text = it)
+                        viewModel.onEvent(
+                            EditProfileEvent.EnteredBio(it)
                         )
                     }
                 )
@@ -209,24 +282,17 @@ fun EditProfileScreen(
                     mainAxisSpacing = SpaceMedium,
                     crossAxisSpacing = SpaceMedium
                 ) {
-                    listOf(
-                        "Kotlin",
-                        "JavaScript",
-                        "Assembly",
-                        "C++",
-                        "C#",
-                        "Python",
-                        "Dart",
-                        "Java",
-                        "C"
-
-                    ).forEach {
+                    viewModel.skills.value.skills.forEach { currentSkill ->
                         Chip(
-                            text = it,
-                            selected = Random.nextInt(2) == 0
-                        ) {
+                            text = currentSkill.name,
+                            selected = viewModel.skills.value.selectedSkills.any {
+                                                         it.name == currentSkill.name
+                            },
+                            onChipClick = {
+                                viewModel.onEvent(EditProfileEvent.     SetSkillSelected(currentSkill))
 
-                        }
+                            }
+                        )
                     }
 
                 }
@@ -244,7 +310,7 @@ fun BannerEditSection(
     profileImage: Painter,
     profilePictureSize: Dp = ProfilePictureSizeLage,
     onBannerClick: () -> Unit = {},
-    onProfileImageClick: () -> Unit = {}
+    onProfilePictureClick: () -> Unit = {}
 
 ) {
 
@@ -257,7 +323,9 @@ fun BannerEditSection(
         Image(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(bannerHeight),
+                .height(bannerHeight)
+                .clickable { onBannerClick() },
+            contentScale = ContentScale.Crop,
             painter = bannerImage,
             contentDescription = null
         )
@@ -276,6 +344,7 @@ fun BannerEditSection(
                     shape = CircleShape
 
                 )
+                .clickable { onProfilePictureClick() }
         )
     }
 

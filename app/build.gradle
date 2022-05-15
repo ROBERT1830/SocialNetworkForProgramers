@@ -132,6 +132,9 @@ dependencies {
 
     // Coil
     implementation "io.coil-kt:coil-compose:2.0.0-rc03"
+    // Coils svg decoder
+    implementation("io.coil-kt:coil-svg:2.0.0")
+
 
     // uCrop
     implementation 'com.github.yalantis:ucrop:2.2.6'
