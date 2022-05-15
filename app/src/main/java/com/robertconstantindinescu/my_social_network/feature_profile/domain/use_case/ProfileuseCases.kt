@@ -4,5 +4,6 @@ data class ProfileUseCases(
     val getProfile: GetProfileUseCase,
     val updateProfileUseCase: UpdateProfileUseCase,
     val getSkillsUseCase: GetSkillsUseCase,
-    val setSkillSelectedUseCase: SetSkillSelectedUseCase
+    val setSkillSelectedUseCase: SetSkillSelectedUseCase,
+    val getPostsForProfileUseCase: GetPostsForProfileUseCase
 )

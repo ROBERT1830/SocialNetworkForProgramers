@@ -1,8 +1,7 @@
 package com.robertconstantindinescu.my_social_network.di
 
-import android.content.Context
 import com.google.gson.Gson
-import com.robertconstantindinescu.my_social_network.feature_post.data.data_source.remote.PostApi
+import com.robertconstantindinescu.my_social_network.core.data.remote.PostApi
 import com.robertconstantindinescu.my_social_network.feature_post.data.repository.PostRepositoryImpl
 import com.robertconstantindinescu.my_social_network.feature_post.domain.repository.PostRepository
 import com.robertconstantindinescu.my_social_network.feature_post.domain.use_case.CreatePostUseCae
@@ -11,7 +10,6 @@ import com.robertconstantindinescu.my_social_network.feature_post.domain.use_cas
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
-import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit

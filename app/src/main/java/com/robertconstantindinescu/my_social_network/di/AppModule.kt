@@ -4,6 +4,7 @@ import android.app.Application
 import android.content.Context.MODE_PRIVATE
 import android.content.SharedPreferences
 import com.google.gson.Gson
+import com.robertconstantindinescu.my_social_network.core.domain.use_case.GetOwnUserIdUseCase
 import com.robertconstantindinescu.my_social_network.core.util.Constants
 import com.robertconstantindinescu.my_social_network.core.util.Constants.SHARED_PREF_NAME
 import dagger.Module
@@ -22,20 +23,21 @@ object AppModule {
      * If we provide the token here as a singleton, will not change through the whole time life
      * app
      */
-    @Provides
-    @Singleton
-    fun provideJwtToken(sharedPreferences: SharedPreferences): String {
-        return sharedPreferences.getString(Constants.KEY_JWT_TOKEN, "")?: ""
-    }
+//    @Provides
+//    @Singleton
+//    fun provideJwtToken(sharedPreferences: SharedPreferences): String {
+//        return sharedPreferences.getString(Constants.KEY_JWT_TOKEN, "")?: ""
+//    }
 
     /**
      * Here we add an interceptor that will take the jwt token which can be get from shared preferences
      */
     @Provides
     @Singleton
-    fun provideOkHttpClient(token: String): OkHttpClient {
+    fun provideOkHttpClient(sharedPreferences: SharedPreferences): OkHttpClient {
         return OkHttpClient.Builder()
             .addInterceptor{
+                val token = sharedPreferences.getString(Constants.KEY_JWT_TOKEN, "")
                 /**
                  * Here we are telling that the okhttp client will have an
                  * interceptor in each and every request to add
@@ -73,5 +75,51 @@ object AppModule {
         return Gson()
     }
 
+    @Provides
+    @Singleton
+    fun provideGetOwnUserIdUseCase(sharedPreferences: SharedPreferences): GetOwnUserIdUseCase{
+        return GetOwnUserIdUseCase(sharedPreferences)
+    }
+
+
+
+
+
     
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

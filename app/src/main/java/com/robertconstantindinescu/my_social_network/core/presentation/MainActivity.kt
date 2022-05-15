@@ -9,6 +9,7 @@ import androidx.compose.material.Surface
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.navigation.NavBackStackEntry
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.robertconstantindinescu.my_social_network.core.presentation.components.StandardScaffold
@@ -38,12 +39,7 @@ class MainActivity : ComponentActivity() {
                         modifier = Modifier.fillMaxSize(),
                         navController = navController,
                         //if current route is inside this list then show bottom bar
-                        showBottomBar = navBackStackEntry?.destination?.route in listOf(
-                            Screen.MainFeedScreen.route,
-                            Screen.ChatScreen.route,
-                            Screen.ActivityScreen.route,
-                            Screen.ProfileScreen.route,
-                        ),
+                        showBottomBar = shouldShowBottomBar(navBackStackEntry),
                         state = scaffoldState,
 //                        showBackArrow = navBackStackEntry?.destination?.route in listOf(
 //                            Screen.PostDetailScreen.route,
@@ -69,6 +65,22 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
+    }
+
+
+    private fun shouldShowBottomBar(backStackEntry: NavBackStackEntry?): Boolean{
+        val doesRouteMatch = backStackEntry?.destination?.route in listOf(
+            Screen.MainFeedScreen.route,
+            Screen.ChatScreen.route,
+            Screen.ActivityScreen.route,
+            //only if the yser id is null we show the bottom bar,
+            //because that means we are on our own profile.
+            Screen.ProfileScreen.route
+        )
+        val isOwnProfile = backStackEntry?.destination?.route == "${Screen.ProfileScreen.route}?userId={userId}" &&
+                backStackEntry?.arguments?.getString("userId") == null
+
+        return doesRouteMatch || isOwnProfile
     }
 }
 

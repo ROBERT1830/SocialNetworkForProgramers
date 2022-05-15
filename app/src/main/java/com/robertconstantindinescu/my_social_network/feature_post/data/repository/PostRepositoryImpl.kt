@@ -1,7 +1,5 @@
 package com.robertconstantindinescu.my_social_network.feature_post.data.repository
 
-import android.content.ContentResolver
-import android.content.Context
 import android.net.Uri
 import androidx.core.net.toFile
 import androidx.paging.Pager
@@ -10,24 +8,18 @@ import androidx.paging.PagingData
 import com.google.gson.Gson
 import com.robertconstantindinescu.my_social_network.R
 import com.robertconstantindinescu.my_social_network.core.domain.models.Post
-import com.robertconstantindinescu.my_social_network.core.domain.util.getFileName
 import com.robertconstantindinescu.my_social_network.core.util.Constants
 import com.robertconstantindinescu.my_social_network.core.util.Resource
 import com.robertconstantindinescu.my_social_network.core.util.SimpleResource
 import com.robertconstantindinescu.my_social_network.core.util.UiText
-import com.robertconstantindinescu.my_social_network.feature_post.data.data_source.remote.PostApi
+import com.robertconstantindinescu.my_social_network.core.data.remote.PostApi
 import com.robertconstantindinescu.my_social_network.feature_post.data.paging.PostSource
 import com.robertconstantindinescu.my_social_network.feature_post.domain.repository.PostRepository
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.withContext
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
 import retrofit2.HttpException
 import robertconstantin.example.data.requests.CreatePostRequest
-import java.io.File
-import java.io.FileInputStream
-import java.io.FileOutputStream
 import java.io.IOException
 
 class PostRepositoryImpl(
@@ -58,7 +50,7 @@ class PostRepositoryImpl(
     //when call this variable then we will get a flow of an object called PaginData of type Post.
     override val posts: Flow<PagingData<Post>>
         get() = Pager(PagingConfig(pageSize = Constants.PAGE_SIZE_POSTS)) {
-            PostSource(api)
+            PostSource(api, PostSource.Source.Follows)
         }.flow //important to return a flow by .flow This makes the data to be a flow.
 
 

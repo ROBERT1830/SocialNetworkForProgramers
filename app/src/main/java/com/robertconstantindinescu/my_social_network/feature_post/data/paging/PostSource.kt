@@ -1,16 +1,17 @@
 package com.robertconstantindinescu.my_social_network.feature_post.data.paging
 
-import androidx.compose.ui.unit.Constraints
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.robertconstantindinescu.my_social_network.core.domain.models.Post
 import com.robertconstantindinescu.my_social_network.core.util.Constants
-import com.robertconstantindinescu.my_social_network.feature_post.data.data_source.remote.PostApi
+import com.robertconstantindinescu.my_social_network.core.util.Constants.PAGE_SIZE_POSTS
+import com.robertconstantindinescu.my_social_network.core.data.remote.PostApi
 import retrofit2.HttpException
 import java.io.IOException
 
 class PostSource(
-    private val api: PostApi
+    private val api: PostApi,
+    private val source: PostSource.Source
 ): PagingSource<Int, Post>() {
 
     private var currentPage = 0
@@ -21,13 +22,23 @@ class PostSource(
          * to our api in the constructor
          */
         return try {
+
             //start at page 0 then will automatically get the page.
             //key is the for the page to be loaded. It will be null initially.
             val nextPage = params.key ?: currentPage
-            val posts = api.getPostForFollows(
-                page = nextPage,
-                pageSize = Constants.PAGE_SIZE_POSTS
-            )
+            val posts = when(source){
+                is Source.Follows -> api.getPostForFollows(
+                    page = nextPage,
+                    pageSize = Constants.PAGE_SIZE_POSTS
+                )
+                is Source.Profile -> api.getPostForProfile(
+                    userId = source.userid,
+                    page = nextPage,
+                    pageSize = PAGE_SIZE_POSTS
+                )
+            }
+
+
             LoadResult.Page(
                 data = posts,
                 prevKey = if (nextPage == 0) null else nextPage - 1,
@@ -44,6 +55,47 @@ class PostSource(
     override fun getRefreshKey(state: PagingState<Int, Post>): Int? {
         return state.anchorPosition
     }
+
+    /**
+     * We want to differentiate post from a those people we follow and post for a specific profile.
+     */
+
+    sealed class Source {
+        object Follows: Source()
+        data class Profile(val userid: String): Source()
+    }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 

@@ -1,6 +1,7 @@
 package com.robertconstantindinescu.my_social_network.di
 
 import com.google.gson.Gson
+import com.robertconstantindinescu.my_social_network.core.data.remote.PostApi
 import com.robertconstantindinescu.my_social_network.feature_profile.data.remote.ProfileApi
 import com.robertconstantindinescu.my_social_network.feature_profile.data.repository.ProfileRepositoryImpl
 import com.robertconstantindinescu.my_social_network.feature_profile.domain.repository.ProfileRepository
@@ -31,8 +32,8 @@ object ProfileModule {
 
     @Provides
     @Singleton
-    fun provideProfileRepository(api: ProfileApi, gson:Gson): ProfileRepository {
-        return ProfileRepositoryImpl(api, gson)
+    fun provideProfileRepository(profileApi: ProfileApi, postApi: PostApi, gson:Gson): ProfileRepository {
+        return ProfileRepositoryImpl(profileApi, postApi  ,gson)
     }
 
     @Provides
@@ -42,7 +43,8 @@ object ProfileModule {
             getProfile = GetProfileUseCase(repository),
             getSkillsUseCase = GetSkillsUseCase(repository),
             updateProfileUseCase = UpdateProfileUseCase(repository),
-            setSkillSelectedUseCase = SetSkillSelectedUseCase()
+            setSkillSelectedUseCase = SetSkillSelectedUseCase(),
+            getPostsForProfileUseCase = GetPostsForProfileUseCase(repository)
         )
     }
 

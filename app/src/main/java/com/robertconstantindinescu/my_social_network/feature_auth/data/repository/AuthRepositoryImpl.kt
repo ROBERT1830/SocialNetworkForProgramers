@@ -2,6 +2,7 @@ package com.robertconstantindinescu.my_social_network.feature_auth.data.reposito
 
 import android.content.SharedPreferences
 import com.robertconstantindinescu.my_social_network.R
+import com.robertconstantindinescu.my_social_network.core.util.Constants
 import com.robertconstantindinescu.my_social_network.core.util.Constants.KEY_JWT_TOKEN
 import com.robertconstantindinescu.my_social_network.core.util.Resource
 import com.robertconstantindinescu.my_social_network.core.util.SimpleResource
@@ -61,9 +62,10 @@ class AuthRepositoryImpl(
             val response = api.login(request = request)
             if (response.successful) {
                 //if the response is susccesful then save the token.
-                response.data?.token?.let { token ->
+                response.data?.let { authResponse ->
                     sharedPreferences.edit()
-                        .putString(KEY_JWT_TOKEN, token)
+                        .putString(KEY_JWT_TOKEN, authResponse.token)
+                        .putString(Constants.KEY_USER_ID, authResponse.userId)
                         .apply()
                 }
                 Resource.Success(Unit) //no data

@@ -1,4 +1,4 @@
-package com.robertconstantindinescu.my_social_network.feature_post.data.data_source.remote
+package com.robertconstantindinescu.my_social_network.core.data.remote
 
 import com.robertconstantindinescu.my_social_network.core.data.dto.response.BasicApiResponse
 import com.robertconstantindinescu.my_social_network.core.domain.models.Post
@@ -14,6 +14,12 @@ interface PostApi {
         @Query("pageSize") pageSize: Int
     ): List<Post>
 
+    @GET("/api/user/posts")
+    suspend fun getPostForProfile(
+        @Query("userId") userId: String,
+        @Query("page") page: Int,
+        @Query("pageSize") pageSize: Int
+    ): List<Post>
 
     /**
      * This request will be a multipart because we want to send either JSON and file with an image

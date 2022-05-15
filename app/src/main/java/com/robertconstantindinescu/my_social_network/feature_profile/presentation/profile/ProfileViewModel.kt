@@ -5,6 +5,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.paging.cachedIn
+import com.robertconstantindinescu.my_social_network.core.domain.use_case.GetOwnUserIdUseCase
 import com.robertconstantindinescu.my_social_network.core.presentation.util.UiEvent
 import com.robertconstantindinescu.my_social_network.core.util.Resource
 import com.robertconstantindinescu.my_social_network.core.util.UiText
@@ -18,6 +20,7 @@ import javax.inject.Inject
 @HiltViewModel
 class ProfileViewModel @Inject constructor(
     private val profileUseCases: ProfileUseCases,
+    private val getOwnUserId: GetOwnUserIdUseCase,
     savedStateHandle: SavedStateHandle //to get the id directly. Comes from navigation arguments. Is basically a bundle tha tcontains navigation arguments.
 ): ViewModel(){
 
@@ -33,11 +36,12 @@ class ProfileViewModel @Inject constructor(
     private val _eventFlow = MutableSharedFlow<UiEvent>()
     val eventFlow = _eventFlow.asSharedFlow()
 
-    init {
-//        savedStateHandle.get<String>("userId")?.let { userId ->
-//            getProfile(userId)
-//        }
-    }
+
+    //Observe the from directly from the ui.
+    val posts = profileUseCases.getPostsForProfileUseCase(
+        savedStateHandle.get<String>("userId") ?: getOwnUserId()
+    ).cachedIn(viewModelScope)
+
 
     fun setExpandedRatio(ratio: Float){
         _toolbarState.value = _toolbarState.value.copy(expandedRatio = ratio)
@@ -57,12 +61,15 @@ class ProfileViewModel @Inject constructor(
         }
     }
 
-    public fun getProfile(userId:String){
+    fun getProfile(userId:String?){
+
+        //Load profile info
         viewModelScope.launch {
             _state.value = state.value.copy(
                 isLoading = true
             )
-            val result = profileUseCases.getProfile(userId)
+            //if user id is null, then pick our own to see our profile
+            val result = profileUseCases.getProfile(userId ?: getOwnUserId())
             when(result){
                 is Resource.Success -> {
                     _state.value = state.value.copy(
@@ -81,6 +88,8 @@ class ProfileViewModel @Inject constructor(
                 }
             }
         }
+
+
 
     }
 

@@ -26,6 +26,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.paging.compose.collectAsLazyPagingItems
+import androidx.paging.compose.items
 import coil.compose.rememberAsyncImagePainter
 import com.robertconstantindinescu.my_social_network.R
 import com.robertconstantindinescu.my_social_network.core.domain.models.Post
@@ -66,15 +68,17 @@ import kotlinx.coroutines.flow.collectLatest
 
 @Composable
 fun ProfileScreen(
-    userId: String,
+    scaffoldState: ScaffoldState,
+    userId: String? = null,
     onNavigate: (String) -> Unit = {},
     onNavigateUp: () -> Unit = {},
-    scaffoldState: ScaffoldState,
+
     //userId: String ? = null,
     profilePicturesSize: Dp = ProfilePictureSizeLage,
     viewModel: ProfileViewModel = hiltViewModel()
 ) {
 
+    val posts = viewModel.posts.collectAsLazyPagingItems()
 
     val lazyListState = rememberLazyListState()
     val toolbarState = viewModel.toolbarState.value
@@ -210,8 +214,6 @@ fun ProfileScreen(
         }
     }
 
-
-
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -254,7 +256,7 @@ fun ProfileScreen(
 
             }
 
-            items(20) {
+            items(posts) { post ->
                 Spacer(
                     modifier = Modifier
                         .height(SpaceMedium)
@@ -262,13 +264,12 @@ fun ProfileScreen(
                 )
                 Post(
                     post = Post(
-                        username = "Robert Constantin",
-                        imageUrl = "",
-                        profilePicture = "",
-                        description = "sadasd asdasd asfsd fsd g sdg sd g sf gfs g df gdf g dsf gs dfg " +
-                                "sdfgsdfgsdfgsdfg sdfg sdfg aerhwet hd b",
-                        likeCount = 17,
-                        commentCount = 7
+                        username = post?.username ?: "",
+                        imageUrl = post?.imageUrl ?: "",
+                        profilePicture = post?.profilePicture ?: "",
+                        description = post?.description ?: "",
+                        likeCount = post?.likeCount ?: 0,
+                        commentCount = post?.commentCount ?: 0
                     ),
                     showProfileImage = false,
                     onPostClick = {

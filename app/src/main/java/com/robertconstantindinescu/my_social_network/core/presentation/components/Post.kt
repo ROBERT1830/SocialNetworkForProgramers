@@ -31,6 +31,9 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil.compose.rememberAsyncImagePainter
+import coil.compose.rememberImagePainter
+import coil.request.ImageRequest
 import com.robertconstantindinescu.my_social_network.R
 import com.robertconstantindinescu.my_social_network.core.domain.models.Post
 import com.robertconstantindinescu.my_social_network.core.presentation.ui.theme.*
@@ -53,7 +56,7 @@ fun Post(
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .offset(y = if(showProfileImage) ProfilePictureSizeMedium / 2f else 0.dp)
+                .offset(y = if (showProfileImage) ProfilePictureSizeMedium / 2f else 0.dp)
                 .shadow(5.dp)
                 .clip(MaterialTheme.shapes.medium)
                 .background(MediumGray)
@@ -62,7 +65,27 @@ fun Post(
                 }
         ) {
             Image(
-                painter = painterResource(id = R.drawable.kermit),
+                painter = rememberAsyncImagePainter(
+                    ImageRequest.Builder(LocalContext.current).data(data = post.imageUrl)
+                        .apply(block = fun ImageRequest.Builder.() {
+                            //this is for debuging the coil response
+                            listener(
+                                onStart = { _ ->
+                                    println("START LOADING IMAGE")
+                                },
+                                onCancel = {
+                                    println("REQUEST CANCELLED")
+
+                                },
+                                // t is a throwable
+                                onError = { _, t ->
+                                    println("ERROR LOADING IMAGE")
+                                    t.throwable.printStackTrace()
+                                }
+                            )
+                            crossfade(true)
+                        }).build()
+                ),
                 contentDescription = "Post Image"
             )
 
@@ -127,7 +150,12 @@ fun Post(
 
         if (showProfileImage){
             Image(
-                painter = painterResource(id = R.drawable.robert),
+                painter = rememberAsyncImagePainter(
+                    ImageRequest.Builder(LocalContext.current).data(data = post.profilePicture)
+                        .apply(block = fun ImageRequest.Builder.() {
+                            crossfade(true)
+                        }).build()
+                ),
                 contentDescription = "Profile picture",
                 modifier = Modifier
                     .size(ProfilePictureSizeMedium)
