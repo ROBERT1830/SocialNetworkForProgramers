@@ -2,7 +2,9 @@ package com.robertconstantindinescu.my_social_network.feature_profile.domain.rep
 
 import android.net.Uri
 import androidx.paging.PagingData
+import com.robertconstantindinescu.my_social_network.core.data.dto.response.UserItemDto
 import com.robertconstantindinescu.my_social_network.core.domain.models.Post
+import com.robertconstantindinescu.my_social_network.core.domain.models.UserItem
 import com.robertconstantindinescu.my_social_network.core.util.Resource
 import com.robertconstantindinescu.my_social_network.core.util.SimpleResource
 import com.robertconstantindinescu.my_social_network.feature_profile.domain.model.Profile
@@ -30,4 +32,10 @@ interface ProfileRepository {
     ): SimpleResource
 
     suspend fun getSkills():Resource<List<Skill>>
+
+    suspend fun searchUser(query: String): Resource<List<UserItem>>
+
+    suspend fun followUser(userId:String): SimpleResource
+
+    suspend fun unfollowUser(userId: String): SimpleResource
 }

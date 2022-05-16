@@ -2,16 +2,18 @@ package com.robertconstantindinescu.my_social_network.feature_profile.presentati
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.PersonAdd
+import androidx.compose.material.icons.filled.PersonRemove
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavController
 import com.robertconstantindinescu.my_social_network.R
 import com.robertconstantindinescu.my_social_network.core.domain.models.User
 import com.robertconstantindinescu.my_social_network.core.presentation.components.StandardTextField
@@ -30,68 +32,91 @@ fun SearchScreen(
     onNavigateUp: () -> Unit = {},
     viewModel: SearchViewModel = hiltViewModel()
 ) {
-    Column(modifier = Modifier.fillMaxSize()) {
-        StandardToolBar(
-            onNavigateUp = onNavigateUp,
-            showBackArrow = true,
-            title = {
-                Text(
-                    text = stringResource(id = R.string.search_for_users),
-                    fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colors.onBackground
+    val state = viewModel.searchState.value
+    Box(
+        modifier = Modifier.fillMaxSize()
+    ) {
+        Column(modifier = Modifier.fillMaxSize()) {
+            StandardToolBar(
+                onNavigateUp = onNavigateUp,
+                showBackArrow = true,
+                title = {
+                    Text(
+                        text = stringResource(id = R.string.search_for_users),
+                        fontWeight = FontWeight.Bold,
+                        color = MaterialTheme.colors.onBackground
 
-                )
-            }
-        )
-        Column(modifier = Modifier
-            .fillMaxSize()
-            .padding(SpaceLarge)) {
-            StandardTextField(
-                modifier = Modifier.fillMaxWidth(),
-                text = viewModel.searchState.value.text,
-                hint = stringResource(id = R.string.search),
-                error = "",
-                leadingIcon = Icons.Default.Search,
-                onValueChange = {
-                    viewModel.setSearchState(
-                        StandardTextFieldState(text = it)
                     )
                 }
             )
-            Spacer(modifier = Modifier.height(SpaceLarge))
-            LazyColumn(
-                modifier = Modifier.fillMaxSize()
-            ){
-                items(10){
-                    UserProfileItem(
-                        user = User(
-                            userId = "626f8dc5b8d0dc0e92182b4f",
-                            profilePictureUrl = "",
-                            username = "Robert Constantin",
-                            bio = "Lorem ipsum es el texto que se usa habitualmente en diseño " +
-                                    "gráfico en demostraciones de tipografías o de borradores de diseño " +
-                                    "para probar el diseño visual antes de insertar el texto final",
-                            followerCount = 234,
-                            followingCount = 432,
-                            postCount = 23
-                        ),
-                        actionIcon = {
-                            Icon(
-                                imageVector = Icons.Default.PersonAdd,
-                                contentDescription = null,
-                                modifier = Modifier.size(IconSizeMedium)
-                            )
-                        },
-                        onItemClick = {
-                            onNavigate(
-                                Screen.ProfileScreen.route + "?userId=626f8dc5b8d0dc0e92182b4f"
-                            )
-                        }
-                    )
-                    Spacer(modifier = Modifier.height(SpaceMedium))
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(SpaceLarge)
+            ) {
+                StandardTextField(
+                    modifier = Modifier.fillMaxWidth(),
+                    text = viewModel.searchFieldState.value.text,
+                    hint = stringResource(id = R.string.search),
+                    error = "",
+                    leadingIcon = Icons.Default.Search,
+                    onValueChange = {
+                        viewModel.onEvent(
+                            SearchEvent.Query(it)
+                        )
+                    }
+                )
+                Spacer(modifier = Modifier.height(SpaceLarge))
+                LazyColumn(
+                    modifier = Modifier.fillMaxSize()
+                ) {
+                    items(state.userItems) { user ->
+                        UserProfileItem(
+                            user = User(
+                                userId = user.userId,
+                                profilePictureUrl = user.profilePictureUrl,
+                                username = user.userName,
+                                bio = user.bio,
+                                //we don't get the numbers from the response, so they are not needed
+                                followerCount = 0,
+                                followingCount = 0,
+                                postCount = 0
+                            ),
+                            actionIcon = {
+                                IconButton(
+                                    onClick = {
+                                        viewModel.onEvent(SearchEvent.ToggleFollowState(user.userId))
+                                    },
+                                    modifier = Modifier.size(IconSizeMedium)
+                                ) {
+                                    Icon(
+                                        imageVector = if (user.isFollowing) {
+                                            Icons.Default.PersonRemove
+                                        } else Icons.Default.PersonAdd,
+
+                                        contentDescription = null,
+                                        modifier = Modifier.size(IconSizeMedium)
+                                    )
+                                }
+
+                            },
+                            onItemClick = {
+                                onNavigate(
+                                    Screen.ProfileScreen.route + "?userId=${user.userId}"
+                                )
+                            }
+                        )
+                        Spacer(modifier = Modifier.height(SpaceMedium))
+                    }
                 }
             }
         }
+        if (state.isLoading) {
+            CircularProgressIndicator(
+                modifier = Modifier.align(Alignment.Center)
+            )
+        }
     }
+
 
 }

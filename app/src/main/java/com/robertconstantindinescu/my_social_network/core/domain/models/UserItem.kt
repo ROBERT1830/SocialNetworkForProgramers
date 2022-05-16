@@ -1,4 +1,4 @@
-package com.robertconstantindinescu.my_social_network.feature_profile.domain.model
+package com.robertconstantindinescu.my_social_network.core.domain.models
 
 data class UserItem(
     val userId: String,

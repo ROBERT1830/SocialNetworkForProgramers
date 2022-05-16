@@ -7,14 +7,17 @@ import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import com.google.gson.Gson
 import com.robertconstantindinescu.my_social_network.R
+import com.robertconstantindinescu.my_social_network.core.data.dto.response.UserItemDto
 import com.robertconstantindinescu.my_social_network.core.data.remote.PostApi
 import com.robertconstantindinescu.my_social_network.core.domain.models.Post
+import com.robertconstantindinescu.my_social_network.core.domain.models.UserItem
 import com.robertconstantindinescu.my_social_network.core.util.Constants
 import com.robertconstantindinescu.my_social_network.core.util.Resource
 import com.robertconstantindinescu.my_social_network.core.util.SimpleResource
 import com.robertconstantindinescu.my_social_network.core.util.UiText
 import com.robertconstantindinescu.my_social_network.feature_post.data.paging.PostSource
 import com.robertconstantindinescu.my_social_network.feature_profile.data.remote.ProfileApi
+import com.robertconstantindinescu.my_social_network.feature_profile.data.remote.request.FollowUpdateRequest
 import com.robertconstantindinescu.my_social_network.feature_profile.domain.model.Profile
 import com.robertconstantindinescu.my_social_network.feature_profile.domain.model.Skill
 import com.robertconstantindinescu.my_social_network.feature_profile.domain.model.UpdateProfileData
@@ -145,11 +148,109 @@ class ProfileRepositoryImpl(
 
     override fun getPostsPaged(userId: String): Flow<PagingData<Post>> {
         return Pager(PagingConfig(pageSize = Constants.PAGE_SIZE_POSTS)) {
-            //here get the post from an other
+            //here get the post from an other user
             PostSource(postApi, PostSource.Source.Profile(userId))
         }.flow
     }
+
+    override suspend fun searchUser(query: String): Resource<List<UserItem>> {
+        return try {
+            val response = profileApi.searchUser(query)
+            Resource.Success(
+                data = response.map {
+                    it.toUserItem()
+                }
+            )
+
+            //couldnt send the data or coudl not receive. Some kind of time out
+        } catch (e: IOException) {
+            Resource.Error(
+                uiText = UiText.StringResource(R.string.error_couldnt_reach_server)
+            )
+
+
+            //exception for verything that doesnt start with the 2 xx (200 ok)
+        } catch (e: HttpException) {
+            Resource.Error(
+                uiText = UiText.StringResource(R.string.oops_something_went_wrong)
+            )
+        }
+
+    }
+
+    override suspend fun followUser(userId: String): SimpleResource {
+        return try {
+            val response = profileApi.followUser(
+                request = FollowUpdateRequest(userId)
+            )
+            if (response.successful) {
+                Resource.Success(Unit)
+            } else {
+                response.message?.let { msg ->
+                    Resource.Error(UiText.DynamicString(msg))
+                } ?: Resource.Error(UiText.StringResource(R.string.error_unknown))
+
+            }
+            //couldnt send the data or coudl not receive. Some kind of time out
+        } catch (e: IOException) {
+            Resource.Error(
+                uiText = UiText.StringResource(R.string.error_couldnt_reach_server)
+            )
+            //exception for verything that doesnt start with the 2 xx (200 ok)
+        } catch (e: HttpException) {
+            Resource.Error(
+                uiText = UiText.StringResource(R.string.oops_something_went_wrong)
+            )
+        }
+    }
+
+    override suspend fun unfollowUser(userId: String): SimpleResource {
+        return try {
+            val response = profileApi.unfollowUser(
+                userId = userId
+            )
+            if (response.successful) {
+                Resource.Success(Unit)
+            } else {
+                response.message?.let { msg ->
+                    Resource.Error(UiText.DynamicString(msg))
+                } ?: Resource.Error(UiText.StringResource(R.string.error_unknown))
+
+            }
+            //couldnt send the data or coudl not receive. Some kind of time out
+        } catch (e: IOException) {
+            Resource.Error(
+                uiText = UiText.StringResource(R.string.error_couldnt_reach_server)
+            )
+            //exception for verything that doesnt start with the 2 xx (200 ok)
+        } catch (e: HttpException) {
+            Resource.Error(
+                uiText = UiText.StringResource(R.string.oops_something_went_wrong)
+            )
+        }
+    }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

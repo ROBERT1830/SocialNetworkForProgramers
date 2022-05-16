@@ -24,6 +24,7 @@ fun ProfileHeaderSection(
     user: User,
     modifier: Modifier = Modifier,
     isOwnProfile: Boolean = true,
+    isFollowing: Boolean = true,
     onAddEditClick: () -> Unit = {}
 
 ) {
@@ -75,7 +76,7 @@ fun ProfileHeaderSection(
         }
 
 
-        ProfileStats(user = user, isOwnProfile = isOwnProfile)
+        ProfileStats(user = user, isOwnProfile = isOwnProfile, isFollowing = isFollowing)
 
 
 

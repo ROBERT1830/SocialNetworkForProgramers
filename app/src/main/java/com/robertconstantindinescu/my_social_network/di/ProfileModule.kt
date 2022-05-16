@@ -44,7 +44,9 @@ object ProfileModule {
             getSkillsUseCase = GetSkillsUseCase(repository),
             updateProfileUseCase = UpdateProfileUseCase(repository),
             setSkillSelectedUseCase = SetSkillSelectedUseCase(),
-            getPostsForProfileUseCase = GetPostsForProfileUseCase(repository)
+            getPostsForProfileUseCase = GetPostsForProfileUseCase(repository),
+            searchUserUseCase = SearchUserUseCase(repository),
+            toggleFollowStateForUserUseCase = ToggleFollowStateForUserUseCase(repository)
         )
     }
 

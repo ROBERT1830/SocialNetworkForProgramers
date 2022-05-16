@@ -12,6 +12,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import coil.compose.rememberImagePainter
 import com.robertconstantindinescu.my_social_network.R
 import com.robertconstantindinescu.my_social_network.core.domain.models.User
 import com.robertconstantindinescu.my_social_network.core.presentation.ui.theme.*
@@ -41,7 +42,12 @@ fun UserProfileItem(
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Image(
-                painter = painterResource(id = R.drawable.robert),
+                painter = rememberImagePainter(
+                    data = user.profilePictureUrl,
+                    builder = {
+                        crossfade(true)
+                    }
+                ),
                 contentDescription = null,
                 modifier = Modifier
                     .size(ProfilePictureSizeSmall)

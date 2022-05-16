@@ -1,16 +1,15 @@
-package com.robertconstantindinescu.my_social_network.feature_profile.data.remote.response
+package com.robertconstantindinescu.my_social_network.core.data.dto.response
 
-import com.robertconstantindinescu.my_social_network.core.domain.models.User
-import com.robertconstantindinescu.my_social_network.feature_profile.domain.model.UserItem
+import com.robertconstantindinescu.my_social_network.core.domain.models.UserItem
 
-data class UserResponseItem(
+data class UserItemDto(
     val userId: String,
     val userName: String,
     val profilePictureUrl: String,
     val bio:String,
     val isFollowing: Boolean
 ){
-    fun toUserItem():UserItem{
+    fun toUserItem(): UserItem {
         return UserItem(
             userId = userId,
             userName = userName,

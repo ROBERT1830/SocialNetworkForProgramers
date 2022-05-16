@@ -1,6 +1,9 @@
 package com.robertconstantindinescu.my_social_network.feature_profile.data.remote
 
 import com.robertconstantindinescu.my_social_network.core.data.dto.response.BasicApiResponse
+import com.robertconstantindinescu.my_social_network.core.data.dto.response.UserItemDto
+import com.robertconstantindinescu.my_social_network.core.util.Resource
+import com.robertconstantindinescu.my_social_network.feature_profile.data.remote.request.FollowUpdateRequest
 import com.robertconstantindinescu.my_social_network.feature_profile.data.remote.response.ProfileResponse
 import com.robertconstantindinescu.my_social_network.feature_profile.data.remote.response.SkillDto
 import com.robertconstantindinescu.my_social_network.feature_profile.domain.model.Skill
@@ -25,6 +28,21 @@ interface ProfileApi {
 
     @GET("/api/skills/get")
     suspend fun getSkills(): List<SkillDto>
+
+    @GET("/api/user/search")
+    suspend fun searchUser(
+        @Query("query") query:String
+    ):List<UserItemDto>
+
+    @POST("/api/following/follow")
+    suspend fun followUser(
+        @Body request: FollowUpdateRequest
+    ): BasicApiResponse<Unit>
+
+    @DELETE("/api/following/unfollow")
+    suspend fun unfollowUser(
+        @Query("userId") userId: String
+    ): BasicApiResponse<Unit>
 
     companion object {
         const val BASE_URL = "http://10.0.2.2:8001/"
