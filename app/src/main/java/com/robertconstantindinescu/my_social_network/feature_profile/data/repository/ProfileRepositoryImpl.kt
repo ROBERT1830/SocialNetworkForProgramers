@@ -7,7 +7,6 @@ import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import com.google.gson.Gson
 import com.robertconstantindinescu.my_social_network.R
-import com.robertconstantindinescu.my_social_network.core.data.dto.response.UserItemDto
 import com.robertconstantindinescu.my_social_network.core.data.remote.PostApi
 import com.robertconstantindinescu.my_social_network.core.domain.models.Post
 import com.robertconstantindinescu.my_social_network.core.domain.models.UserItem
@@ -15,7 +14,7 @@ import com.robertconstantindinescu.my_social_network.core.util.Constants
 import com.robertconstantindinescu.my_social_network.core.util.Resource
 import com.robertconstantindinescu.my_social_network.core.util.SimpleResource
 import com.robertconstantindinescu.my_social_network.core.util.UiText
-import com.robertconstantindinescu.my_social_network.feature_post.data.paging.PostSource
+import com.robertconstantindinescu.my_social_network.feature_post.data.paging.ActivitySource
 import com.robertconstantindinescu.my_social_network.feature_profile.data.remote.ProfileApi
 import com.robertconstantindinescu.my_social_network.feature_profile.data.remote.request.FollowUpdateRequest
 import com.robertconstantindinescu.my_social_network.feature_profile.domain.model.Profile
@@ -147,9 +146,9 @@ class ProfileRepositoryImpl(
     }
 
     override fun getPostsPaged(userId: String): Flow<PagingData<Post>> {
-        return Pager(PagingConfig(pageSize = Constants.PAGE_SIZE_POSTS)) {
+        return Pager(PagingConfig(pageSize = Constants.DEFAULT_PAGE_SIZE)) {
             //here get the post from an other user
-            PostSource(postApi, PostSource.Source.Profile(userId))
+            ActivitySource(postApi, ActivitySource.Source.Profile(userId))
         }.flow
     }
 

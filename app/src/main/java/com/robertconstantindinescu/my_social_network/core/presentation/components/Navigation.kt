@@ -8,7 +8,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.robertconstantindinescu.my_social_network.presentation.MainFeedScreen
-import com.robertconstantindinescu.my_social_network.feature_activity.presentation.activity.ActivityScreen
+import com.robertconstantindinescu.my_social_network.feature_activity.presentation.ActivityScreen
 import com.robertconstantindinescu.my_social_network.feature_chat.presentation.chat.ChatScreen
 import com.robertconstantindinescu.my_social_network.core.domain.models.Post
 import com.robertconstantindinescu.my_social_network.core.util.Screen

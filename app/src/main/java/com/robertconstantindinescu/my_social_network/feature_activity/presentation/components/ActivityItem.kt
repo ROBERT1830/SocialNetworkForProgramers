@@ -20,8 +20,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.robertconstantindinescu.my_social_network.R
 import com.robertconstantindinescu.my_social_network.core.domain.models.Activity
-import com.robertconstantindinescu.my_social_network.domain.util.ActivityAction
 import com.robertconstantindinescu.my_social_network.core.presentation.ui.theme.SpaceSmall
+import com.robertconstantindinescu.my_social_network.domain.util.ActivityType
 
 //all that stuff will be saved in backend
 @Composable
@@ -40,25 +40,34 @@ fun ActivityItem(
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            val fillerText = when(activity.actionType){
-                is ActivityAction.LikedPost ->{
+            val fillerText = when(activity.activityType){
+                is ActivityType.LikedPost ->{
                     stringResource(id = R.string.liked)
                 }
-                is ActivityAction.CommentedOnPost -> {
+                is ActivityType.CommentedOnPost -> {
                     stringResource(id = R.string.commented_on)
                 }
-                is ActivityAction.FollowedYou -> {
+                is ActivityType.FollowedUser -> {
                     stringResource(id = R.string.followed_you)
                 }
+                is ActivityType.LikedComment -> {
+
+                }
+                else -> {stringResource(id = R.string.liked)}
             }
-            val actionText = when(activity.actionType){
-                is ActivityAction.LikedPost ->{
+            val actionText = when(activity.activityType){
+                is ActivityType.LikedPost ->{
                     stringResource(id = R.string.your_post)
                 }
-                is ActivityAction.CommentedOnPost -> {
+                is ActivityType.CommentedOnPost -> {
                     stringResource(id = R.string.your_post)
                 }
-                is ActivityAction.FollowedYou -> ""
+                is ActivityType.FollowedUser -> ""
+
+                is ActivityType.LikedComment -> {
+                    stringResource(id = R.string.your_comment)
+                }
+                else -> {stringResource(id = R.string.liked)}
             }
 
             Text(
