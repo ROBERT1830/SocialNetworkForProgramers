@@ -78,6 +78,7 @@ fun MainFeedScreen(
                 items(posts){ post ->
                     Post(
                         post = com.robertconstantindinescu.my_social_network.core.domain.models.Post(
+                            id = post?.id ?:"",
                             username = post?.username ?: "",
                             imageUrl = post?.imageUrl ?: "",
                             profilePicture = post?.profilePicture ?:"",
@@ -86,7 +87,7 @@ fun MainFeedScreen(
                             commentCount = post?.commentCount?:0
                         ),
                         onPostClick = {
-                            onNavigate(Screen.PostDetailScreen.route)
+                            onNavigate(Screen.PostDetailScreen.route + "/${post?.id}")
                         }
                     )
                 }

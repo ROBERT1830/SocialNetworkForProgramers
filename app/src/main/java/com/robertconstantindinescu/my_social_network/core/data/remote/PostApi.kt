@@ -1,7 +1,10 @@
 package com.robertconstantindinescu.my_social_network.core.data.remote
 
 import com.robertconstantindinescu.my_social_network.core.data.dto.response.BasicApiResponse
+import com.robertconstantindinescu.my_social_network.core.domain.models.Comment
 import com.robertconstantindinescu.my_social_network.core.domain.models.Post
+import com.robertconstantindinescu.my_social_network.feature_post.data.data_source.remote.dto.CommentDto
+import com.robertconstantindinescu.my_social_network.feature_post.data.data_source.remote.dto.CreateCommentRequest
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import retrofit2.http.*
@@ -31,6 +34,22 @@ interface PostApi {
     suspend fun createPost(
         @Part postData: MultipartBody.Part,
         @Part postImage: MultipartBody.Part
+    ): BasicApiResponse<Unit>
+
+
+    @GET("/api/post/details")
+    suspend fun getPostDetails(
+        @Query("postId") postId: String
+    ): BasicApiResponse<Post>
+
+    @GET("/api/comment/get")
+    suspend fun getCommentsForPost(
+        @Query("postId") postId: String
+    ): List<CommentDto>
+
+    @POST
+    suspend fun createComment(
+        @Body request: CreateCommentRequest
     ): BasicApiResponse<Unit>
 
     companion object {

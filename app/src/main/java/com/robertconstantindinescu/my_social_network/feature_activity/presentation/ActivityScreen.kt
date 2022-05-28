@@ -66,7 +66,8 @@ fun ActivityScreen(
                                 parentId = activity.parentId,
                                 username = activity.username
                             ),
-                            modifier = Modifier.padding(SpaceSmall)
+                            modifier = Modifier.padding(SpaceSmall),
+                            onNavigate = onNavigate
 
                         )
                     }

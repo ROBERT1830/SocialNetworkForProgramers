@@ -15,6 +15,7 @@ import com.robertconstantindinescu.my_social_network.core.util.Resource
 import com.robertconstantindinescu.my_social_network.core.util.SimpleResource
 import com.robertconstantindinescu.my_social_network.core.util.UiText
 import com.robertconstantindinescu.my_social_network.feature_post.data.paging.ActivitySource
+import com.robertconstantindinescu.my_social_network.feature_post.data.paging.PostSource
 import com.robertconstantindinescu.my_social_network.feature_profile.data.remote.ProfileApi
 import com.robertconstantindinescu.my_social_network.feature_profile.data.remote.request.FollowUpdateRequest
 import com.robertconstantindinescu.my_social_network.feature_profile.domain.model.Profile
@@ -148,7 +149,7 @@ class ProfileRepositoryImpl(
     override fun getPostsPaged(userId: String): Flow<PagingData<Post>> {
         return Pager(PagingConfig(pageSize = Constants.DEFAULT_PAGE_SIZE)) {
             //here get the post from an other user
-            ActivitySource(postApi, ActivitySource.Source.Profile(userId))
+            PostSource(postApi, PostSource.Source.Profile(userId))
         }.flow
     }
 

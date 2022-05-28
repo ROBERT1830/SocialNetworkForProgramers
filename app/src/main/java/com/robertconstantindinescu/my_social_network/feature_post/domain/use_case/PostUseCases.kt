@@ -2,5 +2,8 @@ package com.robertconstantindinescu.my_social_network.feature_post.domain.use_ca
 
 data class PostUseCases(
     val getPostForFollowsUseCase: GetPostForFollowsUseCase,
-    val createPostUseCase:CreatePostUseCae
+    val createPostUseCase:CreatePostUseCae,
+    val getPostDetailsUseCase: GetPostDetailsUseCase,
+    val getCommentsForPostUseCase: GetCommentsForPostUseCase,
+    val createCommentUseCase: CreateCommentUseCase
 )

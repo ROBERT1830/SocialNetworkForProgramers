@@ -4,9 +4,7 @@ import com.google.gson.Gson
 import com.robertconstantindinescu.my_social_network.core.data.remote.PostApi
 import com.robertconstantindinescu.my_social_network.feature_post.data.repository.PostRepositoryImpl
 import com.robertconstantindinescu.my_social_network.feature_post.domain.repository.PostRepository
-import com.robertconstantindinescu.my_social_network.feature_post.domain.use_case.CreatePostUseCae
-import com.robertconstantindinescu.my_social_network.feature_post.domain.use_case.GetPostForFollowsUseCase
-import com.robertconstantindinescu.my_social_network.feature_post.domain.use_case.PostUseCases
+import com.robertconstantindinescu.my_social_network.feature_post.domain.use_case.*
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -43,7 +41,10 @@ object PostModule {
     fun providePostUseCases(repository: PostRepository): PostUseCases{
         return PostUseCases(
             getPostForFollowsUseCase = GetPostForFollowsUseCase(repository),
-            createPostUseCase = CreatePostUseCae(repository)
+            createPostUseCase = CreatePostUseCae(repository),
+            getPostDetailsUseCase = GetPostDetailsUseCase(repository),
+            getCommentsForPostUseCase = GetCommentsForPostUseCase(repository),
+            createCommentUseCase = CreateCommentUseCase(repository)
         )
     }
 }

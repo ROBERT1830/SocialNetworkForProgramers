@@ -47,6 +47,12 @@ class ActivitySource(
     override fun getRefreshKey(state: PagingState<Int, Activity>): Int? {
         return state.anchorPosition
     }
+
+    /**
+     * We want to differentiate post from a those people we follow and post for a specific profile.
+     */
+
+
 }
 
 

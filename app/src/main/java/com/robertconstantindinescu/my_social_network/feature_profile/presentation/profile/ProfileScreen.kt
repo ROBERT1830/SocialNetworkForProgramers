@@ -265,6 +265,7 @@ fun ProfileScreen(
                 )
                 Post(
                     post = Post(
+                        id = post?.id ?: "",
                         username = post?.username ?: "",
                         imageUrl = post?.imageUrl ?: "",
                         profilePicture = post?.profilePicture ?: "",
@@ -274,7 +275,7 @@ fun ProfileScreen(
                     ),
                     showProfileImage = false,
                     onPostClick = {
-                        onNavigate(Screen.PostDetailScreen.route)
+                        onNavigate(Screen.PostDetailScreen.route + "/${post?.id}")
                     }
                 )
 

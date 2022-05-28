@@ -124,19 +124,20 @@ fun Navigation(
                 onNavigate = navController::navigate)
         }
 
-        composable(route = Screen.PostDetailScreen.route) {
+        composable(
+            route = Screen.PostDetailScreen.route + "/{postId}",
+            arguments = listOf(
+                navArgument(
+                    name = "postId"
+                ){
+                    type = NavType.StringType
+                }
+            )
+        ) {
             PostDetailScreen(
                 onNavigateUp = navController::navigateUp,
                 onNavigate = navController::navigate,
-                post = Post(
-                    username = "Robert Constantin",
-                    imageUrl = "",
-                    profilePicture = "",
-                    description = "sadasd asdasd asfsd fsd g sdg sd g sf gfs g df gdf g dsf gs dfg " +
-                            "sdfgsdfgsdfgsdfg sdfg sdfg aerhwet hd b",
-                    likeCount = 17,
-                    commentCount = 7
-                )
+                scaffoldState =  scaffoldState
             )
         }
 

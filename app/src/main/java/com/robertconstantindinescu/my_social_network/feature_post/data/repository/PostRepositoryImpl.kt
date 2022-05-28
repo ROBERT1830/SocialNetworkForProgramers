@@ -13,9 +13,12 @@ import com.robertconstantindinescu.my_social_network.core.util.Resource
 import com.robertconstantindinescu.my_social_network.core.util.SimpleResource
 import com.robertconstantindinescu.my_social_network.core.util.UiText
 import com.robertconstantindinescu.my_social_network.core.data.remote.PostApi
+import com.robertconstantindinescu.my_social_network.core.domain.models.Comment
+import com.robertconstantindinescu.my_social_network.feature_post.data.data_source.remote.dto.CreateCommentRequest
 import com.robertconstantindinescu.my_social_network.feature_post.data.paging.ActivitySource
 import com.robertconstantindinescu.my_social_network.feature_post.data.paging.PostSource
 import com.robertconstantindinescu.my_social_network.feature_post.domain.repository.PostRepository
+import com.robertconstantindinescu.my_social_network.feature_profile.data.remote.request.FollowUpdateRequest
 import kotlinx.coroutines.flow.Flow
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
@@ -26,7 +29,7 @@ import java.io.IOException
 class PostRepositoryImpl(
     private val api: PostApi,
     private val gson: Gson
-): PostRepository {
+) : PostRepository {
 
 //    override suspend fun getPostForFollows(page: Int, pageSize: Int): Resource<List<Post>> {
 //
@@ -82,7 +85,7 @@ class PostRepositoryImpl(
                     ),
                 postImage = MultipartBody.Part
                     .createFormData(
-                        name =  "post_image",
+                        name = "post_image",
                         filename = file.name,
                         body = file.asRequestBody()
                     )
@@ -108,25 +111,85 @@ class PostRepositoryImpl(
             )
         }
     }
+
+    override suspend fun getPostDetails(postId: String): Resource<Post> {
+
+        return try {
+            val response = api.getPostDetails(
+                postId = postId
+            )
+            if (response.successful) {
+                Resource.Success(response.data)
+            } else {
+                response.message?.let { msg ->
+                    Resource.Error(UiText.DynamicString(msg))
+                } ?: Resource.Error(UiText.StringResource(R.string.error_unknown))
+
+            }
+            //couldnt send the data or coudl not receive. Some kind of time out
+        } catch (e: IOException) {
+            Resource.Error(
+                uiText = UiText.StringResource(R.string.error_couldnt_reach_server)
+            )
+            //exception for verything that doesnt start with the 2 xx (200 ok)
+        } catch (e: HttpException) {
+            Resource.Error(
+                uiText = UiText.StringResource(R.string.oops_something_went_wrong)
+            )
+        }
+    }
+
+    override suspend fun getCommentsForPost(postId: String): Resource<List<Comment>> {
+        return try {
+            val comments = api.getCommentsForPost(
+                postId = postId
+            ).map {
+                it.toComment()
+            }
+            Resource.Success(comments)
+            //couldnt send the data or coudl not receive. Some kind of time out
+        } catch (e: IOException) {
+            Resource.Error(
+                uiText = UiText.StringResource(R.string.error_couldnt_reach_server)
+            )
+            //exception for verything that doesnt start with the 2 xx (200 ok)
+        } catch (e: HttpException) {
+            Resource.Error(
+                uiText = UiText.StringResource(R.string.oops_something_went_wrong)
+            )
+        }
+    }
+
+    override suspend fun createComment(postId: String, comment: String): SimpleResource {
+        return try {
+            val response = api.createComment(
+                CreateCommentRequest(
+                    comment = comment,
+                    postId = postId
+                )
+            )
+            if (response.successful) {
+                Resource.Success(response.data)
+            } else {
+                response.message?.let { msg ->
+                    Resource.Error(UiText.DynamicString(msg))
+                } ?: Resource.Error(UiText.StringResource(R.string.error_unknown))
+
+            }
+        }
+        //couldnt send the data or coudl not receive. Some kind of time out
+        catch (e: IOException) {
+            Resource.Error(
+                uiText = UiText.StringResource(R.string.error_couldnt_reach_server)
+            )
+            //exception for verything that doesnt start with the 2 xx (200 ok)
+        } catch (e: HttpException) {
+            Resource.Error(
+                uiText = UiText.StringResource(R.string.oops_something_went_wrong)
+            )
+        }
+    }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

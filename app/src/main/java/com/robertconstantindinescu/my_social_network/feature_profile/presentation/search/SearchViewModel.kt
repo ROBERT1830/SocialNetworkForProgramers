@@ -1,5 +1,6 @@
 package com.robertconstantindinescu.my_social_network.feature_profile.presentation.search
 
+import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
@@ -60,11 +61,13 @@ class SearchViewModel @Inject constructor(
              * That needs to be executed first to not change inmediatly the
              * isFollowing from status.
              */
-            /*Take a look at userItems and find the user user with the user id we want to toggle
-            * the status and check if the status isFollowing is true. */
+            /*Take a look at userItems (contains all users in db that could be followed or not,
+            i mean could have isFollowing true or false) and find the user  with the user id we want to toggle
+            * the status and check if the status isFollowing of that objects is true. */
             val isFollowing = searchState.value.userItems.find {
                 it.userId == userId
             }?.isFollowing == true
+            println("isFollowing before: $isFollowing")
 
             //This is for toggle or untoggle the icon for follow or unfollow.
             _searchState.value = searchState.value.copy(
@@ -80,8 +83,8 @@ class SearchViewModel @Inject constructor(
             val result = profileUseCases.toggleFollowStateForUserUseCase(
                 userId = userId,
                 isFollowing = isFollowing
-
             )
+            println("isFollowing after: $isFollowing")
 
             when(result){
                 is Resource.Success -> Unit

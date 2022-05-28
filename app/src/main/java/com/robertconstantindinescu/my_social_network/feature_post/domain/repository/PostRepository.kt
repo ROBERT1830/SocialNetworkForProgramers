@@ -2,7 +2,9 @@ package com.robertconstantindinescu.my_social_network.feature_post.domain.reposi
 
 import android.net.Uri
 import androidx.paging.PagingData
+import com.robertconstantindinescu.my_social_network.core.domain.models.Comment
 import com.robertconstantindinescu.my_social_network.core.domain.models.Post
+import com.robertconstantindinescu.my_social_network.core.util.Resource
 import com.robertconstantindinescu.my_social_network.core.util.SimpleResource
 import kotlinx.coroutines.flow.Flow
 
@@ -16,4 +18,10 @@ interface PostRepository {
      *
      */
     suspend fun createPost(description: String, imageUri: Uri): SimpleResource
+
+    suspend fun getPostDetails(postId: String): Resource<Post>  //we have some data to attach so is not SimpleResource
+
+    suspend fun getCommentsForPost(postId: String): Resource<List<Comment>>
+
+    suspend fun createComment(postId:String, comment: String): SimpleResource
 }

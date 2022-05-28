@@ -11,7 +11,7 @@ import java.io.IOException
 
 class PostSource(
     private val api: PostApi,
-    private val source: ActivitySource.Source
+    private val source: Source
 ): PagingSource<Int, Post>() {
 
     private var currentPage = 0
