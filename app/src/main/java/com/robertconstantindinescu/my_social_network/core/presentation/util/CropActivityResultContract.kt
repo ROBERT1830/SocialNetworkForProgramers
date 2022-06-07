@@ -13,6 +13,11 @@ import java.io.File
 
 /**
  * The contract get a uri and return an uri
+ *
+ * we creatye  an intent and the intent should be fired of onece we pick a picutre. but it also gets
+ * fired off if we go back and not select an image. That should not happen.
+ *
+ *
  */
 class CropActivityResultContract(
     private val aspectRatioX: Float,
@@ -22,6 +27,16 @@ class CropActivityResultContract(
     override fun createIntent(context: Context, input: Uri): Intent {
      //This method creates new Intent builder and sets both source and destination image URIs.
         return UCrop.of(
+            /**
+             * if we didnt choose a uri because we dont pick an image, will be null
+             * and that wil lbe send to the Ucrop library. And because id doesnt accept a nullable uri
+             * we somehow we have to retunr an other intent. So this will bne the intne
+             * tha twe send and crop the UcxRop library is the input is no null and opens the cropp libarry with the image
+             * But if we dont havew an uri, we dont want to crop something. so we dont have a uri
+             * then we don want to crop something so we instead we have to choose a different intent
+             * but if we retiurn an empty intent it doesnt have an ewmpty activiirty that can be launched and it
+             * just crashes because it says activity cant be found.
+             */
             input,
             Uri.fromFile(
                 File(

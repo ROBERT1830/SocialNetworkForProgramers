@@ -1,10 +1,11 @@
 package com.robertconstantindinescu.my_social_network.di
 
 import com.google.gson.Gson
-import com.robertconstantindinescu.my_social_network.core.data.remote.PostApi
+import com.robertconstantindinescu.my_social_network.feature_post.data.data_source.remote.PostApi
 import com.robertconstantindinescu.my_social_network.feature_profile.data.remote.ProfileApi
-import com.robertconstantindinescu.my_social_network.feature_profile.data.repository.ProfileRepositoryImpl
-import com.robertconstantindinescu.my_social_network.feature_profile.domain.repository.ProfileRepository
+import com.robertconstantindinescu.my_social_network.core.data.repository.ProfileRepositoryImpl
+import com.robertconstantindinescu.my_social_network.core.domain.repository.ProfileRepository
+import com.robertconstantindinescu.my_social_network.core.domain.use_case.ToggleFollowStateForUserUseCase
 import com.robertconstantindinescu.my_social_network.feature_profile.domain.use_case.*
 import dagger.Module
 import dagger.Provides
@@ -48,6 +49,12 @@ object ProfileModule {
             searchUserUseCase = SearchUserUseCase(repository),
             toggleFollowStateForUserUseCase = ToggleFollowStateForUserUseCase(repository)
         )
+    }
+
+    @Provides
+    @Singleton
+    fun provideToggleFollowForUseCase(repository: ProfileRepository): ToggleFollowStateForUserUseCase {
+        return ToggleFollowStateForUserUseCase(repository)
     }
 
 

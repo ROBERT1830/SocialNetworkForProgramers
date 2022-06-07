@@ -1,13 +1,12 @@
 package com.robertconstantindinescu.my_social_network.feature_profile.domain.use_case
 
 import android.net.Uri
-import android.util.Patterns
 import com.robertconstantindinescu.my_social_network.R
 import com.robertconstantindinescu.my_social_network.core.util.Resource
 import com.robertconstantindinescu.my_social_network.core.util.SimpleResource
 import com.robertconstantindinescu.my_social_network.core.util.UiText
 import com.robertconstantindinescu.my_social_network.feature_profile.domain.model.UpdateProfileData
-import com.robertconstantindinescu.my_social_network.feature_profile.domain.repository.ProfileRepository
+import com.robertconstantindinescu.my_social_network.core.domain.repository.ProfileRepository
 import com.robertconstantindinescu.my_social_network.feature_profile.domain.util.ProfileConstants
 
 class UpdateProfileUseCase(

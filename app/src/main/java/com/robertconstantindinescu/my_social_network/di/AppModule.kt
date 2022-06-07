@@ -4,9 +4,13 @@ import android.app.Application
 import android.content.Context.MODE_PRIVATE
 import android.content.SharedPreferences
 import com.google.gson.Gson
+import com.robertconstantindinescu.my_social_network.core.domain.repository.ProfileRepository
 import com.robertconstantindinescu.my_social_network.core.domain.use_case.GetOwnUserIdUseCase
+import com.robertconstantindinescu.my_social_network.core.domain.use_case.ToggleFollowStateForUserUseCase
 import com.robertconstantindinescu.my_social_network.core.util.Constants
 import com.robertconstantindinescu.my_social_network.core.util.Constants.SHARED_PREF_NAME
+import com.robertconstantindinescu.my_social_network.core.util.DefaultPostLiker
+import com.robertconstantindinescu.my_social_network.core.util.PostLiker
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -79,6 +83,12 @@ object AppModule {
     @Singleton
     fun provideGetOwnUserIdUseCase(sharedPreferences: SharedPreferences): GetOwnUserIdUseCase{
         return GetOwnUserIdUseCase(sharedPreferences)
+    }
+
+    @Provides
+    @Singleton
+    fun providePostLiker(): PostLiker {
+        return DefaultPostLiker()
     }
 
 

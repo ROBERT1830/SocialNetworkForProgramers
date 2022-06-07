@@ -1,8 +1,7 @@
-package com.robertconstantindinescu.my_social_network.feature_profile.domain.use_case
+package com.robertconstantindinescu.my_social_network.core.domain.use_case
 
-import android.text.BoringLayout
 import com.robertconstantindinescu.my_social_network.core.util.SimpleResource
-import com.robertconstantindinescu.my_social_network.feature_profile.domain.repository.ProfileRepository
+import com.robertconstantindinescu.my_social_network.core.domain.repository.ProfileRepository
 
 class ToggleFollowStateForUserUseCase(
     private val repository: ProfileRepository

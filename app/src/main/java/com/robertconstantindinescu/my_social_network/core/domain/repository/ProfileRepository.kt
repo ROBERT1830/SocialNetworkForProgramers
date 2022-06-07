@@ -1,10 +1,11 @@
-package com.robertconstantindinescu.my_social_network.feature_profile.domain.repository
+package com.robertconstantindinescu.my_social_network.core.domain.repository
 
 import android.net.Uri
 import androidx.paging.PagingData
 import com.robertconstantindinescu.my_social_network.core.data.dto.response.UserItemDto
 import com.robertconstantindinescu.my_social_network.core.domain.models.Post
 import com.robertconstantindinescu.my_social_network.core.domain.models.UserItem
+import com.robertconstantindinescu.my_social_network.core.util.Constants
 import com.robertconstantindinescu.my_social_network.core.util.Resource
 import com.robertconstantindinescu.my_social_network.core.util.SimpleResource
 import com.robertconstantindinescu.my_social_network.feature_profile.domain.model.Profile
@@ -17,7 +18,11 @@ interface ProfileRepository {
 
     //val posts: Flow<PagingData<Post>>
 
-    fun getPostsPaged(userId: String): Flow<PagingData<Post>>
+    suspend fun getPostsPaged(
+        page: Int = 0,
+        pageSize: Int = Constants.DEFAULT_PAGE_SIZE,
+        userId: String
+    ): Resource<List<Post>>
 
     suspend fun getProfile(userId: String): Resource<Profile>
 

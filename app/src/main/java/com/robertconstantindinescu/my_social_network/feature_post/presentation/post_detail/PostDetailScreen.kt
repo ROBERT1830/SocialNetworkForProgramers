@@ -1,41 +1,43 @@
 package com.robertconstantindinescu.my_social_network.feature_post.presentation.post_detail
 
+import android.content.Context
+import android.view.inputmethod.InputMethodManager
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Send
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavController
 import coil.compose.rememberImagePainter
 import com.robertconstantindinescu.my_social_network.R
-import com.robertconstantindinescu.my_social_network.core.domain.models.Post
 import com.robertconstantindinescu.my_social_network.core.presentation.components.ActionRow
 import com.robertconstantindinescu.my_social_network.core.presentation.components.StandardToolBar
 import com.robertconstantindinescu.my_social_network.core.presentation.ui.theme.*
 
-import com.robertconstantindinescu.my_social_network.core.domain.models.Comment
 import com.robertconstantindinescu.my_social_network.core.presentation.components.StandardTextField
 import com.robertconstantindinescu.my_social_network.core.presentation.util.UiEvent
 import com.robertconstantindinescu.my_social_network.core.presentation.util.asString
+import com.robertconstantindinescu.my_social_network.core.util.Screen
+import com.robertconstantindinescu.my_social_network.core.util.showKeyboard
+import com.robertconstantindinescu.my_social_network.feature_profile.presentation.profile.ProfileScreen
 import kotlinx.coroutines.flow.collectLatest
 
 @Composable
@@ -45,14 +47,23 @@ fun PostDetailScreen(
     onNavigateUp: () -> Unit = {},
     //here we will need to pass a post id to take the entire info from backend. 
     //but for now, just pass full object
-    viewModel: PostDetailViewModel = hiltViewModel()
+    viewModel: PostDetailViewModel = hiltViewModel(),
+    shouldShowKeyboard: Boolean = false
 ) {
 
     val state = viewModel.state.value
     val commentTextFieldState = viewModel.commentTextFieldState.value
 
     val context = LocalContext.current
+
+    val focusRequester = remember {
+        FocusRequester()
+    }
     LaunchedEffect(key1 = true){
+        if (shouldShowKeyboard){
+            context.showKeyboard()
+            focusRequester.requestFocus()
+        }
         viewModel.eventFlow.collectLatest { event ->
             when(event){
                 is UiEvent.ShowSnackBar -> {
@@ -120,8 +131,11 @@ fun PostDetailScreen(
                                             crossfade(true)
                                         }
                                     ),
+                                    contentScale = ContentScale.Crop,
                                     contentDescription = "Post Image",
-                                    modifier = Modifier.fillMaxWidth()
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .aspectRatio(16f / 9f) //this is the ratio for the images
                                 )
 
                                 Column(
@@ -130,20 +144,23 @@ fun PostDetailScreen(
                                         .padding(SpaceLarge)
                                 ) {
                                     ActionRow(
-                                        username = "Robert Constantin",
+                                        username = state.post.username,
                                         modifier = Modifier.fillMaxWidth(),
                                         onLikeClick = {
-
+                                            viewModel.onEvent(PostDetailEvent.LikePost)
                                         },
                                         onCommentClick = {
 
                                         },
                                         onShareClick = {
+                                            context.showKeyboard()
+                                            focusRequester.requestFocus()
 
                                         },
                                         onUsernameClick = {
-
-                                        }
+                                            onNavigate(Screen.ProfileScreen.route + "?userId=${post.userId}") //if you pass a mandatory argument you will have this error .....cannot be found in the navigation graph
+                                        },
+                                        isLiked = state.post.isLiked
                                     )
                                     Spacer(modifier = Modifier.height(SpaceMedium))
                                     Text(
@@ -155,11 +172,14 @@ fun PostDetailScreen(
 
                                     Text(
                                         text = stringResource(
-                                            id = R.string.liked_by_x_people,
+                                            id = R.string.x_likes,
                                             post.likeCount
                                         ),
                                         style = MaterialTheme.typography.body2,
-                                        fontWeight = FontWeight.Bold
+                                        fontWeight = FontWeight.Bold,
+                                        modifier = Modifier.clickable {
+                                            onNavigate(Screen.PersonalListScreen.route + "/${post.id}")
+                                        }
 
                                     )
 
@@ -225,7 +245,13 @@ fun PostDetailScreen(
                             horizontal = SpaceMedium,
                             vertical = SpaceSmall
                         ),
-                    comment = comment
+                    comment = comment,
+                    onLikeClick = {
+                        viewModel.onEvent(PostDetailEvent.LikeComment(comment.commentId))
+                    },
+                    onLikedByClick = {
+                        onNavigate(Screen.PersonalListScreen.route + "/${comment.commentId}")
+                    }
 //                    comment = Comment(
 //                        username = "Robert Constantin",
 //                        comment = "Lorem ismspu fonr  dgth amigh go Lorem ismspu fonr  dgth amigh go Lorem ismspu fonr  dgth amigh go Lorem ismspu fonr  dgth amigh go Lorem ismspu fonr  dgth amigh go Lorem ismspu fonr  dgth amigh go Lorem ismspu fonr  dgth amigh go Lorem ismspu fonr  dgth amigh go Lorem ismspu fonr  dgth amigh go Lorem ismspu fonr  dgth amigh go Lorem ismspu fonr  dgth amigh go  "

@@ -1,6 +1,7 @@
 package com.robertconstantindinescu.my_social_network.feature_post.presentation.post_detail
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.*
@@ -17,14 +18,14 @@ import coil.compose.rememberImagePainter
 import com.robertconstantindinescu.my_social_network.R
 import com.robertconstantindinescu.my_social_network.core.domain.models.Comment
 import com.robertconstantindinescu.my_social_network.core.presentation.ui.theme.ProfilePictureSizeExtraSmall
-import com.robertconstantindinescu.my_social_network.core.presentation.ui.theme.SpaceMedium
 import com.robertconstantindinescu.my_social_network.core.presentation.ui.theme.SpaceSmall
 
 @Composable
 fun Comment(
     modifier: Modifier = Modifier,
     comment: Comment, //mandatory argument
-    onLikeClick: (Boolean) -> Unit = {}
+    onLikeClick: (Boolean) -> Unit = {},
+    onLikedByClick: () -> Unit = {}
 ) {
     Card(
         modifier = modifier,
@@ -75,12 +76,28 @@ fun Comment(
                 verticalAlignment = Alignment.CenterVertically
 
             ) {
-                Text(
-                    text = comment.comment,
-                    style = MaterialTheme.typography.body2,
-                    color = MaterialTheme.colors.onBackground,
-                    modifier = Modifier.weight(0.9f)
-                )
+                Column(modifier = Modifier.weight(9f)) {
+                    Text(
+                        text = comment.comment,
+                        style = MaterialTheme.typography.body2,
+                        color = MaterialTheme.colors.onBackground,
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                    Spacer(modifier = Modifier.height(SpaceSmall))
+                    Text(
+                        text = stringResource(
+                            id = R.string.x_likes,
+                            comment.likeCount,
+                        ),
+                        style = MaterialTheme.typography.body2,
+                        color = MaterialTheme.colors.onBackground,
+                        modifier = Modifier.fillMaxWidth()
+                            .clickable {
+                                onLikedByClick()
+                            }
+                    )
+                }
+
                 Spacer(modifier = Modifier.width(SpaceSmall))
                 IconButton(
                     modifier = Modifier.weight(0.1f),
@@ -105,15 +122,6 @@ fun Comment(
 
                 }
             }
-            Spacer(modifier = Modifier.height(SpaceMedium))
-            Text(
-                text = stringResource(
-                    id = R.string.liked_by_x_people,
-                    comment.likeCount,
-                ),
-                style = MaterialTheme.typography.body2,
-                color = MaterialTheme.colors.onBackground
-            )
         }
 
     }

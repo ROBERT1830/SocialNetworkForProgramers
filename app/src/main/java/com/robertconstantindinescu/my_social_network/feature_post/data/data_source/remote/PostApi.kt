@@ -1,14 +1,13 @@
-package com.robertconstantindinescu.my_social_network.core.data.remote
+package com.robertconstantindinescu.my_social_network.feature_post.data.data_source.remote
 
 import com.robertconstantindinescu.my_social_network.core.data.dto.response.BasicApiResponse
-import com.robertconstantindinescu.my_social_network.core.domain.models.Comment
+import com.robertconstantindinescu.my_social_network.core.data.dto.response.UserItemDto
 import com.robertconstantindinescu.my_social_network.core.domain.models.Post
 import com.robertconstantindinescu.my_social_network.feature_post.data.data_source.remote.dto.CommentDto
-import com.robertconstantindinescu.my_social_network.feature_post.data.data_source.remote.dto.CreateCommentRequest
+import com.robertconstantindinescu.my_social_network.feature_post.data.data_source.remote.request.CreateCommentRequest
+import com.robertconstantindinescu.my_social_network.feature_post.data.data_source.remote.request.LikeUpdateRequest
 import okhttp3.MultipartBody
-import okhttp3.RequestBody
 import retrofit2.http.*
-import robertconstantin.example.data.requests.CreatePostRequest
 
 interface PostApi {
     @GET("api/post/get")
@@ -51,6 +50,28 @@ interface PostApi {
     suspend fun createComment(
         @Body request: CreateCommentRequest
     ): BasicApiResponse<Unit>
+
+    @POST("/api/like")
+    suspend fun likeParent(
+        @Body request: LikeUpdateRequest
+    ): BasicApiResponse<Unit>
+
+    //to delete we need queies. to delete we need a parentId and a parentType
+    @DELETE("/api/unlike")
+    suspend fun unlikeParent(
+        @Query("parentId") parentId: String,
+        @Query("parentType") parentType: Int
+    ): BasicApiResponse<Unit>
+
+    @GET("/api/like/parent")
+    suspend fun getLikesForParent(
+        @Query("parentId") parentId: String
+    ): List<UserItemDto>
+
+    @DELETE("/api/post/delete")
+    suspend fun deletePost(
+        @Query("postId") postId: String,
+    )
 
     companion object {
         const val BASE_URL = "http://10.0.2.2:8001/"

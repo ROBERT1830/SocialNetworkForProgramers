@@ -118,26 +118,45 @@ fun Navigation(
             SearchScreen(onNavigateUp = navController::navigateUp,
                 onNavigate = navController::navigate)
         }
-        
-        composable(route = Screen.PersonalListScreen.route){
+
+        composable(
+            route = Screen.PersonalListScreen.route +"/{parentId}",
+            arguments = listOf(
+                navArgument("parentId"){
+                    type = NavType.StringType
+                }
+            )
+        ){
             PersonListScreen(onNavigateUp = navController::navigateUp,
-                onNavigate = navController::navigate)
+                onNavigate = navController::navigate, scaffoldState = scaffoldState)
         }
 
         composable(
-            route = Screen.PostDetailScreen.route + "/{postId}",
+            route = Screen.PostDetailScreen.route + "/{postId}?shouldShowKeyBoard={shouldShowKeyBoard}",
             arguments = listOf(
                 navArgument(
                     name = "postId"
                 ){
                     type = NavType.StringType
+                },
+                //this is for when you clik on comment from item post and goes directly to the details post and opens the keyboard.
+                //That happens from the mainFeedscreen
+                navArgument(
+                    name = "posshouldShowKeyBoardtId"
+                ){
+                    type = NavType.BoolType
+                    defaultValue = false
                 }
+
+
             )
         ) {
+            val shouldShowKeyboard = it.arguments?.getBoolean("shouldShowKeyBoard") ?: false
             PostDetailScreen(
                 onNavigateUp = navController::navigateUp,
                 onNavigate = navController::navigate,
-                scaffoldState =  scaffoldState
+                scaffoldState =  scaffoldState,
+                shouldShowKeyboard = shouldShowKeyboard
             )
         }
 

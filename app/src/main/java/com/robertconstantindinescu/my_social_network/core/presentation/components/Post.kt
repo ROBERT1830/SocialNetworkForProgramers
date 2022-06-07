@@ -1,6 +1,5 @@
 package com.robertconstantindinescu.my_social_network.core.presentation.components
 
-import androidx.compose.ui.graphics.Color
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -19,8 +18,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextStyle
@@ -32,7 +31,6 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.rememberAsyncImagePainter
-import coil.compose.rememberImagePainter
 import coil.request.ImageRequest
 import com.robertconstantindinescu.my_social_network.R
 import com.robertconstantindinescu.my_social_network.core.domain.models.Post
@@ -41,10 +39,14 @@ import com.robertconstantindinescu.my_social_network.core.util.Constants.MAX_POS
 
 @Composable
 fun Post(
-    modifier: Modifier = Modifier,
     post: Post,
+    modifier: Modifier = Modifier,
     showProfileImage: Boolean = true,
-    onPostClick: () -> Unit = {}
+    onPostClick: () -> Unit = {},
+    onLikeClick: () -> Unit = {},
+    onCommentClick: () -> Unit = {},
+    onSharedClick: () -> Unit = {},
+    onUsernameClick: () -> Unit = {},
 ) {
 
     Box(
@@ -86,7 +88,10 @@ fun Post(
                             crossfade(true)
                         }).build()
                 ),
-                contentDescription = "Post Image"
+                contentDescription = "Post Image",
+                contentScale = ContentScale.Crop,
+                modifier = Modifier.fillMaxWidth()
+                    .aspectRatio(16f/9f) //imnportant to see the images.
             )
 
             Column(
@@ -97,17 +102,18 @@ fun Post(
                 ActionRow(
                     username = "Robert Constantin",
                     modifier = Modifier.fillMaxWidth(),
+                    isLiked = post.isLiked,
                     onLikeClick = {
-
+                        onLikeClick()
                     },
                     onCommentClick = {
-
+                        onCommentClick()
                     },
                     onShareClick = {
-
+                        onSharedClick()
                     },
                     onUsernameClick = {
-
+                        onUsernameClick()
                     }
                 )
                 Spacer(modifier = Modifier.height(SpaceMedium))
@@ -115,7 +121,7 @@ fun Post(
                     text = buildAnnotatedString {
                         append(post.description)
                         withStyle(SpanStyle(color = HintGray)) {
-                            append(LocalContext.current.getString(R.string.read_more))
+                            append(" " + LocalContext.current.getString(R.string.read_more))
                         }
                     },
                     style = MaterialTheme.typography.body2,
@@ -129,7 +135,7 @@ fun Post(
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     Text(
-                        text = stringResource(id = R.string.liked_by_x_people, post.likeCount),
+                        text = stringResource(id = R.string.x_likes, post.likeCount),
                         fontSize = 16.sp,
                         style = MaterialTheme.typography.h2,
                         fontWeight = FontWeight.Bold
@@ -177,7 +183,7 @@ fun EngagementButtons(
     modifier: Modifier = Modifier,
     isLiked: Boolean = false,
     iconSize: Dp = 30.dp,
-    onLikeClick: (Boolean) -> Unit = {},
+    onLikeClick: () -> Unit = {},
     onCommentClick: () -> Unit = {},
     onShareClick: () -> Unit = {}
 ) {
@@ -188,14 +194,14 @@ fun EngagementButtons(
     ) {
         IconButton(
             onClick = {
-                onLikeClick(!isLiked)
+                onLikeClick()
             },
             modifier = Modifier.size(iconSize)
         ) {
             Icon(
                 imageVector = Icons.Filled.Favorite,
                 tint = if (isLiked) {
-                    Color.Red
+                    MaterialTheme.colors.primary
                 } else {
                     TextWhite
                 },
@@ -248,11 +254,11 @@ fun EngagementButtons(
 fun ActionRow(
     modifier: Modifier = Modifier,
     isLiked: Boolean = false,
-    onLikeClick: (Boolean) -> Unit = {},
+    onLikeClick: () -> Unit = {},
     onCommentClick: () -> Unit = {},
     onShareClick: () -> Unit = {},
     username: String,
-    onUsernameClick: (String) -> Unit = {}
+    onUsernameClick: () -> Unit = {}
 ) {
     Row(
         horizontalArrangement = Arrangement.SpaceBetween,
@@ -266,7 +272,7 @@ fun ActionRow(
                 color = MaterialTheme.colors.primary
             ),
             modifier = Modifier.clickable {
-                onUsernameClick(username)
+                onUsernameClick()
             }
         )
         EngagementButtons(

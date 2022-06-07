@@ -2,7 +2,7 @@ package com.robertconstantindinescu.my_social_network.feature_profile.domain.use
 
 import com.robertconstantindinescu.my_social_network.core.util.Resource
 import com.robertconstantindinescu.my_social_network.feature_profile.domain.model.Profile
-import com.robertconstantindinescu.my_social_network.feature_profile.domain.repository.ProfileRepository
+import com.robertconstantindinescu.my_social_network.core.domain.repository.ProfileRepository
 
 class GetProfileUseCase(
     private val repository: ProfileRepository

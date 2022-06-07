@@ -5,6 +5,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.MaterialTheme
@@ -36,11 +37,13 @@ import com.robertconstantindinescu.my_social_network.core.presentation.component
 import com.robertconstantindinescu.my_social_network.feature_profile.presentation.profile.components.BannerSection
 import com.robertconstantindinescu.my_social_network.feature_profile.presentation.profile.components.ProfileHeaderSection
 import com.robertconstantindinescu.my_social_network.core.presentation.ui.theme.ProfilePictureSizeLage
+import com.robertconstantindinescu.my_social_network.core.presentation.ui.theme.SpaceLarge
 import com.robertconstantindinescu.my_social_network.core.presentation.ui.theme.SpaceMedium
 import com.robertconstantindinescu.my_social_network.core.presentation.ui.theme.SpaceSmall
 import com.robertconstantindinescu.my_social_network.core.presentation.util.UiEvent
 import com.robertconstantindinescu.my_social_network.core.presentation.util.asString
 import com.robertconstantindinescu.my_social_network.core.util.Screen
+import com.robertconstantindinescu.my_social_network.feature_post.presentation.person_list.PostEvent
 import com.robertconstantindinescu.my_social_network.presentation.util.toPx
 import kotlinx.coroutines.flow.collectLatest
 
@@ -78,7 +81,7 @@ fun ProfileScreen(
     viewModel: ProfileViewModel = hiltViewModel()
 ) {
 
-    val posts = viewModel.posts.collectAsLazyPagingItems()
+    val paginState = viewModel.pagingState.value //viewModel.posts.collectAsLazyPagingItems()
 
     val lazyListState = rememberLazyListState()
     val toolbarState = viewModel.toolbarState.value
@@ -87,6 +90,7 @@ fun ProfileScreen(
     val context = LocalContext.current
 
     LaunchedEffect(key1 = true){
+        viewModel.setExpandedRatio(1f)
         viewModel.getProfile(userId) //to retrigger the load profile.
         viewModel.eventFlow.collectLatest { event ->
             when(event){
@@ -94,6 +98,9 @@ fun ProfileScreen(
                     scaffoldState.snackbarHostState.showSnackbar(
                         message = event.uiText.asString(context)
                     )
+                }
+                is PostEvent.OnLiked ->{
+                    //posts.refresh()
                 }
 
             }
@@ -257,28 +264,32 @@ fun ProfileScreen(
 
             }
 
-            items(posts) { post ->
-                Spacer(
-                    modifier = Modifier
-                        .height(SpaceMedium)
-                    //.offset(y = -profilePicturesSize / 2f)
-                )
+            items(paginState.items.size) { i ->
+                //get post at index i from the list
+                val post = paginState.items[i]
+                //if index is grater than the size of the items list and we didn't reach the end we are not loading
+                if (i >= paginState.items.size - 1 && !paginState.endReached && !paginState.isLoading) {
+                    viewModel.loadNextPosts()
+                }
+                //.offset(y = -profilePicturesSize / 2f)
+
                 Post(
-                    post = Post(
-                        id = post?.id ?: "",
-                        username = post?.username ?: "",
-                        imageUrl = post?.imageUrl ?: "",
-                        profilePicture = post?.profilePicture ?: "",
-                        description = post?.description ?: "",
-                        likeCount = post?.likeCount ?: 0,
-                        commentCount = post?.commentCount ?: 0
-                    ),
+                    post = post,
                     showProfileImage = false,
                     onPostClick = {
-                        onNavigate(Screen.PostDetailScreen.route + "/${post?.id}")
+                        onNavigate(Screen.PostDetailScreen.route + "/${post.id}")
+                    },
+                    onCommentClick ={
+                        onNavigate(Screen.PostDetailScreen.route + "/${post?.id}?shouldShowKeyBoard=true")
+                    },
+                    onLikeClick = {
+                        viewModel.onEvent(ProfileEvent.LikedPost(post.id ))
                     }
                 )
 
+            }
+            item {
+                Spacer(modifier = Modifier.height(90.dp))
             }
         }
         //because all items are placed in a box, there are no separation between them

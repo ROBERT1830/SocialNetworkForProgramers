@@ -1,4 +1,4 @@
-package com.robertconstantindinescu.my_social_network.feature_post.data.data_source.remote.dto
+package com.robertconstantindinescu.my_social_network.feature_post.data.data_source.remote.request
 
 data class CreateCommentRequest(
     val comment: String,

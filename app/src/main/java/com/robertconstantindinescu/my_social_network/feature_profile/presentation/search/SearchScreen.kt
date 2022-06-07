@@ -16,6 +16,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.robertconstantindinescu.my_social_network.R
 import com.robertconstantindinescu.my_social_network.core.domain.models.User
+import com.robertconstantindinescu.my_social_network.core.domain.models.UserItem
 import com.robertconstantindinescu.my_social_network.core.presentation.components.StandardTextField
 import com.robertconstantindinescu.my_social_network.core.presentation.components.StandardToolBar
 import com.robertconstantindinescu.my_social_network.core.presentation.components.UserProfileItem
@@ -72,16 +73,10 @@ fun SearchScreen(
                 ) {
                     items(state.userItems) { user ->
                         UserProfileItem(
-                            user = User(
-                                userId = user.userId,
-                                profilePictureUrl = user.profilePictureUrl,
-                                username = user.userName,
-                                bio = user.bio,
+                            user = user
                                 //we don't get the numbers from the response, so they are not needed
-                                followerCount = 0,
-                                followingCount = 0,
-                                postCount = 0
-                            ),
+
+                            ,
                             actionIcon = {
                                 IconButton(
                                     onClick = {

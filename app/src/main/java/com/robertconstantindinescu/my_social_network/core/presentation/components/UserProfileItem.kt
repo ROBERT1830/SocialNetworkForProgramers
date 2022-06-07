@@ -15,16 +15,18 @@ import androidx.compose.ui.unit.dp
 import coil.compose.rememberImagePainter
 import com.robertconstantindinescu.my_social_network.R
 import com.robertconstantindinescu.my_social_network.core.domain.models.User
+import com.robertconstantindinescu.my_social_network.core.domain.models.UserItem
 import com.robertconstantindinescu.my_social_network.core.presentation.ui.theme.*
 
 @ExperimentalMaterialApi
 @Composable
 fun UserProfileItem(
-    user: User,
+    user: UserItem,
     modifier: Modifier = Modifier,
     actionIcon: @Composable () -> Unit = {},
     onItemClick: () -> Unit = {},
-    onActionItemClick: () -> Unit = {}
+    onActionItemClick: () -> Unit = {},
+     ownUserId: String = ""
 ) {
 
 
@@ -57,11 +59,11 @@ fun UserProfileItem(
             )
             Column(modifier = Modifier
                 .fillMaxHeight()
-                .fillMaxWidth(0.8f)
                 .padding(horizontal = SpaceSmall)
+                .weight(1f)
                 ) {
                 Text(
-                    text = user.username,
+                    text = user.userName,
                     style = MaterialTheme.typography.body1.copy(fontWeight = FontWeight.Bold)
                 )
                 Spacer(modifier = Modifier.height(SpaceSmall))
@@ -73,12 +75,18 @@ fun UserProfileItem(
                 )
 
             }
-            IconButton(
-                onClick = { onActionItemClick() },
-                modifier = Modifier.size(IconSizeMedium)
-            ) {
-                actionIcon()
+            //this only should exist if the user is now our own user
+            //we can do a state in the viewmdoel that says it this is oursrelfs or not.
+            //do a use case getOwnUserId
+            if (user.userId != ownUserId){
+                IconButton(
+                    onClick = { onActionItemClick() },
+                    modifier = Modifier.size(IconSizeMedium)
+                ) {
+                    actionIcon()
+                }
             }
+
         }
 
 

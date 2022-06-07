@@ -1,0 +1,15 @@
+package com.robertconstantindinescu.my_social_network.feature_post.domain.use_case
+
+
+import com.robertconstantindinescu.my_social_network.core.domain.models.UserItem
+import com.robertconstantindinescu.my_social_network.core.util.Resource
+import com.robertconstantindinescu.my_social_network.feature_post.domain.repository.PostRepository
+
+class GetLikesForParentUseCase(
+    private val repository: PostRepository
+) {
+
+    suspend operator fun invoke(parentId: String): Resource<List<UserItem>> {
+        return repository.getLikesForParent(parentId)
+    }
+}

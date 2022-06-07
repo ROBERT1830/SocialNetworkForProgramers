@@ -12,13 +12,13 @@ import com.robertconstantindinescu.my_social_network.core.util.Constants
 import com.robertconstantindinescu.my_social_network.core.util.Resource
 import com.robertconstantindinescu.my_social_network.core.util.SimpleResource
 import com.robertconstantindinescu.my_social_network.core.util.UiText
-import com.robertconstantindinescu.my_social_network.core.data.remote.PostApi
+import com.robertconstantindinescu.my_social_network.feature_post.data.data_source.remote.PostApi
 import com.robertconstantindinescu.my_social_network.core.domain.models.Comment
-import com.robertconstantindinescu.my_social_network.feature_post.data.data_source.remote.dto.CreateCommentRequest
-import com.robertconstantindinescu.my_social_network.feature_post.data.paging.ActivitySource
+import com.robertconstantindinescu.my_social_network.core.domain.models.UserItem
+import com.robertconstantindinescu.my_social_network.feature_post.data.data_source.remote.request.CreateCommentRequest
+import com.robertconstantindinescu.my_social_network.feature_post.data.data_source.remote.request.LikeUpdateRequest
 import com.robertconstantindinescu.my_social_network.feature_post.data.paging.PostSource
 import com.robertconstantindinescu.my_social_network.feature_post.domain.repository.PostRepository
-import com.robertconstantindinescu.my_social_network.feature_profile.data.remote.request.FollowUpdateRequest
 import kotlinx.coroutines.flow.Flow
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
@@ -52,10 +52,28 @@ class PostRepositoryImpl(
 //    }
 
     //when call this variable then we will get a flow of an object called PaginData of type Post.
-    override val posts: Flow<PagingData<Post>>
-        get() = Pager(PagingConfig(pageSize = Constants.DEFAULT_PAGE_SIZE)) {
-            PostSource(api, PostSource.Source.Follows)
-        }.flow //important to return a flow by .flow This makes the data to be a flow.
+//    override val posts: Flow<PagingData<Post>>
+//        get() = Pager(PagingConfig(pageSize = Constants.DEFAULT_PAGE_SIZE)) {
+//            PostSource(api, PostSource.Source.Follows)
+//        }.flow //important to return a flow by .flow This makes the data to be a flow.
+
+    override suspend fun getPostsForFollows(page: Int, pageSize: Int): Resource<List<Post>> {
+        return try {
+            val posts = api.getPostForFollows(
+                page = page,
+                pageSize = pageSize
+            )
+            Resource.Success(data = posts)
+        } catch(e: IOException) {
+            Resource.Error(
+                uiText = UiText.StringResource(R.string.error_couldnt_reach_server)
+            )
+        } catch(e: HttpException) {
+            Resource.Error(
+                uiText = UiText.StringResource(R.string.oops_something_went_wrong)
+            )
+        }
+    }
 
 
     override suspend fun createPost(
@@ -184,6 +202,88 @@ class PostRepositoryImpl(
             )
             //exception for verything that doesnt start with the 2 xx (200 ok)
         } catch (e: HttpException) {
+            Resource.Error(
+                uiText = UiText.StringResource(R.string.oops_something_went_wrong)
+            )
+        }
+    }
+
+    override suspend fun likeParent(parentId: String, parentType: Int): SimpleResource {
+        return try {
+            val response = api.likeParent(
+                LikeUpdateRequest( //the same object that we have in the server.
+                    parentId = parentId,
+                    parentType = parentType
+                )
+            )
+            if(response.successful) {
+                Resource.Success(response.data)
+            } else {
+                response.message?.let { msg ->
+                    Resource.Error(UiText.DynamicString(msg))
+                } ?: Resource.Error(UiText.StringResource(R.string.error_unknown))
+            }
+        } catch(e: IOException) {
+            Resource.Error(
+                uiText = UiText.StringResource(R.string.error_couldnt_reach_server)
+            )
+        } catch(e: HttpException) {
+            Resource.Error(
+                uiText = UiText.StringResource(R.string.oops_something_went_wrong)
+            )
+        }
+    }
+
+    override suspend fun unlikeParent(parentId: String, parentType: Int): SimpleResource {
+        return try {
+            val response = api.unlikeParent(
+                parentId = parentId,
+                parentType = parentType
+            )
+            if(response.successful) {
+                Resource.Success(response.data)
+            } else {
+                response.message?.let { msg ->
+                    Resource.Error(UiText.DynamicString(msg))
+                } ?: Resource.Error(UiText.StringResource(R.string.error_unknown))
+            }
+        } catch(e: IOException) {
+            Resource.Error(
+                uiText = UiText.StringResource(R.string.error_couldnt_reach_server)
+            )
+        } catch(e: HttpException) {
+            Resource.Error(
+                uiText = UiText.StringResource(R.string.oops_something_went_wrong)
+            )
+        }
+    }
+
+    override suspend fun getLikesForParent(parentId: String): Resource<List<UserItem>> {
+        return try {
+            val response = api.getLikesForParent(
+                parentId = parentId,
+            )
+            Resource.Success(response.map { it.toUserItem() })
+        } catch(e: IOException) {
+            Resource.Error(
+                uiText = UiText.StringResource(R.string.error_couldnt_reach_server)
+            )
+        } catch(e: HttpException) {
+            Resource.Error(
+                uiText = UiText.StringResource(R.string.oops_something_went_wrong)
+            )
+        }
+    }
+
+    override suspend fun deletePost(postId: String): SimpleResource {
+        return try {
+            api.deletePost(postId)
+            Resource.Success(Unit)
+        } catch(e: IOException) {
+            Resource.Error(
+                uiText = UiText.StringResource(R.string.error_couldnt_reach_server)
+            )
+        } catch(e: HttpException) {
             Resource.Error(
                 uiText = UiText.StringResource(R.string.oops_something_went_wrong)
             )

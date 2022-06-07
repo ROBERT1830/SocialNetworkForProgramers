@@ -1,7 +1,7 @@
 package com.robertconstantindinescu.my_social_network.di
 
 import com.google.gson.Gson
-import com.robertconstantindinescu.my_social_network.core.data.remote.PostApi
+import com.robertconstantindinescu.my_social_network.feature_post.data.data_source.remote.PostApi
 import com.robertconstantindinescu.my_social_network.feature_post.data.repository.PostRepositoryImpl
 import com.robertconstantindinescu.my_social_network.feature_post.domain.repository.PostRepository
 import com.robertconstantindinescu.my_social_network.feature_post.domain.use_case.*
@@ -44,7 +44,9 @@ object PostModule {
             createPostUseCase = CreatePostUseCae(repository),
             getPostDetailsUseCase = GetPostDetailsUseCase(repository),
             getCommentsForPostUseCase = GetCommentsForPostUseCase(repository),
-            createCommentUseCase = CreateCommentUseCase(repository)
+            createCommentUseCase = CreateCommentUseCase(repository),
+            toggleLikeForParentUseCase = ToggleLikeForParentUseCase(repository),
+            getLikesForParentUseCase = GetLikesForParentUseCase(repository)
         )
     }
 }

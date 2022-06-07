@@ -1,4 +1,4 @@
-package com.robertconstantindinescu.my_social_network.feature_profile.data.repository
+package com.robertconstantindinescu.my_social_network.core.data.repository
 
 import android.net.Uri
 import androidx.core.net.toFile
@@ -7,21 +7,20 @@ import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import com.google.gson.Gson
 import com.robertconstantindinescu.my_social_network.R
-import com.robertconstantindinescu.my_social_network.core.data.remote.PostApi
+import com.robertconstantindinescu.my_social_network.feature_post.data.data_source.remote.PostApi
 import com.robertconstantindinescu.my_social_network.core.domain.models.Post
 import com.robertconstantindinescu.my_social_network.core.domain.models.UserItem
 import com.robertconstantindinescu.my_social_network.core.util.Constants
 import com.robertconstantindinescu.my_social_network.core.util.Resource
 import com.robertconstantindinescu.my_social_network.core.util.SimpleResource
 import com.robertconstantindinescu.my_social_network.core.util.UiText
-import com.robertconstantindinescu.my_social_network.feature_post.data.paging.ActivitySource
 import com.robertconstantindinescu.my_social_network.feature_post.data.paging.PostSource
 import com.robertconstantindinescu.my_social_network.feature_profile.data.remote.ProfileApi
 import com.robertconstantindinescu.my_social_network.feature_profile.data.remote.request.FollowUpdateRequest
 import com.robertconstantindinescu.my_social_network.feature_profile.domain.model.Profile
 import com.robertconstantindinescu.my_social_network.feature_profile.domain.model.Skill
 import com.robertconstantindinescu.my_social_network.feature_profile.domain.model.UpdateProfileData
-import com.robertconstantindinescu.my_social_network.feature_profile.domain.repository.ProfileRepository
+import com.robertconstantindinescu.my_social_network.core.domain.repository.ProfileRepository
 import kotlinx.coroutines.flow.Flow
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
@@ -146,11 +145,29 @@ class ProfileRepositoryImpl(
         }
     }
 
-    override fun getPostsPaged(userId: String): Flow<PagingData<Post>> {
-        return Pager(PagingConfig(pageSize = Constants.DEFAULT_PAGE_SIZE)) {
-            //here get the post from an other user
-            PostSource(postApi, PostSource.Source.Profile(userId))
-        }.flow
+    override suspend fun getPostsPaged(page: Int,
+                                       pageSize: Int,
+                                       userId: String): /*Flow<PagingData<Post>>*/ Resource<List<Post>> {
+//        return Pager(PagingConfig(pageSize = Constants.DEFAULT_PAGE_SIZE)) {
+//            //here get the post from an other user
+//            PostSource(postApi, PostSource.Source.Profile(userId))
+//        }.flow
+        return try {
+            val posts = postApi.getPostForProfile(
+                userId = userId,
+                page = page,
+                pageSize = pageSize
+            )
+            Resource.Success(data = posts)
+        } catch(e: IOException) {
+            Resource.Error(
+                uiText = UiText.StringResource(R.string.error_couldnt_reach_server)
+            )
+        } catch(e: HttpException) {
+            Resource.Error(
+                uiText = UiText.StringResource(R.string.oops_something_went_wrong)
+            )
+        }
     }
 
     override suspend fun searchUser(query: String): Resource<List<UserItem>> {

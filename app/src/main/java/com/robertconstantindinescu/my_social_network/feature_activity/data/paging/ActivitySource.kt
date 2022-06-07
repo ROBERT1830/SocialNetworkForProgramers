@@ -2,10 +2,7 @@ package com.robertconstantindinescu.my_social_network.feature_post.data.paging
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
-import com.robertconstantindinescu.my_social_network.core.domain.models.Post
-import com.robertconstantindinescu.my_social_network.core.util.Constants
 import com.robertconstantindinescu.my_social_network.core.util.Constants.DEFAULT_PAGE_SIZE
-import com.robertconstantindinescu.my_social_network.core.data.remote.PostApi
 import com.robertconstantindinescu.my_social_network.core.domain.models.Activity
 import com.robertconstantindinescu.my_social_network.feature_activity.data.remote.ActivityApi
 import retrofit2.HttpException

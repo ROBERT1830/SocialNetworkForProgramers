@@ -77,6 +77,9 @@ fun EditProfileScreen(
         rememberLauncherForActivityResult(
             contract = ActivityResultContracts.GetContent() //this makes the user to pick content and will receive content://+Uri for the content.
         ) {
+            if(it == null) {
+                return@rememberLauncherForActivityResult
+            }
             //launch the crop
             cropProfilePictureLauncher.launch(it) // this it will be the input uri for the image
 
@@ -87,6 +90,9 @@ fun EditProfileScreen(
         rememberLauncherForActivityResult(
             contract = ActivityResultContracts.GetContent() //this makes the user to pick content and will receive content://+Uri for the content.
         ) {
+            if(it == null) {
+                return@rememberLauncherForActivityResult
+            }
             cropBannerImageLauncher.launch(it) // this it will be the input uri for the image
 
         }
