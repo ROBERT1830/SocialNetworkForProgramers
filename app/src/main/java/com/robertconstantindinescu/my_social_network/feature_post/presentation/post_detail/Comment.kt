@@ -14,6 +14,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import coil.ImageLoader
 import coil.compose.rememberImagePainter
 import com.robertconstantindinescu.my_social_network.R
 import com.robertconstantindinescu.my_social_network.core.domain.models.Comment
@@ -23,6 +24,7 @@ import com.robertconstantindinescu.my_social_network.core.presentation.ui.theme.
 @Composable
 fun Comment(
     modifier: Modifier = Modifier,
+    imageLoader: ImageLoader,
     comment: Comment, //mandatory argument
     onLikeClick: (Boolean) -> Unit = {},
     onLikedByClick: () -> Unit = {}
@@ -48,9 +50,7 @@ fun Comment(
                     Image(
                         painter = rememberImagePainter(
                             data = comment.profilePictureUrl,
-                            builder = {
-                                crossfade(true)
-                            }
+                            imageLoader = imageLoader
                         ),
                         contentDescription = "",
                         modifier = Modifier

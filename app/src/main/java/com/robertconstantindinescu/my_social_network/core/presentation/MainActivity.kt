@@ -12,14 +12,18 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import coil.ImageLoader
 import com.robertconstantindinescu.my_social_network.core.presentation.components.StandardScaffold
 import com.robertconstantindinescu.my_social_network.core.presentation.ui.theme.My_social_networkTheme
 import com.robertconstantindinescu.my_social_network.presentation.util.Navigation
 import com.robertconstantindinescu.my_social_network.core.util.Screen
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+    @Inject
+    lateinit var imageLoader: ImageLoader
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -58,7 +62,7 @@ class MainActivity : ComponentActivity() {
                             navController.navigate(Screen.CreatePostScreen.route)
                         }
                     ) {
-                        Navigation(navController = navController, scaffoldState = scaffoldState)
+                        Navigation(navController = navController, scaffoldState = scaffoldState, imageLoader)
                     }
 
 

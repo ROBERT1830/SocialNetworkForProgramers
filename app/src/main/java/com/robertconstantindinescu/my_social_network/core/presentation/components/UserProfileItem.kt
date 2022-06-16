@@ -12,6 +12,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import coil.ImageLoader
+import coil.ImageLoaderFactory
 import coil.compose.rememberImagePainter
 import com.robertconstantindinescu.my_social_network.R
 import com.robertconstantindinescu.my_social_network.core.domain.models.User
@@ -22,6 +24,7 @@ import com.robertconstantindinescu.my_social_network.core.presentation.ui.theme.
 @Composable
 fun UserProfileItem(
     user: UserItem,
+    imageLoader: ImageLoader,
     modifier: Modifier = Modifier,
     actionIcon: @Composable () -> Unit = {},
     onItemClick: () -> Unit = {},
@@ -46,9 +49,7 @@ fun UserProfileItem(
             Image(
                 painter = rememberImagePainter(
                     data = user.profilePictureUrl,
-                    builder = {
-                        crossfade(true)
-                    }
+                    imageLoader = imageLoader
                 ),
                 contentDescription = null,
                 modifier = Modifier

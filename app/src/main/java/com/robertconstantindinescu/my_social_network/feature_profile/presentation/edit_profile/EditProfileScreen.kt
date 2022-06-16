@@ -28,7 +28,9 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import coil.ImageLoader
 import coil.compose.rememberAsyncImagePainter
+import coil.compose.rememberImagePainter
 import coil.request.ImageRequest
 import com.google.accompanist.flowlayout.FlowRow
 import com.google.accompanist.flowlayout.MainAxisAlignment
@@ -49,6 +51,7 @@ import kotlinx.coroutines.flow.collectLatest
 @Composable
 fun EditProfileScreen(
     scaffoldState: ScaffoldState,
+    imageLoader: ImageLoader,
     onNavigate: (String) -> Unit = {},
     onNavigateUp: () -> Unit = {},
     viewModel: EditProfileScreenViewModel = hiltViewModel(),
@@ -147,23 +150,32 @@ fun EditProfileScreen(
                 .verticalScroll(rememberScrollState())
         ) {
             BannerEditSection(
-                bannerImage = rememberAsyncImagePainter(
-                    ImageRequest.Builder(LocalContext.current)
-                        //when the uri from the cropper is null, then the image to display comes from the api
-                        // That happens at the first laucnh of the screen. When select an other one, it will be displayed the
-                        // croper.
-                        .data(data = viewModel.bannerUri.value ?: profileState.profile?.bannerUrl)
-                        .apply(block = fun ImageRequest.Builder.() {
-                            crossfade(true)
-                        }).build()
+
+                bannerImage = rememberImagePainter(
+                    data = viewModel.bannerUri.value ?: profileState.profile?.bannerUrl,
+                    imageLoader = imageLoader
                 ),
-                profileImage = rememberAsyncImagePainter(
-                    ImageRequest.Builder(LocalContext.current)
-                        .data(data = viewModel.profilePictureUri.value ?: profileState.profile?.profilePictureUrl)
-                        .apply(block = fun ImageRequest.Builder.() {
-                            crossfade(true)
-                        }).build()
+//                bannerImage = rememberAsyncImagePainter(
+//                    ImageRequest.Builder(LocalContext.current)
+//                        //when the uri from the cropper is null, then the image to display comes from the api
+//                        // That happens at the first laucnh of the screen. When select an other one, it will be displayed the
+//                        // croper.
+//                        .data(data = viewModel.bannerUri.value ?: profileState.profile?.bannerUrl)
+//                        .apply(block = fun ImageRequest.Builder.() {
+//                            crossfade(true)
+//                        }).build()
+//                ),
+                profileImage =  rememberImagePainter(
+                    data =  viewModel.profilePictureUri.value ?: profileState.profile?.profilePictureUrl,
+                    imageLoader = imageLoader
                 ),
+//                profileImage = rememberAsyncImagePainter(
+//                    ImageRequest.Builder(LocalContext.current)
+//                        .data(data = viewModel.profilePictureUri.value ?: profileState.profile?.profilePictureUrl)
+//                        .apply(block = fun ImageRequest.Builder.() {
+//                            crossfade(true)
+//                        }).build()
+//                ),
                 profilePictureSize = profilePictureSize,
                 onBannerClick = {
                     bannerImageGalleryLauncher.launch("image/*")

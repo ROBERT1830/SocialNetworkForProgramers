@@ -30,7 +30,9 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil.ImageLoader
 import coil.compose.rememberAsyncImagePainter
+import coil.compose.rememberImagePainter
 import coil.request.ImageRequest
 import com.robertconstantindinescu.my_social_network.R
 import com.robertconstantindinescu.my_social_network.core.domain.models.Post
@@ -40,6 +42,7 @@ import com.robertconstantindinescu.my_social_network.core.util.Constants.MAX_POS
 @Composable
 fun Post(
     post: Post,
+    imageLoader: ImageLoader,
     modifier: Modifier = Modifier,
     showProfileImage: Boolean = true,
     onPostClick: () -> Unit = {},
@@ -67,31 +70,36 @@ fun Post(
                 }
         ) {
             Image(
-                painter = rememberAsyncImagePainter(
-                    ImageRequest.Builder(LocalContext.current).data(data = post.imageUrl)
-                        .apply(block = fun ImageRequest.Builder.() {
-                            //this is for debuging the coil response
-                            listener(
-                                onStart = { _ ->
-                                    println("START LOADING IMAGE")
-                                },
-                                onCancel = {
-                                    println("REQUEST CANCELLED")
-
-                                },
-                                // t is a throwable
-                                onError = { _, t ->
-                                    println("ERROR LOADING IMAGE")
-                                    t.throwable.printStackTrace()
-                                }
-                            )
-                            crossfade(true)
-                        }).build()
+                painter = rememberImagePainter(
+                    data = post.imageUrl,
+                    imageLoader = imageLoader
                 ),
+//                painter = rememberAsyncImagePainter(
+//                    ImageRequest.Builder(LocalContext.current).data(data = post.imageUrl)
+//                        .apply(block = fun ImageRequest.Builder.() {
+//                            //this is for debuging the coil response
+//                            listener(
+//                                onStart = { _ ->
+//                                    println("START LOADING IMAGE")
+//                                },
+//                                onCancel = {
+//                                    println("REQUEST CANCELLED")
+//
+//                                },
+//                                // t is a throwable
+//                                onError = { _, t ->
+//                                    println("ERROR LOADING IMAGE")
+//                                    t.throwable.printStackTrace()
+//                                }
+//                            )
+//                            crossfade(true)
+//                        }).build()
+//                ),
                 contentDescription = "Post Image",
                 contentScale = ContentScale.Crop,
-                modifier = Modifier.fillMaxWidth()
-                    .aspectRatio(16f/9f) //imnportant to see the images.
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .aspectRatio(16f / 9f) //imnportant to see the images.
             )
 
             Column(
@@ -156,12 +164,16 @@ fun Post(
 
         if (showProfileImage){
             Image(
-                painter = rememberAsyncImagePainter(
-                    ImageRequest.Builder(LocalContext.current).data(data = post.profilePicture)
-                        .apply(block = fun ImageRequest.Builder.() {
-                            crossfade(true)
-                        }).build()
+                painter = rememberImagePainter(
+                    data = post.profilePicture,
+                    imageLoader = imageLoader
                 ),
+//                painter = rememberAsyncImagePainter(
+//                    ImageRequest.Builder(LocalContext.current).data(data = post.profilePicture)
+//                        .apply(block = fun ImageRequest.Builder.() {
+//                            crossfade(true)
+//                        }).build()
+//                ),
                 contentDescription = "Profile picture",
                 modifier = Modifier
                     .size(ProfilePictureSizeMedium)

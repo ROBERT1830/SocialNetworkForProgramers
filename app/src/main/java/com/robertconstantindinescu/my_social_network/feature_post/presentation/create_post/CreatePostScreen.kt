@@ -25,6 +25,7 @@ import androidx.compose.ui.unit.dp
 import androidx.core.net.toFile
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import coil.ImageLoader
 import coil.compose.rememberAsyncImagePainter
 import coil.compose.rememberImagePainter
 import coil.request.ImageRequest
@@ -51,6 +52,7 @@ import java.util.*
 @Composable
 fun CreatePostScreen(
     onNavigate: (String) -> Unit = {},
+    imageLoader: ImageLoader,
     onNavigateUp: () -> Unit = {},
     scaffoldState: ScaffoldState,
     viewModel: CreatePostViewModel = hiltViewModel()
@@ -165,11 +167,8 @@ fun CreatePostScreen(
                     //display an image.
                     Image(
                         painter = rememberAsyncImagePainter(
-                            model = ImageRequest.Builder(
-                                LocalContext.current
-                            )
-                                .data(uri)
-                                .build()
+                            model = uri,
+                            imageLoader = imageLoader
                         ),
                         contentDescription = stringResource(id = R.string.post_image),
                         modifier = Modifier.matchParentSize()
@@ -214,7 +213,8 @@ fun CreatePostScreen(
                 if (viewModel.isLoading.value){
                     CircularProgressIndicator(
                         color = MaterialTheme.colors.onPrimary,
-                        modifier = Modifier.size(20.dp)
+                        modifier = Modifier
+                            .size(20.dp)
                             .align(CenterVertically)
                     )
                 }else{

@@ -29,6 +29,7 @@ import com.robertconstantindinescu.my_social_network.presentation.util.toPx
 @Composable
 fun BannerSection(
     modifier: Modifier = Modifier,
+    imageLoader: ImageLoader,
     imageModifier: Modifier = Modifier,
     iconSize: Dp = 35.dp,
     leftIconModifier: Modifier = Modifier,
@@ -51,12 +52,16 @@ fun BannerSection(
     ) {
 
         Image(
-            painter = rememberAsyncImagePainter(
-                ImageRequest.Builder(LocalContext.current).data(data = bannerUrl)
-                    .apply(block = fun ImageRequest.Builder.() {
-                        crossfade(true)
-                    }).build()
+            painter = rememberImagePainter(
+                data = bannerUrl,
+                imageLoader = imageLoader
             ),
+//            painter = rememberAsyncImagePainter(
+//                ImageRequest.Builder(LocalContext.current).data(data = bannerUrl)
+//                    .apply(block = fun ImageRequest.Builder.() {
+//                        crossfade(true)
+//                    }).build()
+//            ),
             contentDescription = stringResource(id = R.string.banner_image),
             contentScale = ContentScale.Crop,
             modifier = imageModifier
@@ -92,14 +97,18 @@ fun BannerSection(
                 Spacer(modifier = Modifier.width(SpaceSmall))
                 Image(
 
-                    painter = rememberAsyncImagePainter(ImageRequest.Builder(LocalContext.current)
-                        .data(data = skill.imageUrl).build(),
-                        imageLoader = ImageLoader.Builder(LocalContext.current)
-                            .components {
-                                add(SvgDecoder.Factory())
-                            }
-                            .build()
+                    painter = rememberImagePainter(
+                        data = skill.imageUrl,
+                        imageLoader = imageLoader
                     ),
+//                    painter = rememberAsyncImagePainter(ImageRequest.Builder(LocalContext.current)
+//                        .data(data = skill.imageUrl).build(),
+//                        imageLoader = ImageLoader.Builder(LocalContext.current)
+//                            .components {
+//                                add(SvgDecoder.Factory())
+//                            }
+//                            .build()
+//                    ),
 //                    painter = rememberAsyncImagePainter(
 //                        ImageRequest.Builder(LocalContext.current).data(data = skill.imageUrl)
 //                            .apply(block = fun ImageRequest.Builder.() {

@@ -3,6 +3,9 @@ package com.robertconstantindinescu.my_social_network.di
 import android.app.Application
 import android.content.Context.MODE_PRIVATE
 import android.content.SharedPreferences
+import coil.ComponentRegistry
+import coil.ImageLoader
+import coil.decode.SvgDecoder
 import com.google.gson.Gson
 import com.robertconstantindinescu.my_social_network.core.domain.repository.ProfileRepository
 import com.robertconstantindinescu.my_social_network.core.domain.use_case.GetOwnUserIdUseCase
@@ -91,6 +94,16 @@ object AppModule {
         return DefaultPostLiker()
     }
 
+    @Provides
+    @Singleton
+    fun provideImageLoader(app: Application): ImageLoader {
+        return ImageLoader.Builder(app)
+            .crossfade(true)
+            .components(fun ComponentRegistry.Builder.() {
+                add(SvgDecoder.Factory())
+            })
+            .build()
+    }
 
 
 

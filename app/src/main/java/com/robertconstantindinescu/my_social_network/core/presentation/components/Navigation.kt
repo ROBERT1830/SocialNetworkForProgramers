@@ -7,6 +7,7 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
+import coil.ImageLoader
 import com.robertconstantindinescu.my_social_network.presentation.MainFeedScreen
 import com.robertconstantindinescu.my_social_network.feature_activity.presentation.ActivityScreen
 import com.robertconstantindinescu.my_social_network.feature_chat.presentation.chat.ChatScreen
@@ -25,7 +26,8 @@ import com.robertconstantindinescu.my_social_network.feature_profile.presentatio
 @Composable
 fun Navigation(
     navController: NavHostController,
-    scaffoldState: ScaffoldState
+    scaffoldState: ScaffoldState,
+    imageLoader: ImageLoader
 ) {
     //val navController = rememberNavController()
     NavHost(
@@ -36,7 +38,7 @@ fun Navigation(
             //here goes the composable that comes up when visit the route
             SplashScreen(
                 onPopBackStack = navController::popBackStack,
-                onNavigate = navController::navigate
+                onNavigate = navController::navigate,
             )
 
         }
@@ -54,12 +56,14 @@ fun Navigation(
             MainFeedScreen(
                 onNavigateUp = navController::navigateUp,
                 onNavigate = navController::navigate //directly the route are passed
-                , scaffoldState = scaffoldState)
+                , scaffoldState = scaffoldState,
+                imageLoader = imageLoader)
         }
 
         composable(route = Screen.ChatScreen.route) {
             ChatScreen( onNavigateUp = navController::navigateUp,
-                onNavigate = navController::navigate )//directly the route are passed )
+                onNavigate = navController::navigate ,//directly the route are passed )
+                imageLoader = imageLoader)
         }
         composable(route = Screen.ActivityScreen.route) {
             ActivityScreen(onNavigateUp = navController::navigateUp,
@@ -91,7 +95,10 @@ fun Navigation(
                 userId = it.arguments?.getString("userId"),
                 onNavigateUp = navController::navigateUp,
                 onNavigate = navController::navigate,
-                scaffoldState = scaffoldState)//directly the route are passed  /*userId = userId*/, )
+                scaffoldState = scaffoldState,//directly the route are passed  /*userId = userId*/, )
+                imageLoader = imageLoader
+            )
+
         }
         composable(
             //here the user id is not optional. I must be passed. So do it like that.
@@ -107,16 +114,20 @@ fun Navigation(
             )
         ) {
             EditProfileScreen(onNavigateUp = navController::navigateUp,
-                onNavigate = navController::navigate, scaffoldState = scaffoldState)
+                onNavigate = navController::navigate, scaffoldState = scaffoldState,
+                imageLoader = imageLoader
+            )
         }
 
         composable(route = Screen.CreatePostScreen.route) {
             CreatePostScreen(onNavigateUp = navController::navigateUp,
-                onNavigate = navController::navigate, scaffoldState = scaffoldState)
+                onNavigate = navController::navigate, scaffoldState = scaffoldState,
+                imageLoader = imageLoader)
         }
         composable(route = Screen.SearchScreen.route) {
             SearchScreen(onNavigateUp = navController::navigateUp,
-                onNavigate = navController::navigate)
+                onNavigate = navController::navigate,
+                imageLoader = imageLoader)
         }
 
         composable(
@@ -128,7 +139,8 @@ fun Navigation(
             )
         ){
             PersonListScreen(onNavigateUp = navController::navigateUp,
-                onNavigate = navController::navigate, scaffoldState = scaffoldState)
+                onNavigate = navController::navigate, scaffoldState = scaffoldState,
+                imageLoader = imageLoader)
         }
 
         composable(
@@ -156,7 +168,8 @@ fun Navigation(
                 onNavigateUp = navController::navigateUp,
                 onNavigate = navController::navigate,
                 scaffoldState =  scaffoldState,
-                shouldShowKeyboard = shouldShowKeyboard
+                shouldShowKeyboard = shouldShowKeyboard,
+                imageLoader = imageLoader
             )
         }
 

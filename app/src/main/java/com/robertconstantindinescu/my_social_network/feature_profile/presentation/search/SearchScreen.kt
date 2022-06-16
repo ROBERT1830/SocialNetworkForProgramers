@@ -14,6 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.hilt.navigation.compose.hiltViewModel
+import coil.ImageLoader
 import com.robertconstantindinescu.my_social_network.R
 import com.robertconstantindinescu.my_social_network.core.domain.models.User
 import com.robertconstantindinescu.my_social_network.core.domain.models.UserItem
@@ -30,6 +31,7 @@ import com.robertconstantindinescu.my_social_network.core.util.Screen
 @Composable
 fun SearchScreen(
     onNavigate: (String) -> Unit = {},
+    imageLoader: ImageLoader,
     onNavigateUp: () -> Unit = {},
     viewModel: SearchViewModel = hiltViewModel()
 ) {
@@ -77,6 +79,7 @@ fun SearchScreen(
                                 //we don't get the numbers from the response, so they are not needed
 
                             ,
+                            imageLoader = imageLoader,
                             actionIcon = {
                                 IconButton(
                                     onClick = {

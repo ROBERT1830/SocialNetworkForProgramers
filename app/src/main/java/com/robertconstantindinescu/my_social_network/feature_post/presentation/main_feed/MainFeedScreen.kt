@@ -22,6 +22,7 @@ import androidx.navigation.NavController
 import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.items
+import coil.ImageLoader
 import com.robertconstantindinescu.my_social_network.R
 import com.robertconstantindinescu.my_social_network.core.presentation.components.Post
 import com.robertconstantindinescu.my_social_network.core.presentation.components.StandardToolBar
@@ -36,9 +37,10 @@ import kotlinx.coroutines.launch
 @Composable
 fun MainFeedScreen(
     //navController: NavController,
+    imageLoader: ImageLoader,
+    scaffoldState: ScaffoldState,
     onNavigate: (String) -> Unit = {},
     onNavigateUp: () -> Unit = {},
-    scaffoldState: ScaffoldState,
     viewModel: MainFeedViewModel = hiltViewModel()
 ) {
     //val posts = viewModel.posts.collectAsLazyPagingItems()
@@ -100,6 +102,7 @@ fun MainFeedScreen(
                     }
                     Post(
                         post = post,
+                        imageLoader = imageLoader,
                         onUsernameClick = {
                             onNavigate(Screen.ProfileScreen.route + "?userId=${post.userId}")
                         },

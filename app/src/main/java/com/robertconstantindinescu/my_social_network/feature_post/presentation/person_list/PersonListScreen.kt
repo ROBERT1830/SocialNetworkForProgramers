@@ -16,6 +16,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import coil.ImageLoader
 import com.robertconstantindinescu.my_social_network.R
 import com.robertconstantindinescu.my_social_network.core.domain.models.User
 import com.robertconstantindinescu.my_social_network.core.domain.models.UserItem
@@ -37,9 +38,11 @@ import okhttp3.internal.userAgent
 @Composable
 fun PersonListScreen(
     scaffoldState: ScaffoldState,
+    imageLoader: ImageLoader,
     onNavigate: (String) -> Unit = {},
     onNavigateUp: () -> Unit = {},
-    viewModel: PersonListViewModel = hiltViewModel()
+    viewModel: PersonListViewModel = hiltViewModel(),
+
 ) {
     val state1 = viewModel.state.value
     val state = state1
@@ -82,6 +85,7 @@ fun PersonListScreen(
                 items(state.users) { user ->
                     UserProfileItem(
                         user = user,
+                        imageLoader = imageLoader,
                         actionIcon = {
                             Icon(
                                 //if we are following the user then the followiong icon is person remove

@@ -29,7 +29,11 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.items
+import coil.ComponentRegistry
+import coil.ImageLoader
 import coil.compose.rememberAsyncImagePainter
+import coil.compose.rememberImagePainter
+import coil.decode.SvgDecoder
 import com.robertconstantindinescu.my_social_network.R
 import com.robertconstantindinescu.my_social_network.core.domain.models.Post
 import com.robertconstantindinescu.my_social_network.core.domain.models.User
@@ -72,6 +76,7 @@ import kotlinx.coroutines.flow.collectLatest
 @Composable
 fun ProfileScreen(
     scaffoldState: ScaffoldState,
+    imageLoader: ImageLoader,
     userId: String? = null,
     onNavigate: (String) -> Unit = {},
     onNavigateUp: () -> Unit = {},
@@ -275,6 +280,7 @@ fun ProfileScreen(
 
                 Post(
                     post = post,
+                    imageLoader = imageLoader,
                     showProfileImage = false,
                     onPostClick = {
                         onNavigate(Screen.PostDetailScreen.route + "/${post.id}")
@@ -316,6 +322,7 @@ fun ProfileScreen(
                             translationY = (1f - toolbarState.expandedRatio) * -iconCollapsedOffsetY.toPx()
                             translationX = (1f - toolbarState.expandedRatio) * -iconHorizontalCentralLength
                         },
+                    imageLoader = imageLoader,
                     topSkills = profile.topSkills,
                     shouldShowGitHub = profile.gitHubUrl != null && profile.gitHubUrl.isNotBlank(),
                     shouldShowInstagram = profile.instagramUrl != null && profile.instagramUrl.isNotBlank(),
@@ -323,7 +330,10 @@ fun ProfileScreen(
                     bannerUrl = profile.bannerUrl
                 )
                 Image(
-                    painter = rememberAsyncImagePainter(model = profile.profilePictureUrl),
+                    painter = rememberAsyncImagePainter(
+                        model = profile.profilePictureUrl,
+                        imageLoader = imageLoader
+                    ),
                     contentDescription = stringResource(
                         id = R.string.profile_image
                     ),
