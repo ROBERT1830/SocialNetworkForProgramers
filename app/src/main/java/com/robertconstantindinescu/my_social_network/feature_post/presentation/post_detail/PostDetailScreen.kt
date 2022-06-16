@@ -158,7 +158,7 @@ fun PostDetailScreen(
 
                                         },
                                         onUsernameClick = {
-                                            onNavigate(Screen.ProfileScreen.route + "?userId=${post.userId}") //if you pass a mandatory argument you will have this error .....cannot be found in the navigation graph
+                                            onNavigate(Screen.ProfileScreen.route + "?userId=${post.userId}") //if you pass a mandatory argument you will have this error .....cannot be found i
                                         },
                                         isLiked = state.post.isLiked
                                     )

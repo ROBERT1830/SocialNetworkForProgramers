@@ -142,8 +142,8 @@ fun Navigation(
                 //this is for when you clik on comment from item post and goes directly to the details post and opens the keyboard.
                 //That happens from the mainFeedscreen
                 navArgument(
-                    name = "posshouldShowKeyBoardtId"
-                ){
+                    name = "shouldShowKeyboard"
+                ) {
                     type = NavType.BoolType
                     defaultValue = false
                 }
