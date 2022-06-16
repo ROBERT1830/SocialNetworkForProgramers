@@ -33,6 +33,7 @@ fun LoginScreen(
     //navController: NavController,
     onNavigate: (String)-> Unit = {},
     scaffoldState: ScaffoldState,
+    onLogin: () -> Unit = {},
     viewModel: LoginViewModel = hiltViewModel()
 ) {
 
@@ -52,6 +53,9 @@ fun LoginScreen(
                 }
                 is UiEvent.Navigate -> {
                     onNavigate(event.route)
+                }
+                is UiEvent.OnLogin -> {
+                    onLogin()
                 }
             }
 

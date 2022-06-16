@@ -2,7 +2,9 @@ package com.robertconstantindinescu.my_social_network.feature_profile.presentati
 
 import android.util.Log
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -10,6 +12,7 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.ScaffoldState
+import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
@@ -24,8 +27,10 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.items
@@ -79,11 +84,13 @@ fun ProfileScreen(
     imageLoader: ImageLoader,
     userId: String? = null,
     onNavigate: (String) -> Unit = {},
+    onLogout: () -> Unit = {},
     onNavigateUp: () -> Unit = {},
 
     //userId: String ? = null,
     profilePicturesSize: Dp = ProfilePictureSizeLage,
-    viewModel: ProfileViewModel = hiltViewModel()
+    viewModel: ProfileViewModel = hiltViewModel(),
+
 ) {
 
     val paginState = viewModel.pagingState.value //viewModel.posts.collectAsLazyPagingItems()
@@ -259,6 +266,9 @@ fun ProfileScreen(
                             followingCount = profile.followingCount,
                             postCount = profile.postCount
                         ),
+                        onLogoutClick = {
+                            viewModel.onEvent(ProfileEvent.ShowLogoutDialog)
+                        },
                         isFollowing = profile.isFollowing,
                         isOwnProfile = profile.isOwnProfile,
                         onAddEditClick = {
@@ -365,6 +375,47 @@ fun ProfileScreen(
             }
 
 
+        }
+        if (state.isLogoutDialogVisible) {
+            Dialog(onDismissRequest = {
+                viewModel.onEvent(ProfileEvent.DismissLogoutDialog)
+            }) {
+                Column(
+                    modifier = Modifier
+                        .background(
+                            color = MaterialTheme.colors.surface,
+                            shape = MaterialTheme.shapes.medium
+                        )
+                        .padding(SpaceMedium)
+                ) {
+                    Text(text = stringResource(id = R.string.do_you_want_to_logout))
+                    Spacer(modifier = Modifier.height(SpaceMedium))
+                    Row(
+                        horizontalArrangement = Arrangement.End,
+                        modifier = Modifier.align(Alignment.End)
+                    ) {
+                        Text(
+                            text = stringResource(id = R.string.no).uppercase(),
+                            color = MaterialTheme.colors.onBackground,
+                            fontWeight = FontWeight.Bold,
+                            modifier = Modifier.clickable {
+                                viewModel.onEvent(ProfileEvent.DismissLogoutDialog)
+                            }
+                        )
+                        Spacer(modifier = Modifier.width(SpaceMedium))
+                        Text(
+                            text = stringResource(id = R.string.yes).uppercase(),
+                            color = MaterialTheme.colors.primary,
+                            fontWeight = FontWeight.Bold,
+                            modifier = Modifier.clickable {
+                                viewModel.onEvent(ProfileEvent.Logout)
+                                viewModel.onEvent(ProfileEvent.DismissLogoutDialog)
+                                onLogout()
+                            }
+                        )
+                    }
+                }
+            }
         }
     }
 

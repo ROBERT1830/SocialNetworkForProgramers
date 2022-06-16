@@ -45,6 +45,16 @@ fun Navigation(
         composable(route = Screen.LoginScreen.route) {
             LoginScreen(
                 onNavigate = navController::navigate,
+                onLogin = {
+                    //popstack when login to not have it in the backstack and inclusive ti true
+                    //to pop the destination as well
+                    navController.popBackStack(
+                        //pop till that find taht screen.
+                        route = Screen.LoginScreen.route,
+                        inclusive = true
+                    )
+                    navController.navigate(route = Screen.MainFeedScreen.route)
+                },
                 scaffoldState = scaffoldState
             )
         }
@@ -96,7 +106,10 @@ fun Navigation(
                 onNavigateUp = navController::navigateUp,
                 onNavigate = navController::navigate,
                 scaffoldState = scaffoldState,//directly the route are passed  /*userId = userId*/, )
-                imageLoader = imageLoader
+                imageLoader = imageLoader,
+                onLogout = {
+                    navController.navigate(route = Screen.LoginScreen.route)
+                }
             )
 
         }

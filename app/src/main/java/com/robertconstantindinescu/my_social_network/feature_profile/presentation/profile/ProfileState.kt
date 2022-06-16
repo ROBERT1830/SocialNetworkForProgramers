@@ -5,6 +5,7 @@ import com.robertconstantindinescu.my_social_network.feature_profile.domain.mode
 
 data class ProfileState(
     val profile: Profile? = null,
-    val isLoading: Boolean = false
+    val isLoading: Boolean = false,
+    val isLogoutDialogVisible: Boolean = false
 
 )

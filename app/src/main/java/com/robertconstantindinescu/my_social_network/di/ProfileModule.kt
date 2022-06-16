@@ -1,11 +1,13 @@
 package com.robertconstantindinescu.my_social_network.di
 
+import android.content.SharedPreferences
 import com.google.gson.Gson
 import com.robertconstantindinescu.my_social_network.feature_post.data.data_source.remote.PostApi
 import com.robertconstantindinescu.my_social_network.feature_profile.data.remote.ProfileApi
 import com.robertconstantindinescu.my_social_network.core.data.repository.ProfileRepositoryImpl
 import com.robertconstantindinescu.my_social_network.core.domain.repository.ProfileRepository
 import com.robertconstantindinescu.my_social_network.core.domain.use_case.ToggleFollowStateForUserUseCase
+import com.robertconstantindinescu.my_social_network.feature_post.domain.use_case.LogoutUseCase
 import com.robertconstantindinescu.my_social_network.feature_profile.domain.use_case.*
 import dagger.Module
 import dagger.Provides
@@ -33,8 +35,8 @@ object ProfileModule {
 
     @Provides
     @Singleton
-    fun provideProfileRepository(profileApi: ProfileApi, postApi: PostApi, gson:Gson): ProfileRepository {
-        return ProfileRepositoryImpl(profileApi, postApi  ,gson)
+    fun provideProfileRepository(profileApi: ProfileApi, postApi: PostApi, gson:Gson, sharedPreferences: SharedPreferences): ProfileRepository {
+        return ProfileRepositoryImpl(profileApi, postApi  ,gson, sharedPreferences)
     }
 
     @Provides
@@ -47,7 +49,8 @@ object ProfileModule {
             setSkillSelectedUseCase = SetSkillSelectedUseCase(),
             getPostsForProfileUseCase = GetPostsForProfileUseCase(repository),
             searchUserUseCase = SearchUserUseCase(repository),
-            toggleFollowStateForUserUseCase = ToggleFollowStateForUserUseCase(repository)
+            toggleFollowStateForUserUseCase = ToggleFollowStateForUserUseCase(repository),
+            logout = LogoutUseCase(repository)
         )
     }
 
@@ -56,6 +59,8 @@ object ProfileModule {
     fun provideToggleFollowForUseCase(repository: ProfileRepository): ToggleFollowStateForUserUseCase {
         return ToggleFollowStateForUserUseCase(repository)
     }
+
+
 
 
 }

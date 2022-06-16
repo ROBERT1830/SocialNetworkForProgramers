@@ -1,5 +1,6 @@
 package com.robertconstantindinescu.my_social_network.core.data.repository
 
+import android.content.SharedPreferences
 import android.net.Uri
 import androidx.core.net.toFile
 import androidx.paging.Pager
@@ -30,7 +31,8 @@ import java.io.IOException
 class ProfileRepositoryImpl(
     private val profileApi: ProfileApi,
     private val postApi: PostApi,
-    private val gson: Gson
+    private val gson: Gson,
+    private val sharedPreferences: SharedPreferences
 ): ProfileRepository {
 
     override suspend fun getProfile(userId: String): Resource<Profile> {
@@ -246,6 +248,16 @@ class ProfileRepositoryImpl(
             )
         }
     }
+
+    override fun logout() {
+        sharedPreferences.edit()
+                //restart token, so if the user logs out then has to log in manually again to recreate the token
+            .putString(Constants.KEY_JWT_TOKEN, "")
+            .putString(Constants.KEY_USER_ID, "")
+            .apply()
+    }
+
+
 }
 
 
