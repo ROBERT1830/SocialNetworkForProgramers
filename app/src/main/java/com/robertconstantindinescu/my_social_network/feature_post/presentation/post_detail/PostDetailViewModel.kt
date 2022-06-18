@@ -11,6 +11,7 @@ import com.robertconstantindinescu.my_social_network.core.presentation.util.UiEv
 import com.robertconstantindinescu.my_social_network.core.util.ParentType
 import com.robertconstantindinescu.my_social_network.core.util.Resource
 import com.robertconstantindinescu.my_social_network.core.util.UiText
+import com.robertconstantindinescu.my_social_network.feature_auth.domain.use_case.AuthenticateUseCase
 import com.robertconstantindinescu.my_social_network.feature_post.domain.use_case.PostUseCases
 import com.robertconstantindinescu.my_social_network.feature_post.presentation.util.CommentError
 import com.robertconstantindinescu.my_social_network.feature_post.presentation.util.PostDescriptionError
@@ -25,6 +26,7 @@ import javax.inject.Inject
  */
 @HiltViewModel
 class PostDetailViewModel @Inject constructor(
+    private val authenticate: AuthenticateUseCase,
     private val postUseCases: PostUseCases,
     //get postId using savestate handle form nav arguments
     private val savedStateHandle: SavedStateHandle
@@ -44,6 +46,8 @@ class PostDetailViewModel @Inject constructor(
 
     private val _eventFlow = MutableSharedFlow<UiEvent>()
     val eventFlow = _eventFlow.asSharedFlow()
+
+    private var isUserLoggedIn = false
 
     init {
         savedStateHandle.get<String>("postId")?.let { postId ->
@@ -101,11 +105,11 @@ class PostDetailViewModel @Inject constructor(
     ) {
         viewModelScope.launch {
 
-//            isUserLoggedIn = authenticate() is Resource.Success
-//            if(!isUserLoggedIn) {
-//                _eventFlow.emit(UiEvent.ShowSnackbar(UiText.StringResource(R.string.error_not_logged_in)))
-//                return@launch
-//            }
+            isUserLoggedIn = authenticate() is Resource.Success
+            if(!isUserLoggedIn) {
+                _eventFlow.emit(UiEvent.ShowSnackBar(UiText.StringResource(R.string.error_not_logged_in)))
+                return@launch
+            }
             val currentLikeCount = state.value.post?.likeCount ?: 0
             when(parentType) {
                 ParentType.Post.type -> {
@@ -174,6 +178,11 @@ class PostDetailViewModel @Inject constructor(
 
     private fun createComment(postId:String, comment:String){
         viewModelScope.launch {
+            isUserLoggedIn = authenticate() is Resource.Success
+            if(!isUserLoggedIn) {
+                _eventFlow.emit(UiEvent.ShowSnackBar(UiText.StringResource(R.string.error_not_logged_in)))
+                return@launch
+            }
             _commentState.value = commentState.value.copy(
                 isLoading = true
             )

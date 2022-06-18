@@ -33,7 +33,8 @@
                     android:scheme="https"
                     android:host="pl-coding.com" />
             </intent-filter>
-
+<!--intentn to sned and image and then create a post with it
+i mean open an intentn with the gallery with only images of any type-->
             <intent-filter>
                 <action android:name="android.intent.action.SEND" />
                 <category android:name="android.intent.category.DEFAULT" />
