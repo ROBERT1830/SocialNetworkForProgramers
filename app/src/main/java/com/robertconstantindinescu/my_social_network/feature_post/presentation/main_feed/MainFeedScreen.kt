@@ -14,6 +14,7 @@ import androidx.compose.ui.Alignment.Companion.Center
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.modifier.modifierLocalConsumer
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -28,6 +29,7 @@ import com.robertconstantindinescu.my_social_network.core.presentation.component
 import com.robertconstantindinescu.my_social_network.core.presentation.components.StandardToolBar
 import com.robertconstantindinescu.my_social_network.core.presentation.ui.theme.SpaceLarge
 import com.robertconstantindinescu.my_social_network.core.util.Screen
+import com.robertconstantindinescu.my_social_network.core.util.sendSharePostIntent
 import com.robertconstantindinescu.my_social_network.feature_post.presentation.main_feed.MainFeedEvent
 import com.robertconstantindinescu.my_social_network.feature_post.presentation.main_feed.MainFeedViewModel
 import com.robertconstantindinescu.my_social_network.feature_post.presentation.person_list.PostEvent
@@ -45,6 +47,7 @@ fun MainFeedScreen(
 ) {
     //val posts = viewModel.posts.collectAsLazyPagingItems()
     val paginState = viewModel.pagingState.value
+    val context = LocalContext.current
     //val state = viewModel.state.value
     val scope = rememberCoroutineScope() //coroutine for displaying the toeas
 
@@ -115,6 +118,9 @@ fun MainFeedScreen(
                         onLikeClick = {
                             viewModel.onEvent(MainFeedEvent.LikedPost(post.id))
                             //posts.refresh()
+                        },
+                        onSharedClick = {
+                            context.sendSharePostIntent(post.id)
                         }
                     )
                     //if we are not at the list item add some space.

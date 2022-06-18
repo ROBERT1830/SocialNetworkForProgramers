@@ -37,6 +37,7 @@ import com.robertconstantindinescu.my_social_network.core.presentation.component
 import com.robertconstantindinescu.my_social_network.core.presentation.util.UiEvent
 import com.robertconstantindinescu.my_social_network.core.presentation.util.asString
 import com.robertconstantindinescu.my_social_network.core.util.Screen
+import com.robertconstantindinescu.my_social_network.core.util.sendSharePostIntent
 import com.robertconstantindinescu.my_social_network.core.util.showKeyboard
 import com.robertconstantindinescu.my_social_network.feature_profile.presentation.profile.ProfileScreen
 import kotlinx.coroutines.flow.collectLatest
@@ -150,11 +151,11 @@ fun PostDetailScreen(
                                             viewModel.onEvent(PostDetailEvent.LikePost)
                                         },
                                         onCommentClick = {
-
-                                        },
-                                        onShareClick = {
                                             context.showKeyboard()
                                             focusRequester.requestFocus()
+                                        },
+                                        onShareClick = {
+                                            context.sendSharePostIntent(post.id)
 
                                         },
                                         onUsernameClick = {

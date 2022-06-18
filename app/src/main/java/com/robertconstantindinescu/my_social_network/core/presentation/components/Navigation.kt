@@ -1,5 +1,6 @@
 package com.robertconstantindinescu.my_social_network.presentation.util
 
+import android.content.Intent
 import androidx.compose.material.ScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
@@ -7,6 +8,7 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
+import androidx.navigation.navDeepLink
 import coil.ImageLoader
 import com.robertconstantindinescu.my_social_network.presentation.MainFeedScreen
 import com.robertconstantindinescu.my_social_network.feature_activity.presentation.ActivityScreen
@@ -172,11 +174,19 @@ fun Navigation(
                     type = NavType.BoolType
                     defaultValue = false
                 }
-
-
+            ),
+            //thiis composable should has deeplink to receive the post
+            deepLinks = listOf(
+                navDeepLink {
+                    action = Intent.ACTION_VIEW
+                    uriPattern = "https://pl-coding.com/{postId}" //for pasrsing the deeplink
+                }
             )
         ) {
             val shouldShowKeyboard = it.arguments?.getBoolean("shouldShowKeyBoard") ?: false
+            //debig to see if we gert the id from the deeplink
+            println("POST ID: ${it.arguments?.getString("postId")}")
+            //dont need to pass the id because we get it from the viewModel with saveState or so.
             PostDetailScreen(
                 onNavigateUp = navController::navigateUp,
                 onNavigate = navController::navigate,

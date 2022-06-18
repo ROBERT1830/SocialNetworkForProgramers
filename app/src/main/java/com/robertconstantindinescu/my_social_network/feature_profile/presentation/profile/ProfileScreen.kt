@@ -52,6 +52,7 @@ import com.robertconstantindinescu.my_social_network.core.presentation.ui.theme.
 import com.robertconstantindinescu.my_social_network.core.presentation.util.UiEvent
 import com.robertconstantindinescu.my_social_network.core.presentation.util.asString
 import com.robertconstantindinescu.my_social_network.core.util.Screen
+import com.robertconstantindinescu.my_social_network.core.util.sendSharePostIntent
 import com.robertconstantindinescu.my_social_network.feature_post.presentation.person_list.PostEvent
 import com.robertconstantindinescu.my_social_network.presentation.util.toPx
 import kotlinx.coroutines.flow.collectLatest
@@ -300,6 +301,9 @@ fun ProfileScreen(
                     },
                     onLikeClick = {
                         viewModel.onEvent(ProfileEvent.LikedPost(post.id ))
+                    },
+                    onSharedClick = {
+                        context.sendSharePostIntent(post.id)
                     }
                 )
 
